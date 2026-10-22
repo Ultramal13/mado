@@ -60,6 +60,12 @@
     <string name="frm_unverified">precision not verified for this lens</string>
     <string name="frm_double_tap">double tap the image: cropped view</string>
     <string name="frm_exposure">exposure (EV)</string>
+    <string name="guides_label">composition guides</string>
+    <string name="guide_thirds">rule of thirds</string>
+    <string name="guide_golden">golden ratio</string>
+    <string name="guide_cross">center cross</string>
+    <string name="guide_grid">grid</string>
+    <string name="guide_safe">safe areas</string>
     <string name="frm_phone_lens">phone lens (fixed, one at a time)</string>
     <string name="frm_camera">camera</string>
     <string name="frm_custom">custom</string>

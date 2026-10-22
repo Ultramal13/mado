@@ -60,6 +60,12 @@
     <string name="frm_unverified">このレンズの精度は未検証</string>
     <string name="frm_double_tap">画像をダブルタップ：切り抜き表示</string>
     <string name="frm_exposure">露出補正（EV）</string>
+    <string name="guides_label">構図ガイド</string>
+    <string name="guide_thirds">三分割</string>
+    <string name="guide_golden">黄金比</string>
+    <string name="guide_cross">中央十字</string>
+    <string name="guide_grid">グリッド</string>
+    <string name="guide_safe">セーフエリア</string>
     <string name="frm_phone_lens">スマホのレンズ（固定・一度に1つ）</string>
     <string name="frm_camera">カメラ</string>
     <string name="frm_custom">カスタム</string>

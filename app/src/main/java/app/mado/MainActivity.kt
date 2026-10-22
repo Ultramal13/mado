@@ -80,6 +80,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             val results = remember { FovResults(applicationContext) }
+            val appVersion = remember { runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull().orEmpty() }
             val framing = remember { FramingState(CameraRepository.load(applicationContext)) }
             androidx.activity.compose.BackHandler(enabled = screen != 0) { screen = 0 }
 
@@ -107,7 +108,7 @@ class MainActivity : ComponentActivity() {
                             add(stringResource(R.string.lang_title) to { langDialog = true })
                             add(stringResource(R.string.menu_theme) to { themeDialog = true })
                         }
-                        app.mado.ui.MenuDialog(stringResource(R.string.menu_title), items, { menuOpen = false }, stringResource(R.string.action_close))
+                        app.mado.ui.MenuDialog(stringResource(R.string.menu_title), items, { menuOpen = false }, stringResource(R.string.action_close), appVersion)
                     }
                     if (langDialog) {
                         val names = listOf(stringResource(R.string.lang_auto), "Español", "English", "日本語")

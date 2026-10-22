@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,14 +34,53 @@ fun Header(title: String, onMenu: () -> Unit, onBack: (() -> Unit)? = null) {
     }
 }
 
-/** Menú de acciones (calibrar, diagnóstico, idioma, tema…). */
+/** Logo de Mado: anillo de cinco rayas con un recuadro naranja 3:2 en el centro (mismos trazos que el de las fotos). */
 @Composable
-fun MenuDialog(title: String, items: List<Pair<String, () -> Unit>>, onDismiss: () -> Unit, closeLabel: String) {
+fun MadoLogo(size: androidx.compose.ui.unit.Dp, modifier: Modifier = Modifier) {
+    val p = LocalPalette.current
+    val ring = p.text
+    androidx.compose.foundation.Canvas(modifier.androidx_size(size)) {
+        val r = this.size.minDimension / 2f
+        val ringR = r * 0.92f
+        val stroke = ringR * 5f / 33f
+        val c = androidx.compose.ui.geometry.Offset(this.size.width / 2f, this.size.height / 2f)
+        val span = 72f - 11.5f - Math.toDegrees((stroke / ringR).toDouble()).toFloat()
+        for (k in 0 until 5) {
+            val center = -90f + k * 72f
+            drawArc(
+                ring, center - span / 2f, span, false,
+                topLeft = androidx.compose.ui.geometry.Offset(c.x - ringR, c.y - ringR),
+                size = androidx.compose.ui.geometry.Size(2 * ringR, 2 * ringR),
+                style = androidx.compose.ui.graphics.drawscope.Stroke(stroke, cap = androidx.compose.ui.graphics.StrokeCap.Round),
+            )
+        }
+        val rw = ringR * 30f / 33f; val rh = ringR * 20f / 33f
+        drawRoundRect(
+            Accent, androidx.compose.ui.geometry.Offset(c.x - rw / 2, c.y - rh / 2), androidx.compose.ui.geometry.Size(rw, rh),
+            androidx.compose.ui.geometry.CornerRadius(ringR * 3f / 33f),
+        )
+    }
+}
+
+private fun Modifier.androidx_size(s: androidx.compose.ui.unit.Dp): Modifier = this.then(Modifier.size(s))
+
+/** Menú de acciones (calibrar, diagnóstico, idioma, tema…), con el logo, el nombre y la versión de la app. */
+@Composable
+fun MenuDialog(title: String, items: List<Pair<String, () -> Unit>>, onDismiss: () -> Unit, closeLabel: String, version: String = "") {
     val p = LocalPalette.current
     androidx.compose.material3.AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = p.body,
-        title = { Text(title, style = mono(14, p.text, true)) },
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                MadoLogo(44.dp)
+                Spacer(Modifier.padding(start = 12.dp))
+                Column {
+                    Text("mado", style = mono(20, p.text, true))
+                    if (version.isNotEmpty()) Text("v$version", style = mono(11, p.text.copy(alpha = 0.6f)))
+                }
+            }
+        },
         text = {
             Column {
                 items.forEach { (label, action) ->

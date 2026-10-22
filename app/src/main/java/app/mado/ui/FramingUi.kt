@@ -58,7 +58,7 @@ internal data class FrameDraw(val label: String, val frame: Framing.Frame, val c
  * y las demás en blanco. Si la focal más ancha supera al teléfono (padding), el preview se achica y ese recuadro llena el visor.
  */
 @Composable
-internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, showTags: Boolean = true) {
+internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, showTags: Boolean = true, guides: Set<Guide> = emptySet()) {
     val p = LocalPalette.current
     val line = if (p.red) p.screenText else Color.White
     val accent = if (p.red) p.screenText else Accent
@@ -92,6 +92,34 @@ internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, showTags: 
                 Size(l.size.width + 2 * pad, l.size.height + pad),
             )
             drawText(l, topLeft = Offset(tagTl.x + pad, tagTl.y + pad / 2))
+        }
+        // Guías de composición dentro del encuadre actual.
+        frames.firstOrNull { it.current }?.let { cur ->
+            val gw = cur.frame.widthFrac.toFloat() * iw
+            val gh = cur.frame.heightFrac.toFloat() * ih
+            drawGuides(guides, Offset(c.x - gw / 2, c.y - gh / 2), Size(gw, gh), line.copy(alpha = 0.75f), 1.dp.toPx())
+        }
+    }
+}
+
+private const val PHI_INV = 0.6180339887f      // 1/φ: las líneas de la proporción áurea van a 0.382 y 0.618
+
+/** Dibuja las guías elegidas dentro del rectángulo (origen `tl`, medidas `sz`). */
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGuides(guides: Set<Guide>, tl: Offset, sz: Size, color: Color, w: Float) {
+    if (guides.isEmpty()) return
+    fun v(f: Float) = drawLine(color, Offset(tl.x + sz.width * f, tl.y), Offset(tl.x + sz.width * f, tl.y + sz.height), w)
+    fun h(f: Float) = drawLine(color, Offset(tl.x, tl.y + sz.height * f), Offset(tl.x + sz.width, tl.y + sz.height * f), w)
+    if (Guide.THIRDS in guides) { v(1f / 3); v(2f / 3); h(1f / 3); h(2f / 3) }
+    if (Guide.GOLDEN in guides) { v(1f - PHI_INV); v(PHI_INV); h(1f - PHI_INV); h(PHI_INV) }
+    if (Guide.GRID in guides) for (i in 1..3) { v(i / 4f); h(i / 4f) }
+    if (Guide.CROSS in guides) {
+        val c = Offset(tl.x + sz.width / 2, tl.y + sz.height / 2); val a = minOf(sz.width, sz.height) * 0.05f
+        drawLine(color, Offset(c.x - a, c.y), Offset(c.x + a, c.y), w * 1.5f); drawLine(color, Offset(c.x, c.y - a), Offset(c.x, c.y + a), w * 1.5f)
+    }
+    if (Guide.SAFE in guides) {
+        // Zona segura de acción (93 %) y de títulos (90 %).
+        for (f in listOf(0.93f, 0.90f)) {
+            drawRect(color, Offset(tl.x + sz.width * (1 - f) / 2, tl.y + sz.height * (1 - f) / 2), Size(sz.width * f, sz.height * f), style = Stroke(w))
         }
     }
 }
@@ -312,6 +340,13 @@ internal fun FramingControls(
                 StepKey("+", ev < range.last) { onEv((ev + 1).coerceAtMost(range.last)) }
                 StepKey("0", ev != 0) { onEv(0) }
             }
+        }
+
+        Label(stringResource(R.string.guides_label))
+        val guideNames = listOf(R.string.guide_thirds, R.string.guide_golden, R.string.guide_cross, R.string.guide_grid, R.string.guide_safe).map { stringResource(it) }
+        MultiSeg(guideNames, Guide.values().map { it in framing.guides }) { i ->
+            val g = Guide.values()[i]
+            framing.guides = if (g in framing.guides) framing.guides - g else framing.guides + g
         }
 
         Label(stringResource(R.string.gps_label))

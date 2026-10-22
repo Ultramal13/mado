@@ -10,6 +10,9 @@ import app.mado.data.loc
 import app.mado.optics.Fov
 import app.mado.optics.Framing
 
+/** Guías de composición que se dibujan dentro del encuadre actual. */
+enum class Guide { THIRDS, GOLDEN, CROSS, GRID, SAFE }
+
 /** Selección del usuario para el modo marco: cámara, modo de grabación, juego de lentes y focal. */
 class FramingState(val db: CameraDb) {
     /** Cámaras con datos completos + al final la personalizada (índice == cameras.size). */
@@ -35,6 +38,8 @@ class FramingState(val db: CameraDb) {
     var builtInIdx by mutableIntStateOf(0)
     /** Focales del kit que se dibujan a la vez (la actual va resaltada); se suman o quitan desde el panel. */
     var kit by mutableStateOf(listOf(24.0, 35.0, 50.0, 85.0))
+    /** Guías de composición activas (se recuerdan entre usos). */
+    var guides by mutableStateOf(setOf<Guide>())
     /** Aspecto elegido cuando una cámara de lente fija no trae modos con medidas. */
     var fixedAspectIdx by mutableIntStateOf(0)
     val fixedAspects = listOf(16.0 / 9.0 to "16:9", 4.0 / 3.0 to "4:3", 3.0 / 2.0 to "3:2", 2.39 to "2.39:1", 1.0 to "1:1")

@@ -60,6 +60,12 @@
     <string name="frm_unverified">precisión no verificada para esta lente</string>
     <string name="frm_double_tap">doble toque en la imagen: vista recortada</string>
     <string name="frm_exposure">exposición (EV)</string>
+    <string name="guides_label">guías de composición</string>
+    <string name="guide_thirds">tercios</string>
+    <string name="guide_golden">proporción áurea</string>
+    <string name="guide_cross">cruz central</string>
+    <string name="guide_grid">cuadrícula</string>
+    <string name="guide_safe">zonas seguras</string>
     <string name="frm_phone_lens">lente del teléfono (fija, una a la vez)</string>
     <string name="frm_camera">cámara</string>
     <string name="frm_custom">personalizada</string>

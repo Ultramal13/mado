@@ -281,7 +281,7 @@ fun FovScreen(
             corner = if (framing != null) 0.dp else 14.dp,
             overlay = {
                 if (framing != null) Box(Modifier.fillMaxSize()) {
-                    FrameOverlay(cropDraws, if (cropOn) 1f else imageScale, showTags = !cropOn)
+                    FrameOverlay(cropDraws, if (cropOn) 1f else imageScale, showTags = !cropOn, guides = framing.guides)
                     if (cropOn) {
                         val hDeg = target?.let { Math.toDegrees(it.hFovRad) }
                         val vDeg = target?.let { Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(it.hFovRad / 2.0) / it.aspect)) }
@@ -318,6 +318,13 @@ fun FovScreen(
 
     // Ubicación en las fotos: opcional, la activa el usuario, una lectura al disparar.
     val prefs = remember { ctx.getSharedPreferences("mado", Context.MODE_PRIVATE) }
+    // Las guías de composición elegidas se recuerdan.
+    if (framing != null) {
+        LaunchedEffect(Unit) {
+            framing.guides = prefs.getString("guides", "").orEmpty().split(',').mapNotNull { n -> Guide.values().firstOrNull { it.name == n } }.toSet()
+        }
+        LaunchedEffect(framing.guides) { prefs.edit().putString("guides", framing.guides.joinToString(",") { it.name }).apply() }
+    }
     var gpsOn by remember { mutableStateOf(prefs.getBoolean("gps", false) && LocationHelper.hasPermission(ctx)) }
     var gpsDenied by remember { mutableStateOf(false) }
     val gpsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
