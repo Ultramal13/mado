@@ -73,4 +73,12 @@ class FramingTest {
         val vPhone = 2.0 * Math.atan(tan(phoneH / 2.0) / phoneAspect)
         assertEquals(tan(t.hFovRad / 2.0) / tan(vPhone / 2.0), portrait.widthFrac, 1e-9)
     }
+
+    @Test
+    fun onlyTheCurrentFrameShrinksTheImage() {
+        assertEquals(1f, Framing.imageScale(Framing.Frame(0.4, 0.3)), 1e-6f)
+        assertEquals(1f, Framing.imageScale(null), 1e-6f)
+        // Un recuadro más ancho que el teléfono (padding) achica la imagen a 1/ancho.
+        assertEquals(0.5f, Framing.imageScale(Framing.Frame(2.0, 1.2)), 1e-6f)
+    }
 }

@@ -85,11 +85,13 @@ internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, showTags: 
             )
             val l = measurer.measure(if (fd.current) fd.detail else fd.label, style)
             val pad = 4.dp.toPx()
+            // Si el recuadro sale de la pantalla, la etiqueta se queda dentro para que se pueda leer.
+            val tagTl = Offset(tl.x.coerceIn(0f, maxOf(0f, size.width - l.size.width - 2 * pad)), tl.y.coerceIn(0f, maxOf(0f, size.height - l.size.height - pad)))
             drawRect(
-                if (fd.current) accent else Color.Black.copy(alpha = 0.55f), tl,
+                if (fd.current) accent else Color.Black.copy(alpha = 0.55f), tagTl,
                 Size(l.size.width + 2 * pad, l.size.height + pad),
             )
-            drawText(l, topLeft = Offset(tl.x + pad, tl.y + pad / 2))
+            drawText(l, topLeft = Offset(tagTl.x + pad, tagTl.y + pad / 2))
         }
     }
 }

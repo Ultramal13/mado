@@ -40,6 +40,14 @@ object Framing {
     fun toScreen(frame: Frame, phoneAspect: Double, portrait: Boolean): Frame =
         if (portrait) Frame(frame.widthFrac * phoneAspect, frame.heightFrac / phoneAspect) else frame
 
+    /**
+     * Escala de la imagen del teléfono dentro del visor: 1 si el recuadro actual cabe; si es más ancho que el teléfono
+     * (padding) la imagen se achica para mostrarlo entero. Solo cuenta el recuadro actual: los demás del kit que no caben
+     * simplemente salen del visor, en vez de achicar toda la imagen.
+     */
+    fun imageScale(current: Frame?): Float =
+        if (current == null) 1f else (1.0 / maxOf(1.0, current.widthFrac, current.heightFrac)).toFloat()
+
     /** Recorte del FOV horizontal del teléfono por un perfil calibrado: factor sobre tan(FOV/2) (1.0 = sin calibrar). */
     fun calibratedHFovRad(reportedHFovRad: Double, tanHalfFactor: Double): Double =
         2.0 * atan(tan(reportedHFovRad / 2.0) * tanHalfFactor)

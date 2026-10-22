@@ -246,7 +246,8 @@ fun FovScreen(
         val phoneAspect = size.width.toDouble() / size.height
         FrameDraw(it.label, Framing.toScreen(Framing.frame(it.target, Math.toRadians(phoneDeg), phoneAspect), phoneAspect, portrait = !landscape), it.current, detail)
     }
-    val imageScale = frameDraws.maxOfOrNull { maxOf(it.frame.widthFrac, it.frame.heightFrac) }?.let { (1.0 / maxOf(1.0, it)).toFloat() } ?: 1f
+    // Solo el recuadro actual puede achicar la imagen (padding); los otros del kit que no caben salen del visor.
+    val imageScale = Framing.imageScale(frameDraws.firstOrNull { it.current }?.frame)
 
     // Vista recortada (doble toque en el visor): el encuadre actual llena el visor y se ve «como saldría».
     var cropView by rememberSaveable { mutableStateOf(false) }

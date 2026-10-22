@@ -50,8 +50,7 @@ object PhotoAnnotator {
         val c = Canvas(out)
         c.drawColor(PAPER)
 
-        val widest = frames.maxOfOrNull { maxOf(it.frame.widthFrac, it.frame.heightFrac) } ?: 1.0
-        val scale = (1.0 / maxOf(1.0, widest)).toFloat()
+        val scale = Framing.imageScale(frames.firstOrNull { it.current }?.frame)   // igual que el visor: solo el recuadro actual achica la foto
         val iw = w * scale; val ih = h * scale
         val ix = (w - iw) / 2f; val iy = (h - ih) / 2f
         if (scale < 0.999f) c.drawRect(0f, 0f, w.toFloat(), h.toFloat(), Paint().apply { color = NEUTRAL })
