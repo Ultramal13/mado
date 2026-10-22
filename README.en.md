@@ -71,6 +71,10 @@ The latest test version is under **[Releases](https://github.com/Ultramal13/mado
 
 The app language is chosen from the **☰** menu → language: automatic, Spanish, English or Japanese.
 
+### Got an Xperia 1 III? Calibrate your phone
+
+There is a **[step-by-step guide to calibrate the Xperia 1 III](docs/calibracion-xperia.md)** (Spanish, English and Japanese): what you need, how to measure each lens with a tape measure, **what data to write down** and how to send it.
+
 ## Build
 
 Needs JDK 21, Gradle 9.8+ and the Android SDK (platform 37.2). There is no Gradle wrapper in the repo yet.
