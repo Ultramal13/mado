@@ -96,13 +96,13 @@ internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, showTags: 
 
 /** Etiqueta flotante arriba a la izquierda: cámara y modo que se simulan. Tocarla abre el panel de configuración. */
 @Composable
-internal fun ViewerChip(framing: FramingState, onClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun ViewerChip(framing: FramingState, onClick: () -> Unit, modifier: Modifier = Modifier, evLabel: String? = null) {
     Column(
         modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp)).background(Color.Black.copy(alpha = 0.6f))
             .clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = 7.dp),
     ) {
         Text(framing.cameraName() + "  ▾", style = mono(15, Color.White, true), maxLines = 1, overflow = TextOverflow.Ellipsis)
-        val sub = listOf(framing.modeName(), framing.subLabel()).filter { it.isNotEmpty() }.joinToString(" · ")
+        val sub = listOfNotNull(framing.modeName(), framing.subLabel(), evLabel).filter { it.isNotEmpty() }.joinToString(" · ")
         Text(sub, style = mono(10, Color.White.copy(alpha = 0.75f)), maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }
@@ -230,6 +230,9 @@ internal fun FramingControls(
     gpsOn: Boolean,
     onGps: (Boolean) -> Unit,
     gpsDenied: Boolean,
+    ev: Int = 0,
+    evInfo: Pair<IntRange, Double>? = null,
+    onEv: (Int) -> Unit = {},
 ) {
     val p = LocalPalette.current
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -299,6 +302,16 @@ internal fun FramingControls(
             NumField(framing.focal) { framing.focal = it }
         }
 
+        evInfo?.let { (range, step) ->
+            Label(stringResource(R.string.frm_exposure))
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                StepKey("−", ev > range.first) { onEv((ev - 1).coerceAtLeast(range.first)) }
+                Text(evText(ev, step), style = mono(15, p.text, true), modifier = Modifier.widthIn(min = 76.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                StepKey("+", ev < range.last) { onEv((ev + 1).coerceAtMost(range.last)) }
+                StepKey("0", ev != 0) { onEv(0) }
+            }
+        }
+
         Label(stringResource(R.string.gps_label))
         Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (gpsOn) 1 else 0) { onGps(it == 1) }
         if (gpsDenied) Text(stringResource(R.string.gps_denied), style = mono(10, p.accent))
@@ -366,6 +379,21 @@ internal fun FramingControls(
 }
 
 private fun fmt(v: Double, digits: Int) = String.format(Locale.ROOT, "%.${digits}f", v)
+
+/** Compensación de exposición para mostrar: «EV +0.7» (0 = automática). */
+internal fun evText(index: Int, step: Double): String =
+    if (index == 0) "EV 0" else String.format(Locale.ROOT, "EV %+.1f", index * step)
+
+/** Tecla chica para sumar o restar un paso. */
+@Composable
+private fun StepKey(text: String, enabled: Boolean, onClick: () -> Unit) {
+    val p = LocalPalette.current
+    Box(
+        Modifier.size(width = 48.dp, height = 40.dp).clip(androidx.compose.foundation.shape.RoundedCornerShape(9.dp))
+            .background(p.keyBg.copy(alpha = if (enabled) 1f else 0.4f)).clickable(enabled = enabled, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) { Text(text, style = mono(16, p.keyText, true)) }
+}
 
 private fun principalsExist(framing: FramingState) = framing.principalCount > 0
 

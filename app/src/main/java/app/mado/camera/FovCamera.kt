@@ -98,6 +98,7 @@ class FovCamera(
         val gen = ++generation
         wanted = true
         previewAspect = size.width.toDouble() / size.height
+        focusRegion = null
         Log.i("mado", "cam.start gen=$gen lens=${lens.id} size=${size.width}x${size.height}")
         val surface = holder.surface
         handler.post { startInternal(surface, lens, size, distortionOff, gen) }
@@ -203,24 +204,122 @@ class FovCamera(
         }
     }
 
-    private fun request(d: CameraDevice, surface: Surface, lens: CameraInfo, distortionOff: Boolean): CaptureRequest {
+    /** Zoom del flujo de preview (1 = sin zoom). Solo lo usa la vista recortada; la foto siempre sale a 1x. */
+    @Volatile var zoomRatio = 1f
+    @Volatile private var focusRegion: android.hardware.camera2.params.MeteringRectangle? = null
+
+    /** Zoom máximo que acepta la lente (1 si el teléfono no tiene control de zoom). */
+    fun maxZoom(lens: CameraInfo): Float {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return 1f
+        return try {
+            val id = if (lens.id in manager.cameraIdList) lens.id else lens.parentId ?: lens.id
+            manager.getCameraCharacteristics(id).get(CameraCharacteristics.CONTROL_ZOOM_RATIO_RANGE)?.upper ?: 1f
+        } catch (e: Exception) { 1f }
+    }
+
+    fun setZoom(z: Float) {
+        zoomRatio = z
+        reissue()
+    }
+
+    private fun reissue() {
+        if (released) return
+        handler.post {
+            val s = session; val d = device; val a = active
+            if (s != null && d != null && a != null && !capturing) {
+                try { s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff), null, handler) } catch (e: Exception) { Log.w("mado", "reissue", e) }
+            }
+        }
+    }
+
+    /**
+     * Enfoca y mide la exposición en un punto de la imagen del preview, dado en fracciones (0..1) de lo que muestra el flujo
+     * (ya con zoom) en la orientación de la pantalla. Se traduce a coordenadas del sensor: giro de la pantalla, recorte del
+     * flujo (proporción más ancha que el sensor) y zoom.
+     */
+    fun focusAt(u: Float, v: Float, displayRotationDeg: Int) {
+        if (released) return
+        handler.post {
+            val s = session; val d = device; val a = active
+            if (s == null || d == null || a == null || capturing) return@post
+            try {
+                val c = manager.getCameraCharacteristics(d.id)
+                val arr = c.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE) ?: return@post
+                val rot = ((c.get(CameraCharacteristics.SENSOR_ORIENTATION) ?: 90) - displayRotationDeg + 360) % 360
+                var x: Float; var y: Float
+                when (rot) { 90 -> { x = v; y = 1f - u }; 180 -> { x = 1f - u; y = 1f - v }; 270 -> { x = 1f - v; y = u }; else -> { x = u; y = v } }
+                val sensorAspect = arr.width().toDouble() / arr.height()
+                val ap = previewAspect
+                if (ap > sensorAspect) y = 0.5f + (y - 0.5f) * (sensorAspect / ap).toFloat() else x = 0.5f + (x - 0.5f) * (ap / sensorAspect).toFloat()
+                x = 0.5f + (x - 0.5f) / zoomRatio; y = 0.5f + (y - 0.5f) / zoomRatio
+                val half = (minOf(arr.width(), arr.height()) * 0.08f).toInt()
+                val cx = (arr.left + x.coerceIn(0f, 1f) * arr.width()).toInt().coerceIn(arr.left + half, arr.right - half)
+                val cy = (arr.top + y.coerceIn(0f, 1f) * arr.height()).toInt().coerceIn(arr.top + half, arr.bottom - half)
+                focusRegion = android.hardware.camera2.params.MeteringRectangle(cx - half, cy - half, 2 * half, 2 * half, android.hardware.camera2.params.MeteringRectangle.METERING_WEIGHT_MAX - 1)
+                val trig = requestBuilder(d, a.surface, a.lens, a.distortionOff)
+                trig.set(CaptureRequest.CONTROL_AF_TRIGGER, CaptureRequest.CONTROL_AF_TRIGGER_START)
+                s.capture(trig.build(), null, handler)
+                s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff), null, handler)
+            } catch (e: Exception) { Log.w("mado", "focusAt", e) }
+        }
+    }
+
+    /** Compensación de exposición en pasos de la cámara (0 = automática). Vale para el preview y para la foto. */
+    @Volatile var exposureIndex = 0
+
+    /** Rango (en pasos) y tamaño del paso (EV) de la compensación de exposición de la lente, o null si no la tiene. */
+    fun exposureInfo(lens: CameraInfo): Pair<IntRange, Double>? = try {
+        val id = if (lens.id in manager.cameraIdList) lens.id else lens.parentId ?: lens.id
+        val c = manager.getCameraCharacteristics(id)
+        val r = c.get(CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE)
+        val step = c.get(CameraCharacteristics.CONTROL_AE_COMPENSATION_STEP)?.toDouble()
+        if (r == null || step == null || step <= 0.0 || (r.lower == 0 && r.upper == 0)) null else (r.lower..r.upper) to step
+    } catch (e: Exception) { null }
+
+    /** Cambia la exposición sobre la marcha (si hay una sesión de preview abierta); si no, queda para el próximo inicio. */
+    fun setExposure(index: Int) {
+        exposureIndex = index
+        reissue()
+    }
+
+    private fun applyExposure(b: CaptureRequest.Builder, d: CameraDevice) {
+        val r = manager.getCameraCharacteristics(d.id).get(CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE) ?: return
+        b.set(CaptureRequest.CONTROL_AE_EXPOSURE_COMPENSATION, exposureIndex.coerceIn(r.lower, r.upper))
+    }
+
+    private fun request(d: CameraDevice, surface: Surface, lens: CameraInfo, distortionOff: Boolean): CaptureRequest =
+        requestBuilder(d, surface, lens, distortionOff).build()
+
+    private fun requestBuilder(d: CameraDevice, surface: Surface, lens: CameraInfo, distortionOff: Boolean): CaptureRequest.Builder {
         val b = d.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
         b.addTarget(surface)
+        applyExposure(b, d)
         // Cuadros por segundo bajos: menos trabajo y menos calor (mismo criterio que LUX-0).
         val c = manager.getCameraCharacteristics(d.id)
         c.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES)
             ?.filter { it.upper >= 10 }
             ?.minWithOrNull(compareBy<Range<Int>> { it.upper }.thenBy { it.lower })
             ?.let { b.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, it) }
-        // Sin zoom: evita que Android cambie de lente sola y descuadre el cálculo.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) b.set(CaptureRequest.CONTROL_ZOOM_RATIO, 1.0f) // Android 11+; antes no existe y el zoom por defecto ya es 1x
+        // Zoom 1x salvo en la vista recortada (recorte por hardware: el flujo chico muestra solo el encuadre, con detalle).
+        // Se pide sobre una cámara física fija, así que no cambia de lente sola.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val zr = c.get(CameraCharacteristics.CONTROL_ZOOM_RATIO_RANGE)
+            b.set(CaptureRequest.CONTROL_ZOOM_RATIO, if (zr != null) zoomRatio.coerceIn(zr.lower, zr.upper) else 1.0f)
+        }
+        // Enfoque continuo (como una app de cámara) y, si el usuario tocó la imagen, enfoque y exposición en ese punto.
+        val afModes = c.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES)?.toList().orEmpty()
+        if (CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE in afModes) b.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE)
+        focusRegion?.let { rg ->
+            if ((c.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AF) ?: 0) > 0) b.set(CaptureRequest.CONTROL_AF_REGIONS, arrayOf(rg))
+            if ((c.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AE) ?: 0) > 0) b.set(CaptureRequest.CONTROL_AE_REGIONS, arrayOf(rg))
+        }
         if (distortionOff) {
             val modes = c.get(CameraCharacteristics.DISTORTION_CORRECTION_AVAILABLE_MODES)?.toList().orEmpty()
             if (CaptureRequest.DISTORTION_CORRECTION_MODE_OFF in modes) {
                 b.set(CaptureRequest.DISTORTION_CORRECTION_MODE, CaptureRequest.DISTORTION_CORRECTION_MODE_OFF)
             }
         }
-        return b.build()
+        return b
     }
 
     /** Cierra sesión y dispositivo. Solo en el hilo de cámara. */
@@ -329,6 +428,7 @@ class FovCamera(
         try {
             val b = d.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
             b.addTarget(r.surface)
+            applyExposure(b, d)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) b.set(CaptureRequest.CONTROL_ZOOM_RATIO, 1.0f) // Android 11+; antes no existe y el zoom por defecto ya es 1x
             if (a.distortionOff) {
                 val modes = manager.getCameraCharacteristics(d.id).get(CameraCharacteristics.DISTORTION_CORRECTION_AVAILABLE_MODES)?.toList().orEmpty()

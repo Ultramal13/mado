@@ -59,6 +59,7 @@
     <string name="frm_verified">精度: このレンズは校正済み</string>
     <string name="frm_unverified">このレンズの精度は未検証</string>
     <string name="frm_double_tap">画像をダブルタップ：切り抜き表示</string>
+    <string name="frm_exposure">露出補正（EV）</string>
     <string name="frm_phone_lens">スマホのレンズ（固定・一度に1つ）</string>
     <string name="frm_camera">カメラ</string>
     <string name="frm_custom">カスタム</string>

@@ -59,6 +59,7 @@
     <string name="frm_verified">precision: calibrated for this lens</string>
     <string name="frm_unverified">precision not verified for this lens</string>
     <string name="frm_double_tap">double tap the image: cropped view</string>
+    <string name="frm_exposure">exposure (EV)</string>
     <string name="frm_phone_lens">phone lens (fixed, one at a time)</string>
     <string name="frm_camera">camera</string>
     <string name="frm_custom">custom</string>

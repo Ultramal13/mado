@@ -59,6 +59,7 @@
     <string name="frm_verified">precisión: calibrada para esta lente</string>
     <string name="frm_unverified">precisión no verificada para esta lente</string>
     <string name="frm_double_tap">doble toque en la imagen: vista recortada</string>
+    <string name="frm_exposure">exposición (EV)</string>
     <string name="frm_phone_lens">lente del teléfono (fija, una a la vez)</string>
     <string name="frm_camera">cámara</string>
     <string name="frm_custom">personalizada</string>

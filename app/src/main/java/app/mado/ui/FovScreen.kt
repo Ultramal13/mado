@@ -60,6 +60,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -176,6 +178,10 @@ fun FovScreen(
     }
 
     val lens = lenses[lensIdx.coerceIn(0, lenses.lastIndex)]
+    // Exposición (compensación EV): se ajusta desde el panel del visor y vale para el preview y la foto.
+    var ev by rememberSaveable { mutableIntStateOf(0) }
+    val evInfo = remember(lens.id) { camera.exposureInfo(lens) }
+    LaunchedEffect(ev, evInfo) { camera.setExposure(evInfo?.first?.let { ev.coerceIn(it.first, it.last) } ?: 0) }
     // El visor usa una proporción parecida a la de la pantalla (la imagen la llena); la calibración queda en 4:3.
     val cfg = LocalConfiguration.current
     val screenAspect = maxOf(cfg.screenWidthDp, cfg.screenHeightDp).toDouble() / minOf(cfg.screenWidthDp, cfg.screenHeightDp)
@@ -249,6 +255,17 @@ fun FovScreen(
     // Fracción del ancho y del alto de la pantalla que ocupa el encuadre actual.
     val cropFw = frameDraws.firstOrNull { it.current }?.frame?.widthFrac?.toFloat() ?: 1f
     val cropFh = frameDraws.firstOrNull { it.current }?.frame?.heightFrac?.toFloat() ?: 1f
+    // Recorte por hardware: en la vista recortada el flujo (chico) muestra solo el encuadre, con mucho más detalle que ampliarlo.
+    val maxZoom = remember(lens.id) { camera.maxZoom(lens) }
+    val camZoom = if (cropOn && cropFw <= 1f && cropFh <= 1f) (1f / maxOf(cropFw, cropFh)).coerceIn(1f, maxOf(1f, maxZoom)) else 1f
+    LaunchedEffect(camZoom) { camera.setZoom(camZoom) }
+    val surfFracX = if (cropOn) 1f / (cropFw * camZoom) else imageScale
+    val surfFracY = if (cropOn) 1f / (cropFh * camZoom) else imageScale
+    // Toque en la imagen: enfoca y mide la exposición ahí (fracciones del recuadro del visor → fracciones del flujo).
+    val onFocus: (Float, Float) -> Unit = { bu, bv ->
+        val su = 0.5f + (bu - 0.5f) / surfFracX; val sv = 0.5f + (bv - 0.5f) / surfFracY
+        if (su in 0f..1f && sv in 0f..1f) camera.focusAt(su, sv, displayRotation * 90)
+    }
     val cropDraws = if (cropOn) frameDraws.filter { it.current }.map { it.copy(frame = Framing.Frame(1.0, 1.0)) } else frameDraws
 
     val preview: @Composable (Modifier) -> Unit = { mod ->
@@ -258,8 +275,8 @@ fun FovScreen(
             running = running,
             onHolder = { holder = it; if (it != null) surfaceGen++ },
             onDestroyed = { camera.stopAndWait() },
-            surfaceFracX = if (cropOn) 1f / cropFw else imageScale,
-            surfaceFracY = if (cropOn) 1f / cropFh else imageScale,
+            surfaceFracX = surfFracX,
+            surfaceFracY = surfFracY,
             corner = if (framing != null) 0.dp else 14.dp,
             overlay = {
                 if (framing != null) Box(Modifier.fillMaxSize()) {
@@ -325,6 +342,7 @@ fun FovScreen(
             put("app", "Mado")
             put("time", Instant.now().toString())
             put("device", "${Build.MANUFACTURER} ${Build.MODEL}")
+            evInfo?.let { (_, st) -> put("exposure_compensation_ev", ev * st) }
             put("phone_lens", JSONObject().put("camera2_id", lens.id).put("hfov_deg_used", phoneDeg).put("hfov_deg_theory", theory)
                 .put("calibrated", profileDeg != null).put("distortion_correction", if (distortionOff) "off" else "default"))
             put("target", JSONObject().put("label", framing.label()).put("kit_focals", org.json.JSONArray(frameDraws.map { it.label })).put("hfov_deg", target?.let { Math.toDegrees(it.hFovRad) })
@@ -384,6 +402,7 @@ fun FovScreen(
             running = running, hasPermission = hasPermission, reason = reason, error = error, guard = guard,
             onToggle = onToggle, shot = shot, onShot = takeShot,
             orientation = orientationText(tracker.pose), gpsOn = gpsOn, onGps = onGps, gpsDenied = gpsDenied,
+            ev = ev, evInfo = evInfo, onEv = { ev = it },
         ) else Controls(
             report = report, lenses = lenses, lensIdx = lensIdx, onLens = { lensIdx = it },
             distortionOff = distortionOff, onDistortion = { distortionOff = it },
@@ -407,6 +426,7 @@ fun FovScreen(
                 framing = framing, landscape = landscape, preview = preview, controls = controls,
                 running = running, working = shot is ShotUi.Working, hasPermission = hasPermission,
                 onToggle = onToggle, onShot = takeShot, onMenu = onMenu, onDoubleTap = { cropView = !cropView },
+                evLabel = evInfo?.takeIf { ev != 0 }?.let { evText(ev, it.second) }, onFocus = onFocus,
             )
         } else if (landscape) {
             // El preview ocupa el alto; los controles van en un panel desplazable a la derecha.
@@ -435,27 +455,52 @@ private fun ViewerLayout(
     framing: FramingState, landscape: Boolean,
     preview: @Composable (Modifier) -> Unit, controls: @Composable () -> Unit,
     running: Boolean, working: Boolean, hasPermission: Boolean,
-    onToggle: () -> Unit, onShot: () -> Unit, onMenu: () -> Unit, onDoubleTap: () -> Unit,
+    onToggle: () -> Unit, onShot: () -> Unit, onMenu: () -> Unit, onDoubleTap: () -> Unit, evLabel: String? = null, onFocus: (Float, Float) -> Unit = { _, _ -> },
 ) {
     val p = LocalPalette.current
     var optionsOpen by rememberSaveable { mutableStateOf(false) }
     val safe = androidx.compose.foundation.layout.WindowInsets.safeDrawing
+    // Rectángulo del visor (donde se dibuja la imagen) y última marca de enfoque, ambos en px del contenedor.
+    var previewRect by remember { mutableStateOf(androidx.compose.ui.geometry.Rect.Zero) }
+    var focusMark by remember { mutableStateOf<Offset?>(null) }
+    androidx.compose.runtime.LaunchedEffect(focusMark) { if (focusMark != null) { kotlinx.coroutines.delay(1200); focusMark = null } }
     androidx.compose.foundation.layout.BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
         val screenH = maxHeight
         val screenW = maxWidth
-        preview(Modifier.align(Alignment.Center).then(if (landscape) Modifier.fillMaxHeight() else Modifier.fillMaxWidth()))
+        preview(
+            Modifier.align(Alignment.Center).then(if (landscape) Modifier.fillMaxHeight() else Modifier.fillMaxWidth())
+                .androidxOnPlaced { previewRect = it },
+        )
 
         // Un toque sobre la imagen cierra el panel; doble toque alterna la vista recortada al encuadre.
         Box(
             Modifier.fillMaxSize().pointerInput(Unit) {
-                detectTapGestures(onTap = { optionsOpen = false }, onDoubleTap = { onDoubleTap() })
+                detectTapGestures(
+                    onTap = { pt ->
+                        if (optionsOpen) optionsOpen = false
+                        else if (running && previewRect.width > 0f && previewRect.contains(pt)) {
+                            focusMark = pt
+                            onFocus((pt.x - previewRect.left) / previewRect.width, (pt.y - previewRect.top) / previewRect.height)
+                        }
+                    },
+                    onDoubleTap = { onDoubleTap() },
+                )
             },
         )
+
+        // Marca del último toque de enfoque.
+        focusMark?.let { m ->
+            androidx.compose.foundation.Canvas(Modifier.fillMaxSize()) {
+                drawCircle(Color.White, 34.dp.toPx(), m, style = androidx.compose.ui.graphics.drawscope.Stroke(2.dp.toPx()))
+                drawCircle(Accent, 4.dp.toPx(), m)
+            }
+        }
 
         // Cámara y modo (arriba a la izquierda): tocarla abre la configuración.
         ViewerChip(
             framing, { optionsOpen = !optionsOpen },
-            Modifier.align(Alignment.TopStart).windowInsetsPadding(safe.only(WindowInsetsSides.Top + WindowInsetsSides.Start)).padding(8.dp),
+            evLabel = evLabel,
+            modifier = Modifier.align(Alignment.TopStart).windowInsetsPadding(safe.only(WindowInsetsSides.Top + WindowInsetsSides.Start)).padding(8.dp),
         )
 
         // Cámara apagada: un solo botón grande en el centro (no se confunde con las flechas de focal).
@@ -808,3 +853,10 @@ internal fun Seg(options: List<String>, selected: Int, onSelect: (Int) -> Unit) 
 }
 
 private fun fmt(v: Double, digits: Int) = String.format(Locale.ROOT, "%.${digits}f", v)
+
+/** Informa el rectángulo del elemento (en px, relativo a su contenedor) cada vez que se coloca. */
+private fun Modifier.androidxOnPlaced(onRect: (androidx.compose.ui.geometry.Rect) -> Unit): Modifier =
+    this.onGloballyPositioned { c ->
+        val p = c.positionInParent()
+        onRect(androidx.compose.ui.geometry.Rect(p, androidx.compose.ui.geometry.Size(c.size.width.toFloat(), c.size.height.toFloat())))
+    }
