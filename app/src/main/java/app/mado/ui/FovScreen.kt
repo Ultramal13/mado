@@ -176,10 +176,16 @@ fun FovScreen(
     }
 
     val lens = lenses[lensIdx.coerceIn(0, lenses.lastIndex)]
-    val size = remember(lens) { camera.choosePreviewSize(lens) }
+    // El visor usa una proporción parecida a la de la pantalla (la imagen la llena); la calibración queda en 4:3.
+    val cfg = LocalConfiguration.current
+    val screenAspect = maxOf(cfg.screenWidthDp, cfg.screenHeightDp).toDouble() / minOf(cfg.screenWidthDp, cfg.screenHeightDp)
+    val size = remember(lens, framing != null, screenAspect) { camera.choosePreviewSize(lens, if (framing != null) screenAspect else null) }
     val running = hasPermission && holder != null && reason == null && !guard.hot
 
-    LaunchedEffect(running, lens.id, distortionOff, retry, surfaceGen) {
+    // Al girar el teléfono con la cámara andando, Android no vuelve a orientar el flujo ya abierto: hay que reabrir la sesión
+    // para que el preview salga derecho (si no, queda de lado hasta detener e iniciar).
+    val displayRotation = LocalView.current.display?.rotation ?: 0
+    LaunchedEffect(running, lens.id, distortionOff, retry, surfaceGen, displayRotation) {
         android.util.Log.i("mado", "effect running=$running perm=$hasPermission holder=${holder != null} reason=$reason err=$error hot=${guard.hot} lens=${lens.id}")
         if (running) {
             error = null
@@ -256,7 +262,14 @@ fun FovScreen(
             surfaceFracY = if (cropOn) 1f / cropFh else imageScale,
             corner = if (framing != null) 0.dp else 14.dp,
             overlay = {
-                if (framing != null) FrameOverlay(cropDraws, if (cropOn) 1f else imageScale)
+                if (framing != null) Box(Modifier.fillMaxSize()) {
+                    FrameOverlay(cropDraws, if (cropOn) 1f else imageScale, showTags = !cropOn)
+                    if (cropOn) {
+                        val hDeg = target?.let { Math.toDegrees(it.hFovRad) }
+                        val vDeg = target?.let { Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(it.hFovRad / 2.0) / it.aspect)) }
+                        CropInfo(framing, hDeg, vDeg, Modifier.align(Alignment.BottomStart))
+                    }
+                }
                 else Overlay(theory, distCm.toDoubleOrNull(), landscape)
             },
         )

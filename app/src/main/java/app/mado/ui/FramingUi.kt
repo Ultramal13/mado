@@ -58,7 +58,7 @@ internal data class FrameDraw(val label: String, val frame: Framing.Frame, val c
  * y las demás en blanco. Si la focal más ancha supera al teléfono (padding), el preview se achica y ese recuadro llena el visor.
  */
 @Composable
-internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float) {
+internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, showTags: Boolean = true) {
     val p = LocalPalette.current
     val line = if (p.red) p.screenText else Color.White
     val accent = if (p.red) p.screenText else Accent
@@ -78,6 +78,7 @@ internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float) {
             val fh = fd.frame.heightFrac.toFloat() * ih
             val tl = Offset(c.x - fw / 2, c.y - fh / 2)
             drawRect(if (fd.current) accent else line.copy(alpha = 0.85f), tl, Size(fw, fh), style = Stroke((if (fd.current) 3f else 1.5f).dp.toPx()))
+            if (!showTags) return@forEach
             val style = TextStyle(
                 fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold,
                 color = if (fd.current) Color.Black else Color.White,
@@ -103,6 +104,21 @@ internal fun ViewerChip(framing: FramingState, onClick: () -> Unit, modifier: Mo
         Text(framing.cameraName() + "  ▾", style = mono(15, Color.White, true), maxLines = 1, overflow = TextOverflow.Ellipsis)
         val sub = listOf(framing.modeName(), framing.subLabel()).filter { it.isNotEmpty() }.joinToString(" · ")
         Text(sub, style = mono(10, Color.White.copy(alpha = 0.75f)), maxLines = 1, overflow = TextOverflow.Ellipsis)
+    }
+}
+
+/** Datos sobre la vista recortada: cámara, modo, focal y campo de visión horizontal y vertical. */
+@Composable
+internal fun CropInfo(framing: FramingState, hDeg: Double?, vDeg: Double?, modifier: Modifier = Modifier) {
+    Column(
+        modifier.padding(8.dp).clip(androidx.compose.foundation.shape.RoundedCornerShape(10.dp)).background(Color.Black.copy(alpha = 0.65f))
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+    ) {
+        Text(framing.cameraName(), style = mono(14, Color.White, true), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        val mode = framing.modeName()
+        if (mode.isNotEmpty()) Text(mode, style = mono(10, Color.White.copy(alpha = 0.8f)), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        val fov = if (hDeg != null && vDeg != null) "  ·  FOV H " + fmt(hDeg, 1) + "°  V " + fmt(vDeg, 1) + "°" else ""
+        Text(framing.currentLabel() + fov, style = mono(12, Accent, true), maxLines = 1)
     }
 }
 

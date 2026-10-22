@@ -66,14 +66,29 @@ class FovCamera(
     /** Lo que quiere la UI. El vigilante cierra cualquier cámara abierta cuando esto es false (anti-huérfana). */
     @Volatile private var wanted = false
 
-    /** Stream más chico 4:3 con ancho >= 640 que soporte la lente (SurfaceView). */
-    fun choosePreviewSize(lens: CameraInfo): Size {
+    /** Relación (lado largo / lado corto) del preview en uso: la foto sale con la misma, para que los recuadros coincidan. */
+    @Volatile private var previewAspect = 4.0 / 3.0
+
+    /**
+     * Stream chico que soporte la lente (SurfaceView). Por omisión el más chico 4:3 con ancho >= 640. Con `screenAspect`
+     * (lado largo / lado corto de la pantalla) elige el de proporción más parecida entre los de ~0.15 a 0.56 MP, y de ésos el más
+     * grande: la imagen llena más pantalla. Un sensor 4:3 recorta el lado corto, así que el campo del lado largo no cambia.
+     */
+    fun choosePreviewSize(lens: CameraInfo, screenAspect: Double? = null): Size {
         val fallback = Size(640, 480)
         val streamId = lens.id
         val map = try {
             manager.getCameraCharacteristics(streamId).get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
         } catch (e: Exception) { null } ?: return fallback
         val sizes = map.getOutputSizes(SurfaceHolder::class.java)?.takeIf { it.isNotEmpty() } ?: return fallback
+        if (screenAspect != null) {
+            val cands = sizes.filter { it.width >= it.height && it.width.toLong() * it.height in 150_000L..560_000L }
+            if (cands.isNotEmpty()) {
+                val best = cands.minBy { Math.abs(Math.log((it.width.toDouble() / it.height) / screenAspect)) }
+                val a = best.width.toDouble() / best.height
+                return cands.filter { Math.abs(it.width.toDouble() / it.height - a) < 0.01 }.maxBy { it.width.toLong() * it.height }
+            }
+        }
         return sizes.filter { it.width * 3 == it.height * 4 && it.width >= 640 }.minByOrNull { it.width }
             ?: sizes.minBy { Math.abs(it.width - 640) }
     }
@@ -82,7 +97,8 @@ class FovCamera(
         if (released) return
         val gen = ++generation
         wanted = true
-        Log.i("mado", "cam.start gen=$gen lens=${lens.id}")
+        previewAspect = size.width.toDouble() / size.height
+        Log.i("mado", "cam.start gen=$gen lens=${lens.id} size=${size.width}x${size.height}")
         val surface = holder.surface
         handler.post { startInternal(surface, lens, size, distortionOff, gen) }
     }
@@ -236,7 +252,9 @@ class FovCamera(
     private fun chooseStillSize(c: CameraCharacteristics): Size? {
         val sizes = c.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)?.getOutputSizes(ImageFormat.YUV_420_888) ?: return null
         val ok = sizes.filter { it.width.toLong() * it.height <= STILL_MAX_PIXELS }
-        return ok.filter { it.width * 3 == it.height * 4 }.maxByOrNull { it.width.toLong() * it.height }
+        // La foto con la misma proporción que el preview, para que los recuadros caigan donde se vieron.
+        return ok.filter { Math.abs(it.width.toDouble() / it.height - previewAspect) < 0.01 }.maxByOrNull { it.width.toLong() * it.height }
+            ?: ok.filter { it.width * 3 == it.height * 4 }.maxByOrNull { it.width.toLong() * it.height }
             ?: ok.maxByOrNull { it.width.toLong() * it.height }
     }
 
