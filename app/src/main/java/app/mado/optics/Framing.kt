@@ -32,6 +32,14 @@ object Framing {
         return Frame(w, h)
     }
 
+    /**
+     * Pasa un recuadro (en fracciones del lado largo y del lado corto del preview) a fracciones del ancho y del alto de la pantalla.
+     * Con el teléfono en vertical el lado largo es el alto: el recuadro sigue siendo horizontal en el mundo (como una cámara
+     * en horizontal), así que su ancho se mide contra el lado corto (× aspecto) y su alto contra el largo (÷ aspecto).
+     */
+    fun toScreen(frame: Frame, phoneAspect: Double, portrait: Boolean): Frame =
+        if (portrait) Frame(frame.widthFrac * phoneAspect, frame.heightFrac / phoneAspect) else frame
+
     /** Recorte del FOV horizontal del teléfono por un perfil calibrado: factor sobre tan(FOV/2) (1.0 = sin calibrar). */
     fun calibratedHFovRad(reportedHFovRad: Double, tanHalfFactor: Double): Double =
         2.0 * atan(tan(reportedHFovRad / 2.0) * tanHalfFactor)

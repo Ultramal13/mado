@@ -50,7 +50,6 @@ object PhotoAnnotator {
         val c = Canvas(out)
         c.drawColor(PAPER)
 
-        val landscape = w >= h                               // los recuadros se calculan con el lado largo en horizontal
         val widest = frames.maxOfOrNull { maxOf(it.frame.widthFrac, it.frame.heightFrac) } ?: 1.0
         val scale = (1.0 / maxOf(1.0, widest)).toFloat()
         val iw = w * scale; val ih = h * scale
@@ -62,8 +61,8 @@ object PhotoAnnotator {
         val tagText = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD); textSize = unit * 0.8f }
         frames.sortedBy { it.current }.forEach { af ->
             val fr = af.frame
-            val fw = (if (landscape) fr.widthFrac else fr.heightFrac).toFloat() * iw
-            val fh = (if (landscape) fr.heightFrac else fr.widthFrac).toFloat() * ih
+            val fw = fr.widthFrac.toFloat() * iw                 // fracciones en los ejes de la foto ya girada
+            val fh = fr.heightFrac.toFloat() * ih
             val l = w / 2f - fw / 2f; val t = h / 2f - fh / 2f
             val line = Paint().apply {
                 color = if (af.current) ORANGE else Color.argb(230, 255, 255, 255)
@@ -89,9 +88,8 @@ object PhotoAnnotator {
         val rotated90 = rotationDeg % 180 != 0
         val W = if (rotated90) size.outHeight else size.outWidth      // medidas de la foto ya girada
         val H = if (rotated90) size.outWidth else size.outHeight
-        val landscape = W >= H
-        val fwFrac = (if (landscape) cur.widthFrac else cur.heightFrac).toFloat()
-        val fhFrac = (if (landscape) cur.heightFrac else cur.widthFrac).toFloat()
+        val fwFrac = cur.widthFrac.toFloat()                      // fracciones en los ejes de la foto ya girada
+        val fhFrac = cur.heightFrac.toFloat()
 
         val body: Bitmap
         if (fwFrac <= 1f && fhFrac <= 1f) {

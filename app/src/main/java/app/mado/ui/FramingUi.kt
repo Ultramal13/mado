@@ -58,7 +58,7 @@ internal data class FrameDraw(val label: String, val frame: Framing.Frame, val c
  * y las demás en blanco. Si la focal más ancha supera al teléfono (padding), el preview se achica y ese recuadro llena el visor.
  */
 @Composable
-internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, landscape: Boolean) {
+internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float) {
     val p = LocalPalette.current
     val line = if (p.red) p.screenText else Color.White
     val accent = if (p.red) p.screenText else Accent
@@ -73,9 +73,9 @@ internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, landscape:
         }
         // Las no actuales primero, para que la actual quede encima.
         frames.sortedBy { it.current }.forEach { fd ->
-            // El recuadro se calculó con el lado largo en horizontal; en vertical se intercambian los ejes.
-            val fw = (if (landscape) fd.frame.widthFrac else fd.frame.heightFrac).toFloat() * iw
-            val fh = (if (landscape) fd.frame.heightFrac else fd.frame.widthFrac).toFloat() * ih
+            // Fracciones ya expresadas en los ejes de la pantalla (el recuadro siempre es horizontal en el mundo).
+            val fw = fd.frame.widthFrac.toFloat() * iw
+            val fh = fd.frame.heightFrac.toFloat() * ih
             val tl = Offset(c.x - fw / 2, c.y - fh / 2)
             drawRect(if (fd.current) accent else line.copy(alpha = 0.85f), tl, Size(fw, fh), style = Stroke((if (fd.current) 3f else 1.5f).dp.toPx()))
             val style = TextStyle(

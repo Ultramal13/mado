@@ -57,4 +57,20 @@ class FramingTest {
         assertEquals(71.8, Math.toDegrees(c), 0.1)
         assertEquals(phoneH, Framing.calibratedHFovRad(phoneH, 1.0), 1e-12)
     }
+
+    @Test
+    fun portraitKeepsTheFrameHorizontalInTheWorld() {
+        val t = Framing.target(36.0, 24.0, 50.0)
+        val f = Framing.frame(t, phoneH, phoneAspect)
+        val landscape = Framing.toScreen(f, phoneAspect, portrait = false)
+        assertEquals(f, landscape)
+        val portrait = Framing.toScreen(f, phoneAspect, portrait = true)
+        // Pantalla en vertical: ancho = lado corto (S), alto = lado largo (L = aspecto × S). El recuadro debe seguir siendo 3:2 apaisado.
+        val pixelAspect = (portrait.widthFrac * 1.0) / (portrait.heightFrac * phoneAspect)
+        assertEquals(t.aspect, pixelAspect, 1e-9)
+        assertTrue(portrait.widthFrac > portrait.heightFrac)
+        // Mismo ángulo horizontal contra el lado corto: tan(Ht/2) / tan(Vp/2).
+        val vPhone = 2.0 * Math.atan(tan(phoneH / 2.0) / phoneAspect)
+        assertEquals(tan(t.hFovRad / 2.0) / tan(vPhone / 2.0), portrait.widthFrac, 1e-9)
+    }
 }

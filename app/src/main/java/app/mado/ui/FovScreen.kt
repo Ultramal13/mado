@@ -59,6 +59,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -221,28 +222,41 @@ fun FovScreen(
     }
     val phoneDeg = profileDeg ?: theory
     val target = framing?.target()
-    val frame = target?.let { Framing.frame(it, Math.toRadians(phoneDeg), size.width.toDouble() / size.height) }
+    // En fracciones del ancho y del alto de la pantalla; horizontal en el mundo también con el teléfono en vertical.
+    val frame = target?.let { Framing.toScreen(Framing.frame(it, Math.toRadians(phoneDeg), size.width.toDouble() / size.height), size.width.toDouble() / size.height, portrait = !landscape) }
     // Un recuadro por focal del kit (la actual resaltada). El preview se achica según el más ancho (padding).
     val frameDraws = framing?.options().orEmpty().map {
         val hDeg = Math.toDegrees(it.target.hFovRad)
         val vDeg = Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(it.target.hFovRad / 2.0) / it.target.aspect))
         // La actual lleva su medida en la etiqueta: focal y campo horizontal × vertical.
         val detail = if (it.current) String.format(Locale.ROOT, "%s mm · %.1f° × %.1f°", it.label, hDeg, vDeg) else it.label
-        FrameDraw(it.label, Framing.frame(it.target, Math.toRadians(phoneDeg), size.width.toDouble() / size.height), it.current, detail)
+        // Siempre horizontales en el mundo: con el teléfono en vertical se reexpresan en los ejes de la pantalla.
+        val phoneAspect = size.width.toDouble() / size.height
+        FrameDraw(it.label, Framing.toScreen(Framing.frame(it.target, Math.toRadians(phoneDeg), phoneAspect), phoneAspect, portrait = !landscape), it.current, detail)
     }
     val imageScale = frameDraws.maxOfOrNull { maxOf(it.frame.widthFrac, it.frame.heightFrac) }?.let { (1.0 / maxOf(1.0, it)).toFloat() } ?: 1f
+
+    // Vista recortada (doble toque en el visor): el encuadre actual llena el visor y se ve «como saldría».
+    var cropView by rememberSaveable { mutableStateOf(false) }
+    val cropOn = framing != null && cropView && frame != null
+    val imgAspect = if (landscape) size.width.toFloat() / size.height else size.height.toFloat() / size.width
+    // Fracción del ancho y del alto de la pantalla que ocupa el encuadre actual.
+    val cropFw = frameDraws.firstOrNull { it.current }?.frame?.widthFrac?.toFloat() ?: 1f
+    val cropFh = frameDraws.firstOrNull { it.current }?.frame?.heightFrac?.toFloat() ?: 1f
+    val cropDraws = if (cropOn) frameDraws.filter { it.current }.map { it.copy(frame = Framing.Frame(1.0, 1.0)) } else frameDraws
 
     val preview: @Composable (Modifier) -> Unit = { mod ->
         Preview(
             modifier = mod,
-            aspect = if (landscape) size.width.toFloat() / size.height else size.height.toFloat() / size.width,
+            aspect = if (cropOn) imgAspect * cropFw / cropFh else imgAspect,
             running = running,
             onHolder = { holder = it; if (it != null) surfaceGen++ },
             onDestroyed = { camera.stopAndWait() },
-            imageScale = imageScale,
+            surfaceFracX = if (cropOn) 1f / cropFw else imageScale,
+            surfaceFracY = if (cropOn) 1f / cropFh else imageScale,
             corner = if (framing != null) 0.dp else 14.dp,
             overlay = {
-                if (framing != null) FrameOverlay(frameDraws, imageScale, landscape)
+                if (framing != null) FrameOverlay(cropDraws, if (cropOn) 1f else imageScale)
                 else Overlay(theory, distCm.toDoubleOrNull(), landscape)
             },
         )
@@ -379,7 +393,7 @@ fun FovScreen(
             ViewerLayout(
                 framing = framing, landscape = landscape, preview = preview, controls = controls,
                 running = running, working = shot is ShotUi.Working, hasPermission = hasPermission,
-                onToggle = onToggle, onShot = takeShot, onMenu = onMenu,
+                onToggle = onToggle, onShot = takeShot, onMenu = onMenu, onDoubleTap = { cropView = !cropView },
             )
         } else if (landscape) {
             // El preview ocupa el alto; los controles van en un panel desplazable a la derecha.
@@ -408,7 +422,7 @@ private fun ViewerLayout(
     framing: FramingState, landscape: Boolean,
     preview: @Composable (Modifier) -> Unit, controls: @Composable () -> Unit,
     running: Boolean, working: Boolean, hasPermission: Boolean,
-    onToggle: () -> Unit, onShot: () -> Unit, onMenu: () -> Unit,
+    onToggle: () -> Unit, onShot: () -> Unit, onMenu: () -> Unit, onDoubleTap: () -> Unit,
 ) {
     val p = LocalPalette.current
     var optionsOpen by rememberSaveable { mutableStateOf(false) }
@@ -418,9 +432,11 @@ private fun ViewerLayout(
         val screenW = maxWidth
         preview(Modifier.align(Alignment.Center).then(if (landscape) Modifier.fillMaxHeight() else Modifier.fillMaxWidth()))
 
-        // Tocar la imagen mientras el panel está abierto lo cierra.
-        if (optionsOpen) Box(
-            Modifier.fillMaxSize().pointerInput(Unit) { detectTapGestures { optionsOpen = false } },
+        // Un toque sobre la imagen cierra el panel; doble toque alterna la vista recortada al encuadre.
+        Box(
+            Modifier.fillMaxSize().pointerInput(Unit) {
+                detectTapGestures(onTap = { optionsOpen = false }, onDoubleTap = { onDoubleTap() })
+            },
         )
 
         // Cámara y modo (arriba a la izquierda): tocarla abre la configuración.
@@ -446,6 +462,7 @@ private fun ViewerLayout(
                         modifier = Modifier.clickable { optionsOpen = false }.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }
+                Text(stringResource(R.string.frm_double_tap), style = mono(10, p.text.copy(alpha = 0.6f)), modifier = Modifier.padding(bottom = 8.dp))
                 controls()
             }
         }
@@ -493,7 +510,8 @@ private fun Preview(
     running: Boolean,
     onHolder: (SurfaceHolder?) -> Unit,
     onDestroyed: () -> Unit,
-    imageScale: Float = 1f,
+    surfaceFracX: Float = 1f,
+    surfaceFracY: Float = 1f,
     corner: androidx.compose.ui.unit.Dp = 14.dp,
     overlay: @Composable () -> Unit,
 ) {
@@ -509,7 +527,13 @@ private fun Preview(
                     })
                 }
             },
-            modifier = Modifier.fillMaxSize(imageScale).align(Alignment.Center),
+            // La superficie se dimensiona como fracción del visor (puede ser mayor: el visor la recorta).
+            modifier = Modifier.align(Alignment.Center).layout { m, c ->
+                val w = (c.maxWidth * surfaceFracX).roundToInt().coerceAtLeast(1)
+                val h = (c.maxHeight * surfaceFracY).roundToInt().coerceAtLeast(1)
+                val pl = m.measure(androidx.compose.ui.unit.Constraints.fixed(w, h))
+                layout(c.maxWidth, c.maxHeight) { pl.place((c.maxWidth - w) / 2, (c.maxHeight - h) / 2) }
+            },
         )
         overlay()
         if (!running) Box(Modifier.fillMaxSize().background(p.screen.copy(alpha = 0.85f)), contentAlignment = Alignment.Center) {
