@@ -97,6 +97,7 @@ import app.mado.diagnostics.CameraInfo
 import app.mado.diagnostics.DiagnosticsReport
 import app.mado.diagnostics.FovResults
 import app.mado.optics.Fov
+import app.mado.optics.defaultLensIndex
 import app.mado.optics.Guide
 import app.mado.optics.Framing
 import org.json.JSONObject
@@ -147,7 +148,16 @@ fun FovScreen(
         return
     }
 
-    var lensIdx by rememberSaveable { mutableIntStateOf(0) }
+    // Arranca en la lente calibrada de este teléfono; si no hay, en la principal (no en la ultra gran angular).
+    var lensIdx by rememberSaveable {
+        val profile = framing?.db?.phoneProfiles?.firstOrNull { it.buildModel == Build.MODEL }
+        mutableIntStateOf(
+            defaultLensIndex(
+                lenses.map { it.equiv35Mm.firstOrNull() ?: 0.0 },
+                lenses.map { l -> profile?.lenses?.any { it.camera2Id == l.id && it.measuredHFovDeg != null } == true },
+            ),
+        )
+    }
     var distortionOff by rememberSaveable { mutableStateOf(false) }
     var reason by remember { mutableStateOf<Reason?>(Reason.USER) } // arranca SIEMPRE detenido
     var error by remember { mutableStateOf<String?>(null) }
