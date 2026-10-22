@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -92,46 +93,70 @@ internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, landscape:
     }
 }
 
-/** Etiqueta flotante arriba a la izquierda: qué cámara y qué lente se están simulando. */
+/** Etiqueta flotante arriba a la izquierda: cámara y modo que se simulan. Tocarla abre el panel de configuración. */
 @Composable
-internal fun ViewerChip(framing: FramingState, modifier: Modifier = Modifier) {
+internal fun ViewerChip(framing: FramingState, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(
-        modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(10.dp)).background(Color.Black.copy(alpha = 0.6f))
-            .padding(horizontal = 10.dp, vertical = 6.dp),
+        modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp)).background(Color.Black.copy(alpha = 0.6f))
+            .clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = 7.dp),
     ) {
-        Text(framing.label(), style = mono(11, Color.White, true), maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(framing.subLabel(), style = mono(9, Color.White.copy(alpha = 0.7f)), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(framing.cameraName() + "  ▾", style = mono(15, Color.White, true), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        val sub = listOf(framing.modeName(), framing.subLabel()).filter { it.isNotEmpty() }.joinToString(" · ")
+        Text(sub, style = mono(10, Color.White.copy(alpha = 0.75f)), maxLines = 1, overflow = TextOverflow.Ellipsis)
+    }
+}
+
+/** Obturador: círculo naranja grande, como en una app de cámara. */
+@Composable
+internal fun ShutterKey(working: Boolean, enabled: Boolean, onClick: () -> Unit, size: androidx.compose.ui.unit.Dp = 60.dp) {
+    Box(
+        Modifier.size(size).clip(androidx.compose.foundation.shape.CircleShape)
+            .background(Accent.copy(alpha = if (enabled) 1f else 0.35f))
+            .clickable(enabled = enabled, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (working) Text("…", style = mono(20, Color.White, true))
+        else Box(Modifier.size(size * 0.78f).clip(androidx.compose.foundation.shape.CircleShape).background(Color.Transparent)
+            .border(2.dp, Color.White, androidx.compose.foundation.shape.CircleShape))
     }
 }
 
 /**
- * Teclas del visor sobre la imagen: iniciar/detener, ◀ focal ▶, obturador y el botón que abre el panel de opciones.
- * En vertical van en una fila abajo; en horizontal, en una columna a un lado (`vertical`), con ☰ arriba.
+ * Controles del visor sobre la imagen: ◀ focal ▶ y obturador. Iniciar/detener y ☰ van aparte (arriba a la derecha).
+ * En vertical es una fila abajo; en horizontal (`vertical`), una columna al costado con ☰ y ■ arriba.
  */
 @Composable
 internal fun ViewerBar(
-    framing: FramingState, running: Boolean, working: Boolean, hasPermission: Boolean,
-    onToggle: () -> Unit, onShot: () -> Unit, optionsOpen: Boolean, onOptions: () -> Unit,
-    vertical: Boolean = false, onMenu: (() -> Unit)? = null, modifier: Modifier = Modifier,
+    framing: FramingState, running: Boolean, working: Boolean,
+    onToggle: () -> Unit, onShot: () -> Unit, vertical: Boolean = false, onMenu: (() -> Unit)? = null, modifier: Modifier = Modifier,
 ) {
-    val shape = androidx.compose.foundation.shape.RoundedCornerShape(14.dp)
-    val keys: @Composable () -> Unit = {
-        onMenu?.let { BarKey("☰", it) }
-        BarKey(if (running) "■" else "▶", onToggle, accent = !running)
+    val shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+    val focal: @Composable () -> Unit = {
         BarKey("◀", { framing.step(-1) })
-        Text(framing.currentLabel(), style = mono(12, Color.White, true), maxLines = 1, modifier = Modifier.widthIn(min = if (vertical) 0.dp else 56.dp))
+        Text(framing.currentLabel(), style = mono(14, Color.White, true), maxLines = 1, modifier = Modifier.widthIn(min = if (vertical) 0.dp else 64.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
         BarKey("▶", { framing.step(1) })
-        BarKey(if (working) "…" else "●", onShot, accent = true, enabled = running && !working)
-        BarKey(if (optionsOpen) "▼" else "▲", onOptions)
     }
     if (vertical) Column(
         modifier.background(Color.Black.copy(alpha = 0.6f), shape).padding(6.dp),
         horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(5.dp),
-    ) { keys() }
-    else Row(
-        modifier.background(Color.Black.copy(alpha = 0.6f), shape).padding(horizontal = 8.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
-    ) { keys() }
+    ) {
+        onMenu?.let { BarKey("☰", it) }
+        if (running) BarKey("■", onToggle)
+        focal()
+        ShutterKey(working, running && !working, onShot, 52.dp)
+    }
+    else Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Spacer(Modifier.size(60.dp))
+        Row(
+            Modifier.weight(1f), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(
+                Modifier.background(Color.Black.copy(alpha = 0.6f), shape).padding(horizontal = 8.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) { focal() }
+        }
+        ShutterKey(working, running && !working, onShot)
+    }
 }
 
 @Composable
@@ -192,67 +217,6 @@ internal fun FramingControls(
 ) {
     val p = LocalPalette.current
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        BlackScreen {
-            Row {
-                Text("id ${lens.id} · ${fmt(phoneDeg, 1)}°", style = mono(10, p.screenDim))
-                Spacer(Modifier.weight(1f))
-                val status = when {
-                    error != null -> stringResource(R.string.fov_state_error)
-                    guard.hot -> stringResource(R.string.fov_state_hot)
-                    running -> stringResource(R.string.fov_state_live)
-                    else -> stringResource(R.string.fov_state_stopped)
-                }
-                Text(status, style = mono(10, p.accent))
-            }
-            Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.padding(top = 6.dp)) {
-                Text(target?.let { fmt(Math.toDegrees(it.hFovRad), 1) } ?: "----", style = mono(40, p.screenText, true))
-                Text(" °", style = mono(16, p.screenDim))
-            }
-            Text(stringResource(R.string.frm_target_caption), style = mono(10, p.screenDim))
-            if (target != null && frame != null) {
-                val vDeg = Math.toDegrees(2.0 * atan(tan(target.hFovRad / 2.0) / target.aspect))
-                Text(
-                    stringResource(R.string.frm_aspect_v, fmt(target.aspect, 2), fmt(vDeg, 1)),
-                    style = mono(11, p.screenText), modifier = Modifier.padding(top = 4.dp),
-                )
-                Text(
-                    stringResource(R.string.frm_frame, fmt(frame.widthFrac * 100, 0), fmt(frame.heightFrac * 100, 0)),
-                    style = mono(11, p.accent, true),
-                )
-                if (frame.padding) Text(stringResource(R.string.frm_padding), style = mono(10, p.accent))
-            } else {
-                Text(stringResource(R.string.frm_no_target), style = mono(10, p.accent), modifier = Modifier.padding(top = 4.dp))
-            }
-            when (shot) {
-                is ShotUi.Saved -> Text(stringResource(R.string.frm_saved, shot.name), style = mono(10, p.screenText), modifier = Modifier.padding(top = 4.dp))
-                is ShotUi.Error -> Text(stringResource(R.string.frm_capture_error, shot.message), style = mono(10, p.accent), modifier = Modifier.padding(top = 4.dp))
-                else -> {}
-            }
-            orientation?.let { Text(it, style = mono(10, p.screenText), modifier = Modifier.padding(top = 4.dp)) }
-            val derived = !framing.isCustom && (framing.isFixedLens || framing.camera?.modes?.getOrNull(framing.modeIdx)?.derived == true)
-            if (derived) Text(stringResource(R.string.frm_derived), style = mono(9, p.accent), modifier = Modifier.padding(top = 4.dp))
-            val note = when {
-                error != null -> stringResource(R.string.fov_error_cam, error)
-                guard.hot -> stringResource(R.string.fov_hot_msg)
-                reason == Reason.IDLE -> stringResource(R.string.fov_idle_msg)
-                reason == Reason.MAX_RUN -> stringResource(R.string.fov_max_msg)
-                guard.warm -> stringResource(R.string.fov_warm_msg)
-                else -> null
-            }
-            note?.let { Text(it, style = mono(10, p.accent), modifier = Modifier.padding(top = 4.dp)) }
-            Text(
-                stringResource(if (verified) R.string.frm_verified else R.string.frm_unverified),
-                style = mono(9, if (verified) p.screenDim else p.accent), modifier = Modifier.padding(top = 4.dp),
-            )
-        }
-
-        Label(stringResource(R.string.gps_label))
-        Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (gpsOn) 1 else 0) { onGps(it == 1) }
-        if (gpsDenied) Text(stringResource(R.string.gps_denied), style = mono(10, p.accent))
-
-        Label(stringResource(R.string.frm_phone_lens))
-        Seg(lenses.map { "${it.id} · ${fmt(it.equiv35Mm.first(), 0)}mm" }, lensIdx, onLens)
-
         Label(stringResource(R.string.frm_camera))
         val visible = framing.visibleCameras
         val others = framing.otherCameras
@@ -318,6 +282,69 @@ internal fun FramingControls(
             Label(stringResource(R.string.frm_focal))
             NumField(framing.focal) { framing.focal = it }
         }
+
+        Label(stringResource(R.string.gps_label))
+        Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (gpsOn) 1 else 0) { onGps(it == 1) }
+        if (gpsDenied) Text(stringResource(R.string.gps_denied), style = mono(10, p.accent))
+
+        Label(stringResource(R.string.frm_phone_lens))
+        Seg(lenses.map { "${it.id} · ${fmt(it.equiv35Mm.first(), 0)}mm" }, lensIdx, onLens)
+
+
+        BlackScreen {
+            Row {
+                Text("id ${lens.id} · ${fmt(phoneDeg, 1)}°", style = mono(10, p.screenDim))
+                Spacer(Modifier.weight(1f))
+                val status = when {
+                    error != null -> stringResource(R.string.fov_state_error)
+                    guard.hot -> stringResource(R.string.fov_state_hot)
+                    running -> stringResource(R.string.fov_state_live)
+                    else -> stringResource(R.string.fov_state_stopped)
+                }
+                Text(status, style = mono(10, p.accent))
+            }
+            Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.padding(top = 6.dp)) {
+                Text(target?.let { fmt(Math.toDegrees(it.hFovRad), 1) } ?: "----", style = mono(40, p.screenText, true))
+                Text(" °", style = mono(16, p.screenDim))
+            }
+            Text(stringResource(R.string.frm_target_caption), style = mono(10, p.screenDim))
+            if (target != null && frame != null) {
+                val vDeg = Math.toDegrees(2.0 * atan(tan(target.hFovRad / 2.0) / target.aspect))
+                Text(
+                    stringResource(R.string.frm_aspect_v, fmt(target.aspect, 2), fmt(vDeg, 1)),
+                    style = mono(11, p.screenText), modifier = Modifier.padding(top = 4.dp),
+                )
+                Text(
+                    stringResource(R.string.frm_frame, fmt(frame.widthFrac * 100, 0), fmt(frame.heightFrac * 100, 0)),
+                    style = mono(11, p.accent, true),
+                )
+                if (frame.padding) Text(stringResource(R.string.frm_padding), style = mono(10, p.accent))
+            } else {
+                Text(stringResource(R.string.frm_no_target), style = mono(10, p.accent), modifier = Modifier.padding(top = 4.dp))
+            }
+            when (shot) {
+                is ShotUi.Saved -> Text(stringResource(R.string.frm_saved, shot.name), style = mono(10, p.screenText), modifier = Modifier.padding(top = 4.dp))
+                is ShotUi.Error -> Text(stringResource(R.string.frm_capture_error, shot.message), style = mono(10, p.accent), modifier = Modifier.padding(top = 4.dp))
+                else -> {}
+            }
+            orientation?.let { Text(it, style = mono(10, p.screenText), modifier = Modifier.padding(top = 4.dp)) }
+            val derived = !framing.isCustom && (framing.isFixedLens || framing.camera?.modes?.getOrNull(framing.modeIdx)?.derived == true)
+            if (derived) Text(stringResource(R.string.frm_derived), style = mono(9, p.accent), modifier = Modifier.padding(top = 4.dp))
+            val note = when {
+                error != null -> stringResource(R.string.fov_error_cam, error)
+                guard.hot -> stringResource(R.string.fov_hot_msg)
+                reason == Reason.IDLE -> stringResource(R.string.fov_idle_msg)
+                reason == Reason.MAX_RUN -> stringResource(R.string.fov_max_msg)
+                guard.warm -> stringResource(R.string.fov_warm_msg)
+                else -> null
+            }
+            note?.let { Text(it, style = mono(10, p.accent), modifier = Modifier.padding(top = 4.dp)) }
+            Text(
+                stringResource(if (verified) R.string.frm_verified else R.string.frm_unverified),
+                style = mono(9, if (verified) p.screenDim else p.accent), modifier = Modifier.padding(top = 4.dp),
+            )
+        }
+
         Spacer(Modifier.padding(bottom = 4.dp))
     }
 }

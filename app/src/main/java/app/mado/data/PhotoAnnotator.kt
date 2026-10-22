@@ -18,7 +18,7 @@ import kotlin.math.roundToInt
  * derecha juego de lentes, ángulos H/V y la focal en grande. Los textos opcionales (`orientation`, `position`) se omiten si no hay dato.
  */
 data class BarInfo(
-    val title: String, val phoneLine: String, val stamp: String,
+    val camera: String, val mode: String, val phoneLine: String, val stamp: String,
     val heading: String?, val attitude: String?, val position: String?,
     val lensSet: String, val angles: String, val bigFocal: String,
 )
@@ -184,24 +184,31 @@ object PhotoAnnotator {
         val setTxt = fit(p, info.lensSet, w * 0.2f, unit * 0.5f)
         p.typeface = bold; p.textSize = unit * 0.95f; p.color = INK
         val angTxt = fit(p, info.angles, w * 0.2f, unit * 0.5f)
-        val blockW = maxOf(Paint().apply { typeface = mono; textSize = unit * 0.85f }.measureText(setTxt), p.measureText(angTxt))
+        p.typeface = mono; p.textSize = unit * 0.85f
+        val stampTxt = fit(p, info.stamp, w * 0.2f, unit * 0.5f)
+        val monoPaint = Paint().apply { typeface = mono; textSize = unit * 0.85f }
+        p.typeface = bold; p.textSize = unit * 0.95f
+        val blockW = maxOf(monoPaint.measureText(setTxt), monoPaint.measureText(stampTxt), p.measureText(angTxt))
         val blockX = divX - unit * 0.9f - blockW
         p.typeface = mono; p.textSize = unit * 0.85f; p.color = INK_SOFT
         c.drawText(setTxt, blockX, y1, p)
         p.typeface = bold; p.textSize = unit * 0.95f; p.color = INK
         c.drawText(angTxt, blockX, y2, p)
+        p.typeface = mono; p.textSize = unit * 0.85f; p.color = ORANGE
+        c.drawText(stampTxt, blockX, y3, p)
 
         // Izquierda y centro.
         val avail = blockX - unit * 1.0f - x0
         val leftW = avail * 0.50f
-        val cx = x0 + leftW + unit * 0.8f
-        val centerW = avail - leftW - unit * 0.8f
-        p.typeface = bold; p.textSize = unit * 1.0f; p.color = INK
-        c.drawText(fit(p, info.title, leftW, unit * 0.55f), x0, y1, p)
-        p.typeface = mono; p.textSize = unit * 0.85f; p.color = INK_SOFT
-        c.drawText(fit(p, info.phoneLine, leftW, unit * 0.5f), x0, y2, p)
-        p.textSize = unit * 0.85f; p.color = ORANGE
-        c.drawText(fit(p, info.stamp, leftW, unit * 0.5f), x0, y3, p)
+        val cx = x0 + leftW + unit * 1.8f
+        val centerW = avail - leftW - unit * 1.8f
+        // El nombre de la cámara es el dato principal: grande y en negrita; debajo el modo de grabación y la lente del teléfono.
+        p.typeface = bold; p.textSize = unit * 1.9f; p.color = INK
+        c.drawText(fit(p, info.camera, leftW, unit * 0.9f), x0, y1 + unit * 0.2f, p)
+        p.typeface = mono; p.textSize = unit * 0.9f; p.color = INK
+        c.drawText(fit(p, info.mode, leftW, unit * 0.5f), x0, y2 + unit * 0.1f, p)
+        p.typeface = mono; p.textSize = unit * 0.8f; p.color = INK_SOFT
+        c.drawText(fit(p, info.phoneLine, leftW, unit * 0.5f), x0, y3, p)
         info.heading?.let {
             p.typeface = bold; p.textSize = unit * 1.0f; p.color = INK
             c.drawText(fit(p, it, centerW, unit * 0.5f), cx, y1, p)

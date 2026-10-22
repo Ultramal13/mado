@@ -51,12 +51,19 @@ class FramingState(val db: CameraDb) {
     private fun fmtF(v: Double) = if (v % 1.0 == 0.0) v.toInt().toString() else v.toString()
     val currentFocal: Double? get() = focal.toDoubleOrNull()?.takeIf { it > 0 }
 
-    /** Etiqueta corta de lo que se está simulando. */
-    fun label(): String = when {
-        isCustom -> "${customW}×${customH} mm" + if (squeeze != 1.0) " · ${squeeze}x" else ""
-        isFixedLens -> "${camera!!.displayName.substringBefore(" (")}" + (if (camera!!.modes.isEmpty()) " · ${fixedAspects[fixedAspectIdx].second}" else " · ${camera!!.modes.getOrNull(modeIdx)?.name.orEmpty().substringBefore(" (").loc()}")
-        else -> "${camera!!.displayName.substringBefore(" (")} · ${camera!!.modes.getOrNull(modeIdx)?.name.orEmpty().substringBefore(" (").loc()}"
+    /** Nombre y modelo de la cámara que se simula (o la medida del sensor si es personalizada). */
+    fun cameraName(): String =
+        if (isCustom) "${customW}×${customH} mm" else camera!!.displayName.substringBefore(" (")
+
+    /** Modo de grabación (o aspecto, en lente fija sin modos; o el squeeze, en la personalizada). */
+    fun modeName(): String = when {
+        isCustom -> if (squeeze != 1.0) "${squeeze}x" else ""
+        isFixedLens && camera!!.modes.isEmpty() -> fixedAspects[fixedAspectIdx].second
+        else -> camera!!.modes.getOrNull(modeIdx)?.name.orEmpty().substringBefore(" (").loc()
     }
+
+    /** Etiqueta corta de lo que se está simulando. */
+    fun label(): String = cameraName() + modeName().let { if (it.isEmpty()) "" else " · $it" }
 
     /** Segunda línea de la barra: el juego de lentes o la lente integrada. */
     fun subLabel(): String = when {

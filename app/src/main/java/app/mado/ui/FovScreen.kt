@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
@@ -308,9 +309,9 @@ fun FovScreen(
         val annotFrames = frameDraws.map { app.mado.data.AnnotFrame(it.label, it.frame, it.current, it.detail) }
         val anglesText = target?.let {
             val v = Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(it.hFovRad / 2.0) / it.aspect))
-            String.format(Locale.ROOT, "H %.1f°  V %.1f°", Math.toDegrees(it.hFovRad), v)
+            String.format(Locale.ROOT, "FOV H %.1f°  V %.1f°", Math.toDegrees(it.hFovRad), v)
         }.orEmpty()
-        val title = framing.label(); val lensSetText = framing.subLabel(); val bigText = framing.bigLabel()
+        val camText = framing.cameraName(); val modeText = framing.modeName(); val lensSetText = framing.subLabel(); val bigText = framing.bigLabel()
         val phoneLine = String.format(Locale.ROOT, "%s %s · %.1f° · %s", phoneLensShort, lens.id, phoneDeg, if (profileDeg != null) verifiedText else unverifiedText)
         val stamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT).format(java.util.Date())
         val headText = headingText(pose); val attText = attitudeText(pose)
@@ -322,17 +323,17 @@ fun FovScreen(
                         val loc = try { locJob?.await() } catch (e: Exception) { null }
                         meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms))
                         loc?.let { meta.put("location", JSONObject().put("lat", it.latitude).put("lon", it.longitude).put("accuracy_m", it.accuracy.toDouble())) }
-                        val info = BarInfo(title, phoneLine, stamp, headText, attText, loc?.let { LocationHelper.format(it) }, lensSetText, anglesText, bigText)
+                        val info = BarInfo(camText, modeText, phoneLine, stamp, headText, attText, loc?.let { LocationHelper.format(it) }, lensSetText, anglesText, bigText)
                         shot = try {
                             val now = java.util.Date()
                             val saved = withContext(Dispatchers.IO) {
-                                // Foto limpia + copia con los recuadros del kit + plano recortado al encuadre, con la barra de datos.
-                                val clean = PhotoSaver.save(ctx, result.jpeg, result.rotationDeg, meta, now, location = loc, headingDeg = pose?.headingDeg)
+                                // Dos archivos con la barra de datos: la foto con los recuadros del kit y el plano recortado al encuadre.
+                                // (No se guarda la foto sin gráficos: es la misma imagen que la primera.)
                                 val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info)
-                                PhotoSaver.save(ctx, overview, 0, meta, now, suffix = "_marco", location = loc, headingDeg = pose?.headingDeg)
+                                val marco = PhotoSaver.save(ctx, overview, 0, meta, now, suffix = "_marco", location = loc, headingDeg = pose?.headingDeg)
                                 val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info)
                                 PhotoSaver.save(ctx, plano, 0, meta, now, suffix = "_plano", location = loc, headingDeg = pose?.headingDeg)
-                                clean
+                                marco
                             }
                             ShotUi.Saved(saved.name)
                         } catch (e: Exception) { ShotUi.Error(e.message ?: "save failed") }
@@ -413,57 +414,73 @@ private fun ViewerLayout(
     var optionsOpen by rememberSaveable { mutableStateOf(false) }
     val safe = androidx.compose.foundation.layout.WindowInsets.safeDrawing
     androidx.compose.foundation.layout.BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
-        val sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
         val screenH = maxHeight
         val screenW = maxWidth
         preview(Modifier.align(Alignment.Center).then(if (landscape) Modifier.fillMaxHeight() else Modifier.fillMaxWidth()))
 
         // Tocar la imagen mientras el panel está abierto lo cierra.
         if (optionsOpen) Box(
-            Modifier.fillMaxSize().pointerInput(Unit) {
-                detectTapGestures { optionsOpen = false }
-            },
+            Modifier.fillMaxSize().pointerInput(Unit) { detectTapGestures { optionsOpen = false } },
         )
 
+        // Cámara y modo (arriba a la izquierda): tocarla abre la configuración.
         ViewerChip(
-            framing,
+            framing, { optionsOpen = !optionsOpen },
             Modifier.align(Alignment.TopStart).windowInsetsPadding(safe.only(WindowInsetsSides.Top + WindowInsetsSides.Start)).padding(8.dp),
         )
 
+        // Cámara apagada: un solo botón grande en el centro (no se confunde con las flechas de focal).
+        if (!running) Box(Modifier.align(Alignment.Center).padding(horizontal = 24.dp)) {
+            WideKey(
+                if (hasPermission) stringResource(R.string.fov_start) else stringResource(R.string.fov_grant),
+                accent = true, modifier = Modifier.widthIn(min = 220.dp), onClick = onToggle,
+            )
+        }
+
+        val optionsPanel: @Composable (Modifier) -> Unit = { mod ->
+            Column(mod.verticalScroll(rememberScrollState()).padding(12.dp)) {
+                Row(Modifier.fillMaxWidth().padding(bottom = 6.dp)) {
+                    Text(framing.cameraName(), style = mono(14, p.text, true), modifier = Modifier.weight(1f))
+                    Text(
+                        stringResource(R.string.action_close), style = mono(13, p.accent, true),
+                        modifier = Modifier.clickable { optionsOpen = false }.padding(horizontal = 8.dp, vertical = 4.dp),
+                    )
+                }
+                controls()
+            }
+        }
+
         if (landscape) {
             ViewerBar(
-                framing, running, working, hasPermission, onToggle, onShot, optionsOpen, { optionsOpen = !optionsOpen },
-                vertical = true, onMenu = onMenu,
+                framing, running, working, onToggle, onShot, vertical = true, onMenu = onMenu,
                 modifier = Modifier.align(Alignment.CenterEnd)
                     .windowInsetsPadding(safe.only(WindowInsetsSides.End + WindowInsetsSides.Vertical)).padding(6.dp),
             )
-            if (optionsOpen) Column(
+            if (optionsOpen) optionsPanel(
                 Modifier.align(Alignment.CenterEnd)
                     .windowInsetsPadding(safe.only(WindowInsetsSides.End + WindowInsetsSides.Vertical))
                     .padding(end = 72.dp, top = 6.dp, bottom = 6.dp)
                     .width(minOf(screenW * 0.5f, 380.dp)).fillMaxHeight()
-                    .clip(RoundedCornerShape(16.dp)).background(p.body)
-                    .verticalScroll(rememberScrollState()).padding(12.dp),
-            ) { controls() }
+                    .clip(RoundedCornerShape(16.dp)).background(p.body),
+            )
         } else {
-            // ☰ arriba a la derecha.
-            Box(
+            // Arriba a la derecha: detener (si corre) y menú ☰.
+            Row(
                 Modifier.align(Alignment.TopEnd).windowInsetsPadding(safe.only(WindowInsetsSides.Top + WindowInsetsSides.End)).padding(8.dp),
-            ) { BarKey("☰", onMenu) }
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                if (running) BarKey("■", onToggle)
+                BarKey("☰", onMenu)
+            }
             Column(
                 Modifier.align(Alignment.BottomCenter).fillMaxWidth()
                     .windowInsetsPadding(safe.only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)),
-                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if (optionsOpen) Column(
+                if (optionsOpen) optionsPanel(
                     Modifier.fillMaxWidth().padding(horizontal = 6.dp).heightIn(max = screenH * 0.55f)
-                        .clip(sheetShape).background(p.body)
-                        .verticalScroll(rememberScrollState()).padding(12.dp),
-                ) { controls() }
-                ViewerBar(
-                    framing, running, working, hasPermission, onToggle, onShot, optionsOpen, { optionsOpen = !optionsOpen },
-                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
+                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)).background(p.body),
                 )
+                ViewerBar(framing, running, working, onToggle, onShot, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
             }
         }
     }
