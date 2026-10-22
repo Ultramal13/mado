@@ -10,6 +10,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import app.mado.optics.Framing
+import app.mado.optics.Guide
 import java.io.ByteArrayOutputStream
 import kotlin.math.roundToInt
 
@@ -40,7 +41,7 @@ object PhotoAnnotator {
     private const val NEUTRAL = 0xFFB8B8B4.toInt()
 
     // ---------- Vista general: foto + todos los recuadros ----------
-    fun overview(jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo): ByteArray {
+    fun overview(jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet()): ByteArray {
         val photo = decodeRotated(jpeg, rotationDeg, sample = 2)
         val w = photo.width; val h = photo.height
         val unit = w / 38f                                   // marcos y etiquetas
@@ -75,14 +76,19 @@ object PhotoAnnotator {
             tagText.color = if (af.current) Color.BLACK else Color.WHITE
             c.drawText(text, l + unit * 0.35f, t + th * 0.78f, tagText)
         }
+        // Guías de composición dentro del encuadre actual.
+        frames.firstOrNull { it.current }?.let { cur ->
+            val gw = cur.frame.widthFrac.toFloat() * iw; val gh = cur.frame.heightFrac.toFloat() * ih
+            drawGuides(c, guides, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, unit / 12f)
+        }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, barUnit, info)
         photo.recycle()
         return encode(out)
     }
 
     // ---------- Plano: la foto recortada al encuadre actual ----------
-    fun plano(jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo): ByteArray {
-        val cur = frames.firstOrNull { it.current }?.frame ?: return overview(jpeg, rotationDeg, frames, info)
+    fun plano(jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet()): ByteArray {
+        val cur = frames.firstOrNull { it.current }?.frame ?: return overview(jpeg, rotationDeg, frames, info, guides)
         val size = BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { BitmapFactory.decodeByteArray(jpeg, 0, jpeg.size, it) }
         val rotated90 = rotationDeg % 180 != 0
         val W = if (rotated90) size.outHeight else size.outWidth      // medidas de la foto ya girada
@@ -125,6 +131,7 @@ object PhotoAnnotator {
         val c = Canvas(out)
         c.drawColor(PAPER)
         c.drawBitmap(body, 0f, 0f, null)
+        drawGuides(c, guides, 0f, 0f, w.toFloat(), h.toFloat(), unit / 8f)
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, unit, info)
         body.recycle()
         return encode(out)
@@ -147,6 +154,29 @@ object PhotoAnnotator {
     }
 
     private fun barHeight(unit: Float) = unit * 5.9f
+
+    private const val PHI_INV = 0.6180339887f
+
+    /** Guías de composición dentro del rectángulo (l, t, w, h): línea blanca con un borde oscuro para que se vea sobre cualquier fondo. */
+    private fun drawGuides(c: Canvas, guides: Set<Guide>, l: Float, t: Float, w: Float, h: Float, stroke: Float) {
+        if (guides.isEmpty()) return
+        val dark = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(110, 0, 0, 0); style = Paint.Style.STROKE; strokeWidth = stroke * 2.4f }
+        val light = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(235, 255, 255, 255); style = Paint.Style.STROKE; strokeWidth = stroke }
+        fun line(x1: Float, y1: Float, x2: Float, y2: Float) { c.drawLine(x1, y1, x2, y2, dark); c.drawLine(x1, y1, x2, y2, light) }
+        fun v(f: Float) = line(l + w * f, t, l + w * f, t + h)
+        fun hz(f: Float) = line(l, t + h * f, l + w, t + h * f)
+        if (Guide.THIRDS in guides) { v(1f / 3); v(2f / 3); hz(1f / 3); hz(2f / 3) }
+        if (Guide.GOLDEN in guides) { v(1f - PHI_INV); v(PHI_INV); hz(1f - PHI_INV); hz(PHI_INV) }
+        if (Guide.GRID in guides) for (i in 1..3) { v(i / 4f); hz(i / 4f) }
+        if (Guide.CROSS in guides) {
+            val cx = l + w / 2f; val cy = t + h / 2f; val a = minOf(w, h) * 0.05f
+            line(cx - a, cy, cx + a, cy); line(cx, cy - a, cx, cy + a)
+        }
+        if (Guide.SAFE in guides) for (f in listOf(0.93f, 0.90f)) {
+            val rl = l + w * (1 - f) / 2f; val rt = t + h * (1 - f) / 2f
+            c.drawRect(rl, rt, rl + w * f, rt + h * f, dark); c.drawRect(rl, rt, rl + w * f, rt + h * f, light)
+        }
+    }
 
     /** Reduce el texto hasta que quepa; si aun así no cabe, lo corta con «…». */
     private fun fit(p: Paint, text: String, maxW: Float, minSize: Float): String {

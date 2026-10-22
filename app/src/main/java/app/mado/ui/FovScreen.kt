@@ -97,6 +97,7 @@ import app.mado.diagnostics.CameraInfo
 import app.mado.diagnostics.DiagnosticsReport
 import app.mado.diagnostics.FovResults
 import app.mado.optics.Fov
+import app.mado.optics.Guide
 import app.mado.optics.Framing
 import org.json.JSONObject
 import java.time.Instant
@@ -359,6 +360,8 @@ fun FovScreen(
                 .put("padding", frame?.padding))
             pose?.let { put("orientation", JSONObject().put("heading_deg_magnetic", it.headingDeg).put("elevation_deg", it.elevationDeg).put("level_deg", it.levelDeg)) }
         }
+        val guidesNow = framing.guides                              // las guías elegidas van también en las fotos
+        meta.put("guides", org.json.JSONArray(guidesNow.map { it.name }))
         val annotFrames = frameDraws.map { app.mado.data.AnnotFrame(it.label, it.frame, it.current, it.detail) }
         val anglesText = target?.let {
             val v = Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(it.hFovRad / 2.0) / it.aspect))
@@ -382,9 +385,9 @@ fun FovScreen(
                             val saved = withContext(Dispatchers.IO) {
                                 // Dos archivos con la barra de datos: la foto con los recuadros del kit y el plano recortado al encuadre.
                                 // (No se guarda la foto sin gráficos: es la misma imagen que la primera.)
-                                val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info)
+                                val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow)
                                 val marco = PhotoSaver.save(ctx, overview, 0, meta, now, suffix = "_marco", location = loc, headingDeg = pose?.headingDeg)
-                                val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info)
+                                val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow)
                                 PhotoSaver.save(ctx, plano, 0, meta, now, suffix = "_plano", location = loc, headingDeg = pose?.headingDeg)
                                 marco
                             }

@@ -8,10 +8,8 @@ import app.mado.data.Camera
 import app.mado.data.CameraDb
 import app.mado.data.loc
 import app.mado.optics.Fov
+import app.mado.optics.Guide
 import app.mado.optics.Framing
-
-/** Guías de composición que se dibujan dentro del encuadre actual. */
-enum class Guide { THIRDS, GOLDEN, CROSS, GRID, SAFE }
 
 /** Selección del usuario para el modo marco: cámara, modo de grabación, juego de lentes y focal. */
 class FramingState(val db: CameraDb) {

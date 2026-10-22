@@ -45,6 +45,7 @@ import app.mado.camera.ThermalGuard
 import app.mado.data.loc
 import app.mado.diagnostics.CameraInfo
 import app.mado.optics.Fov
+import app.mado.optics.Guide
 import app.mado.optics.Framing
 import java.util.Locale
 import kotlin.math.atan
