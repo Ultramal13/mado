@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mado</string>
+    <string name="mode_diagnostics">診断</string>
+    <string name="diag_count">カメラ %1$d 台</string>
+    <string name="diag_safe">読み取り専用 · カメラは起動しません</string>
+    <string name="diag_camera_id">カメラ %1$s</string>
+    <string name="diag_logical">論理 · 物理 %1$s</string>
+    <string name="diag_physical_of">%1$s の物理カメラ</string>
+    <string name="diag_hfov_caption">水平画角（最初の焦点距離）</string>
+    <string name="diag_focal_label">焦点距離</string>
+    <string name="diag_equiv_label">35mm換算</string>
+    <string name="diag_vfov_label">垂直画角</string>
+    <string name="diag_active_label">有効センサー</string>
+    <string name="diag_full_label">センサー全体</string>
+    <string name="diag_pixels_label">ピクセル 全体 · 有効</string>
+    <string name="diag_zoom_label">ズーム倍率 · デジタル最大</string>
+    <string name="diag_level_label">ハードウェアレベル</string>
+    <string name="action_copy_json">JSONをコピー</string>
+    <string name="action_share">共有</string>
+    <string name="theme_auto">自動</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_red">赤</string>
+    <string name="mode_fov">画角</string>
+    <string name="fov_no_lenses">使用できる背面レンズが見つかりません</string>
+    <string name="fov_start">プレビュー開始</string>
+    <string name="fov_stop">停止</string>
+    <string name="fov_grant">カメラを許可</string>
+    <string name="fov_state_live">● ライブ</string>
+    <string name="fov_state_stopped">■ 停止中</string>
+    <string name="fov_state_hot">■ 高温</string>
+    <string name="fov_state_error">● エラー</string>
+    <string name="fov_idle_msg">90秒間操作がないため一時停止 · 開始をタップ</string>
+    <string name="fov_max_msg">5分経過のため一時停止 · 開始をタップ</string>
+    <string name="fov_hot_msg">本体が高温です。冷めるまでカメラを停止します</string>
+    <string name="fov_warm_msg">本体が温まっています · 終わったら停止してください</string>
+    <string name="fov_theory_caption">このストリームの理論上の水平画角</string>
+    <string name="fov_hint">1) メジャーの0を十字の中心に合わせ、画像の端まで伸ばします。2) 端でメジャーが示す数値を読みます。約 %1$s cm になるはずです。3) その数値を下に入力します。</string>
+    <string name="fov_thermal">温度: %1$s</string>
+    <string name="fov_error_cam">カメラエラー: %1$s</string>
+    <string name="fov_lens_label">レンズ（一度に1つ）</string>
+    <string name="fov_distortion_label">歪み補正</string>
+    <string name="fov_dist_auto">デフォルト</string>
+    <string name="fov_dist_off">オフ</string>
+    <string name="fov_width_label">ビューファインダーの端でメジャーが示す数値 (cm)</string>
+    <string name="fov_distance_label">レンズから壁までの距離 (cm) · 推奨 %1$d</string>
+    <string name="fov_measured">実測の画角</string>
+    <string name="fov_error">理論との差</string>
+    <string name="fov_save">保存</string>
+    <string name="fov_saved">保存済み · %1$d</string>
+    <string name="fov_ruler_caption">端から端: %1$s cm（距離 %2$s cm）</string>
+    <string name="mode_framing">枠</string>
+    <string name="frm_target_caption">対象カメラの水平画角</string>
+    <string name="frm_aspect_v">アスペクト %1$s:1 · 垂直画角 %2$s°</string>
+    <string name="frm_frame">枠: ビューファインダーの %1$s %% × %2$s %%</string>
+    <string name="frm_padding">スマホの画角より広い: 枠がビューファインダー全体になり、スマホの映像は縮小されます</string>
+    <string name="frm_no_target">有効な焦点距離とセンサーサイズを入力してください</string>
+    <string name="frm_verified">精度: このレンズは校正済み</string>
+    <string name="frm_unverified">このレンズの精度は未検証</string>
+    <string name="frm_phone_lens">スマホのレンズ（固定・一度に1つ）</string>
+    <string name="frm_camera">カメラ</string>
+    <string name="frm_custom">カスタム</string>
+    <string name="frm_sensor_w">センサー幅 (mm)</string>
+    <string name="frm_sensor_h">センサー高さ (mm)</string>
+    <string name="frm_mode">記録モード</string>
+    <string name="frm_lenses">内蔵レンズ</string>
+    <string name="frm_lens_set">レンズセット</string>
+    <string name="frm_focal">焦点距離 (mm)</string>
+    <string name="frm_derived">導出値：メーカー非公開のため計算した値</string>
+    <string name="frm_capture">写真を撮る</string>
+    <string name="frm_capturing">撮影中…</string>
+    <string name="frm_saved">Pictures/Mado に保存しました: %1$s</string>
+    <string name="frm_capture_error">撮影できませんでした: %1$s</string>
+    <string name="frm_phone_lens_short">スマホのレンズ</string>
+    <string name="frm_more_cameras">その他のカメラ…</string>
+    <string name="frm_fewer_cameras">カメラを減らす</string>
+    <string name="frm_aspect">アスペクト比</string>
+    <string name="action_save_file">ファイル保存</string>
+    <string name="toast_saved_in">%1$s に保存しました</string>
+    <string name="toast_save_failed">保存できませんでした: %1$s</string>
+    <string name="action_close">閉じる</string>
+    <string name="frm_kit">焦点距離キット（タップで追加・削除）</string>
+    <string name="lang_title">言語</string>
+    <string name="lang_auto">自動（端末の言語）</string>
+    <string name="facing_back">背面</string>
+    <string name="facing_front">前面</string>
+    <string name="facing_external">外部</string>
+    <string name="facing_unknown">?</string>
+    <string name="orient_elev">仰角</string>
+    <string name="orient_level">水平</string>
+    <string name="gps_label">写真に位置情報を保存（撮影時に1回取得）</string>
+    <string name="opt_no">しない</string>
+    <string name="opt_yes">する</string>
+    <string name="gps_denied">位置情報の許可が拒否されました</string>
+    <string-array name="compass_points">
+        <item>北</item>
+        <item>北東</item>
+        <item>東</item>
+        <item>南東</item>
+        <item>南</item>
+        <item>南西</item>
+        <item>西</item>
+        <item>北西</item>
+    </string-array>
+    <string name="bar_verified">校正済み</string>
+    <string name="bar_unverified">未検証</string>
+    <string name="screen_viewer">ファインダー</string>
+    <string name="screen_calibration">キャリブレーション</string>
+    <string name="menu_title">メニュー</string>
+    <string name="menu_calibration">レンズ校正（画角の測定）</string>
+    <string name="menu_diagnostics">カメラ診断</string>
+    <string name="menu_theme">テーマ</string>
+    <string name="cal_intro">このレンズの実際の画角を測り、ファインダーの枠を正確にします</string>
+</resources>

@@ -1,0 +1,38 @@
+package app.mado.optics
+
+import kotlin.math.atan
+import kotlin.math.tan
+
+/** Encuadre de una cámara objetivo sobre el preview del teléfono. */
+object Framing {
+
+    /** Recuadro centrado, en fracciones del preview (1.0 = todo el ancho/alto). `padding` si no cabe en el preview. */
+    data class Frame(val widthFrac: Double, val heightFrac: Double) {
+        val padding: Boolean get() = widthFrac > 1.0 || heightFrac > 1.0
+    }
+
+    /** Cámara objetivo ya resuelta: FOV horizontal y relación de aspecto de la imagen resultante (ancho/alto). */
+    data class Target(val hFovRad: Double, val aspect: Double)
+
+    /**
+     * Objetivo a partir de sensor activo + focal + squeeze anamórfico.
+     * El squeeze ensancha el campo horizontal (la focal vertical es la nominal), así que:
+     * ancho efectivo = ancho × squeeze y aspecto = (ancho × squeeze) / alto.
+     */
+    fun target(activeWidthMm: Double, activeHeightMm: Double, focalMm: Double, squeeze: Double = 1.0): Target {
+        val effectiveWidth = activeWidthMm * squeeze
+        return Target(Fov.fovRad(effectiveWidth, focalMm), effectiveWidth / activeHeightMm)
+    }
+
+    /** `phoneAspect` = ancho/alto del preview del teléfono (p. ej. 4/3). */
+    fun frame(target: Target, phoneHFovRad: Double, phoneAspect: Double): Frame {
+        val w = Fov.frameFactor(target.hFovRad, phoneHFovRad)
+        // El alto sale del aspecto: tan(vFov/2) = tan(hFov/2) / aspect, también en el teléfono.
+        val h = w * phoneAspect / target.aspect
+        return Frame(w, h)
+    }
+
+    /** Recorte del FOV horizontal del teléfono por un perfil calibrado: factor sobre tan(FOV/2) (1.0 = sin calibrar). */
+    fun calibratedHFovRad(reportedHFovRad: Double, tanHalfFactor: Double): Double =
+        2.0 * atan(tan(reportedHFovRad / 2.0) * tanHalfFactor)
+}

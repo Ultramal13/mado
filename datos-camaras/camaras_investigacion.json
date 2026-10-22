@@ -1,0 +1,1137 @@
+{
+  "meta": {
+    "generado": "2026-10-21",
+    "convencion": "ancho_activo_mm/alto_activo_mm: null si no hay fuente oficial. derivado=true: ver calculo_derivado. factor_crop_vs_ff = 36.0 / ancho_activo_mm (referencia full frame = 36.0 mm de ancho), salvo cuando el fabricante declara el factor (1.5 Sony S35, 1.6 Canon). Todas las cifras de resolucion/mm provienen de documentos oficiales abiertos y leidos en esta sesion (ver fuente por modo).",
+    "aviso": "Los sitios sony.com, pro.sony, canon.com/usa.canon.com e insta360 (curl) bloquean acceso automatizado; se uso el Help Guide oficial de Sony (helpguide.sony.net), Sony Japan, el manual online oficial de Canon (cam.start.canon), arri.com y insta360.com abierto en navegador."
+  },
+  "camaras": [
+    {
+      "id": "sony_a7_iv",
+      "marca": "Sony",
+      "modelo": "A7 IV (ILCE-7M4)",
+      "tipo": "mirrorless full frame foto/video",
+      "montura": "Sony E (fuente: Help Guide 'Sony E-mount lens'; sony.jp 'Eマウント')",
+      "modos": [
+        {
+          "id": "foto_ff_3_2_L",
+          "nombre": "Foto FF 3:2 (L, 33 MP)",
+          "ancho_activo_mm": 35.9,
+          "alto_activo_mm": 23.9,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "7008x4672",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony Help Guide ILCE-7M4, 'Specifications > Image sensor': 35 mm full frame (35.9 mm x 23.9 mm), approx. 33.0 MP effective; cuadro 'Still image size' (JPEG Image Size)",
+            "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+          }
+        },
+        {
+          "id": "foto_ff_4_3_L",
+          "nombre": "Foto FF 4:3 (L, 29 MP)",
+          "ancho_activo_mm": 31.88,
+          "alto_activo_mm": 23.9,
+          "relacion_aspecto": "4:3",
+          "factor_crop_vs_ff": 1.13,
+          "resolucion_px": "6224x4672",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Help Guide ILCE-7M4, 'Specifications > Image sensor': 35 mm full frame (35.9 mm x 23.9 mm), approx. 33.0 MP effective; cuadro 'Still image size' (JPEG Image Size)",
+            "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+          },
+          "calculo_derivado": "ancho = 6224 px x (35.9 mm / 7008 px) = 31.88 mm; alto = 23.9 mm (altura completa, 4672 px)"
+        },
+        {
+          "id": "foto_ff_16_9_L",
+          "nombre": "Foto FF 16:9 (L, 28 MP)",
+          "ancho_activo_mm": 35.9,
+          "alto_activo_mm": 20.18,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "7008x3944",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Help Guide ILCE-7M4, 'Specifications > Image sensor': 35 mm full frame (35.9 mm x 23.9 mm), approx. 33.0 MP effective; cuadro 'Still image size' (JPEG Image Size)",
+            "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+          },
+          "calculo_derivado": "alto = 3944 px x (23.9 mm / 4672 px) = 20.18 mm; ancho = 35.9 mm"
+        },
+        {
+          "id": "foto_ff_1_1_L",
+          "nombre": "Foto FF 1:1 (L, 22 MP)",
+          "ancho_activo_mm": 23.93,
+          "alto_activo_mm": 23.9,
+          "relacion_aspecto": "1:1",
+          "factor_crop_vs_ff": 1.5,
+          "resolucion_px": "4672x4672",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Help Guide ILCE-7M4, 'Specifications > Image sensor': 35 mm full frame (35.9 mm x 23.9 mm), approx. 33.0 MP effective; cuadro 'Still image size' (JPEG Image Size)",
+            "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+          },
+          "calculo_derivado": "ancho = 4672 px x (35.9 mm / 7008 px) = 23.93 mm; alto = 23.9 mm (4672 px de alto completo)"
+        },
+        {
+          "id": "foto_aps_c_3_2_M",
+          "nombre": "Foto APS-C/S35 3:2 (M, 14 MP)",
+          "ancho_activo_mm": 23.61,
+          "alto_activo_mm": 15.72,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 1.52,
+          "resolucion_px": "4608x3072",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Help Guide ILCE-7M4, 'Specifications > Image sensor': 35 mm full frame (35.9 mm x 23.9 mm), approx. 33.0 MP effective; cuadro 'Still image size' (JPEG Image Size)",
+            "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+          },
+          "calculo_derivado": "ancho = 4608 x (35.9/7008) = 23.61 mm; alto = 3072 x (23.9/4672) = 15.72 mm (supone que 4608x3072 es la lectura APS-C completa; Sony solo dice 'aprox. 1.5x')",
+          "nota": "Factor por pixeles = 35.9/23.61 = 1.521; Sony declara 'approx. 1.5 times'."
+        },
+        {
+          "id": "video_4k_ff",
+          "nombre": "Video 4K UHD full frame (XAVC S/HS/S-I; 24p/30p, y 60p solo con S35)",
+          "ancho_activo_mm": 35.9,
+          "alto_activo_mm": 20.19,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "3840x2160",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Japan, pagina de especificaciones ILCE-7M4 (撮像素子 35 mm フルサイズ 35.9 x 23.9 mm; 動画記録モード XAVC HS/S/S-I 4K 3840x2160 y HD; nota *5: en 4K 60p 'APS-C S35 撮影' queda fijo en ON)",
+            "url": "https://www.sony.jp/ichigan/products/ILCE-7M4/spec.html"
+          },
+          "calculo_derivado": "alto = 35.9 mm x 9/16 = 20.19 mm; supone lectura de ancho completo con [APS-C S35]=Off (la Help Guide dice que con Off el angulo es el de full frame)",
+          "nota": "4K 60p/50p no esta disponible en full frame: queda bloqueado en S35 (ver video_4k_s35)."
+        },
+        {
+          "id": "video_fhd_ff",
+          "nombre": "Video FHD full frame (XAVC S/S-I)",
+          "ancho_activo_mm": 35.9,
+          "alto_activo_mm": 20.19,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "1920x1080",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Japan, pagina de especificaciones ILCE-7M4 (撮像素子 35 mm フルサイズ 35.9 x 23.9 mm; 動画記録モード XAVC HS/S/S-I 4K 3840x2160 y HD; nota *5: en 4K 60p 'APS-C S35 撮影' queda fijo en ON)",
+            "url": "https://www.sony.jp/ichigan/products/ILCE-7M4/spec.html"
+          },
+          "calculo_derivado": "igual que 4K FF: alto = 35.9 x 9/16 = 20.19 mm"
+        },
+        {
+          "id": "video_4k_s35",
+          "nombre": "Video 4K UHD Super 35 (crop ~1.5x; obligatorio a 4K 60p/50p)",
+          "ancho_activo_mm": 23.93,
+          "alto_activo_mm": 13.46,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.5,
+          "resolucion_px": "3840x2160",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Help Guide ILCE-7M4, 'APS-C S35 (Super 35mm) Shooting' y 'Angle of view': con [On] el angulo de vision es ~1.5x la focal indicada; bloqueado en [On] al grabar 4K 60p/50p",
+            "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+          },
+          "calculo_derivado": "ancho = 35.9 mm / 1.5 = 23.93 mm; alto = ancho x 9/16 = 13.46 mm",
+          "nota": "Factor 1.5 declarado por Sony como 'approx.'. Alternativa por pixeles de foto APS-C: ancho 23.61 mm (factor 1.52)."
+        },
+        {
+          "id": "video_fhd_s35",
+          "nombre": "Video FHD Super 35 (crop ~1.5x)",
+          "ancho_activo_mm": 23.93,
+          "alto_activo_mm": 13.46,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.5,
+          "resolucion_px": "1920x1080",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Help Guide ILCE-7M4, 'APS-C S35 (Super 35mm) Shooting' y 'Angle of view': con [On] el angulo de vision es ~1.5x la focal indicada; bloqueado en [On] al grabar 4K 60p/50p",
+            "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+          },
+          "calculo_derivado": "igual que video_4k_s35",
+          "nota": "Nota *7 de Sony Japan: con S35 activado, a 120 fps la lectura efectiva del sensor es 1,570x886 px; no se pudo traducir a mm (null para 120p)."
+        }
+      ],
+      "notas": "Sensor Exmor R CMOS 35.9 x 23.9 mm, ~33.0 MP efectivos (7008x4672). Sony no publica ancho/alto en mm por modo de video; los modos de video son derivados (ratio de aspecto y factor 1.5 oficial). Nota: la pagina sony.jp contiene una fila 'XAVC HS 8K 7680x4320' con '-' en frame rates (no soportado en A7 IV); no se incluyo. Los dimensiones 'oficiales' de sensor son nominales (la relacion 35.9/7008 vs 23.9/4672 da pitches ligeramente distintos, 5.123 vs 5.116 um), error esperado <=0.1 mm."
+    },
+    {
+      "id": "sony_fx3",
+      "marca": "Sony",
+      "modelo": "FX3 (ILME-FX3)",
+      "tipo": "cine line full frame compacta",
+      "montura": "Sony E (fuente: Help Guide 'Sony E-mount lens')",
+      "modos": [
+        {
+          "id": "foto_ff_3_2_L",
+          "nombre": "Foto FF 3:2 (L, 12 MP)",
+          "ancho_activo_mm": 35.6,
+          "alto_activo_mm": 23.8,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 1.01,
+          "resolucion_px": "4240x2832",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony Help Guide ILME-FX3, 'Specifications > Image sensor': 35 mm full frame (35.6 mm x 23.8 mm), approx. 12.1 MP efectivos; 'JPEG Image Size' (L 12M 4240x2832; APS-C L 5.1M 2768x1848)",
+            "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+          }
+        },
+        {
+          "id": "foto_aps_c_3_2_L",
+          "nombre": "Foto APS-C/S35 3:2 (L, 5.1 MP)",
+          "ancho_activo_mm": 23.73,
+          "alto_activo_mm": 15.87,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 1.5,
+          "resolucion_px": "2768x1848",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Help Guide ILME-FX3, 'Specifications > Image sensor': 35 mm full frame (35.6 mm x 23.8 mm), approx. 12.1 MP efectivos; 'JPEG Image Size' (L 12M 4240x2832; APS-C L 5.1M 2768x1848)",
+            "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+          },
+          "calculo_derivado": "35.6/1.5 = 23.73; 23.8/1.5 = 15.87 (Sony: 'approximately 1.5 times')",
+          "nota": "Alternativa por pixeles: 35.6 x 2768/4240 = 23.24 mm (factor 1.53)."
+        },
+        {
+          "id": "video_4k_ff",
+          "nombre": "Video 4K UHD full frame (24/25/30/50/60/100/120p)",
+          "ancho_activo_mm": 35.6,
+          "alto_activo_mm": 20.03,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.01,
+          "resolucion_px": "3840x2160",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Help Guide ILME-FX3, 'File Format (movie)' (XAVC S 4K/HD, S-I, HS: 3840x2160 y 1920x1080) y 'APS-C S35 (Super 35mm) Shooting': 4K no se puede grabar con [On]; con [On] angulo ~1.5x la focal",
+            "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+          },
+          "calculo_derivado": "alto = 35.6 x 9/16 = 20.03 mm; supone ancho completo: la Help Guide indica que 4K solo se graba con [APS-C S35]=Off (angulo de full frame)",
+          "nota": "La Help Guide no documenta un recorte adicional para 4K 120p/100p; no se pudo verificar en esta fuente (dato no incluido)."
+        },
+        {
+          "id": "video_fhd_ff",
+          "nombre": "Video FHD full frame",
+          "ancho_activo_mm": 35.6,
+          "alto_activo_mm": 20.03,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.01,
+          "resolucion_px": "1920x1080",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Help Guide ILME-FX3, 'File Format (movie)' (XAVC S 4K/HD, S-I, HS: 3840x2160 y 1920x1080) y 'APS-C S35 (Super 35mm) Shooting': 4K no se puede grabar con [On]; con [On] angulo ~1.5x la focal",
+            "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+          },
+          "calculo_derivado": "alto = 35.6 x 9/16 = 20.03 mm"
+        },
+        {
+          "id": "video_fhd_s35",
+          "nombre": "Video FHD Super 35 (crop ~1.5x)",
+          "ancho_activo_mm": 23.73,
+          "alto_activo_mm": 13.35,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.5,
+          "resolucion_px": "1920x1080",
+          "derivado": true,
+          "fuente": {
+            "texto": "Sony Help Guide ILME-FX3, 'File Format (movie)' (XAVC S 4K/HD, S-I, HS: 3840x2160 y 1920x1080) y 'APS-C S35 (Super 35mm) Shooting': 4K no se puede grabar con [On]; con [On] angulo ~1.5x la focal",
+            "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+          },
+          "calculo_derivado": "ancho = 35.6/1.5 = 23.73 mm; alto = ancho x 9/16 = 13.35 mm"
+        }
+      ],
+      "notas": "Guia usada: ILME-FX3 (helpguide ilc/2035), no FX3A ni FX30. La Help Guide solo lista 4K como 3840x2160 (UHD); no se encontro 4096x2160 en esta fuente. Sony no publica mm por modo de video; todo derivado. Modos de video con estabilizacion (Active/Dynamic) o 'Cinematic' pueden recortar mas: no cuantificado en la fuente."
+    },
+    {
+      "id": "sony_venice2_8k",
+      "marca": "Sony",
+      "modelo": "VENICE 2 (8K, MPC-3628)",
+      "tipo": "cine digital full frame 8.6K",
+      "montura": "PL (con adaptador PL suministrado); E-mount quitando el adaptador PL (fuente: manual FW3.0 pag. 3-4 'E-mount lens support')",
+      "modos": [
+        {
+          "id": "8_6k_3_2",
+          "nombre": "8.6K 3:2 (full frame, licencia Full-Frame)",
+          "ancho_activo_mm": 35.9,
+          "alto_activo_mm": 24.0,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "8640x5760",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          },
+          "desqueeze_soportado": [
+            1.25,
+            1.3,
+            1.5,
+            1.6,
+            1.8,
+            2.0
+          ],
+          "licencia_anamorfica_requerida_para_desqueeze": true
+        },
+        {
+          "id": "8_6k_17_9",
+          "nombre": "8.6K 17:9 (full frame)",
+          "ancho_activo_mm": 35.9,
+          "alto_activo_mm": 19.0,
+          "relacion_aspecto": "17:9",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "8640x4556",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          },
+          "desqueeze_soportado": [
+            1.25,
+            1.3,
+            1.6,
+            1.8,
+            2.0
+          ],
+          "licencia_anamorfica_requerida_para_desqueeze": true
+        },
+        {
+          "id": "8_2k_2_39",
+          "nombre": "8.2K 2.39:1 (full frame)",
+          "ancho_activo_mm": 34.1,
+          "alto_activo_mm": 14.3,
+          "relacion_aspecto": "2.39:1",
+          "factor_crop_vs_ff": 1.06,
+          "resolucion_px": "8192x3432",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "8_2k_17_9",
+          "nombre": "8.2K 17:9 (full frame)",
+          "ancho_activo_mm": 34.1,
+          "alto_activo_mm": 18.0,
+          "relacion_aspecto": "17:9",
+          "factor_crop_vs_ff": 1.06,
+          "resolucion_px": "8192x4320",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          },
+          "desqueeze_soportado": [
+            1.25,
+            1.3,
+            1.6,
+            1.8,
+            2.0
+          ],
+          "licencia_anamorfica_requerida_para_desqueeze": true
+        },
+        {
+          "id": "8_1k_16_9",
+          "nombre": "8.1K 16:9 (full frame)",
+          "ancho_activo_mm": 33.7,
+          "alto_activo_mm": 19.0,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.07,
+          "resolucion_px": "8100x4556",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "7_6k_16_9",
+          "nombre": "7.6K 16:9 (full frame)",
+          "ancho_activo_mm": 31.9,
+          "alto_activo_mm": 18.0,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.13,
+          "resolucion_px": "7680x4320",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          },
+          "nota": "En el manual FW 1.0 este modo figura con 32.0 x 18.0 mm (ver notas)."
+        },
+        {
+          "id": "5_8k_6_5",
+          "nombre": "5.8K 6:5 (Super 35 anamorfico, licencia Anamorphic)",
+          "ancho_activo_mm": 24.1,
+          "alto_activo_mm": 20.2,
+          "relacion_aspecto": "6:5",
+          "factor_crop_vs_ff": 1.49,
+          "resolucion_px": "5792x4854",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, ANAMORPHIC LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          },
+          "desqueeze_soportado": [
+            2.0
+          ],
+          "licencia_anamorfica_requerida_para_desqueeze": true,
+          "nota": "Con de-squeeze 2.0x el aspecto resultante es 6:5 x 2.0 = 2.4:1 (calculo, no cifra del manual)."
+        },
+        {
+          "id": "5_8k_4_3",
+          "nombre": "5.8K 4:3 (Super 35 anamorfico, licencia Anamorphic)",
+          "ancho_activo_mm": 24.1,
+          "alto_activo_mm": 17.8,
+          "relacion_aspecto": "4:3",
+          "factor_crop_vs_ff": 1.49,
+          "resolucion_px": "5792x4276",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, ANAMORPHIC LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          },
+          "desqueeze_soportado": [
+            1.3,
+            1.6,
+            1.8,
+            2.0
+          ],
+          "licencia_anamorfica_requerida_para_desqueeze": true
+        },
+        {
+          "id": "5_8k_17_9",
+          "nombre": "5.8K 17:9 (Super 35, sin licencia)",
+          "ancho_activo_mm": 24.1,
+          "alto_activo_mm": 12.7,
+          "relacion_aspecto": "17:9",
+          "factor_crop_vs_ff": 1.49,
+          "resolucion_px": "5792x3056",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          },
+          "desqueeze_soportado": [
+            1.25,
+            1.3,
+            1.6,
+            1.8,
+            2.0
+          ],
+          "licencia_anamorfica_requerida_para_desqueeze": true
+        },
+        {
+          "id": "5_5k_2_39",
+          "nombre": "5.5K 2.39:1 (Super 35, sin licencia)",
+          "ancho_activo_mm": 22.8,
+          "alto_activo_mm": 9.6,
+          "relacion_aspecto": "2.39:1",
+          "factor_crop_vs_ff": 1.58,
+          "resolucion_px": "5480x2296",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "5_4k_16_9",
+          "nombre": "5.4K 16:9 (Super 35, sin licencia)",
+          "ancho_activo_mm": 22.6,
+          "alto_activo_mm": 12.7,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.59,
+          "resolucion_px": "5434x3056",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        }
+      ],
+      "notas": "Dimensiones W x H en mm tomadas literalmente de la tabla del manual Sony (pag. 5). Modos 'Surround View' (marco +5%) son solo de monitoreo y no se incluyeron. De-squeeze: 1.25x, 1.3x, 1.5x, 1.6x, 1.8x, 2.0x segun modo (tabla pag. 6, leida de imagen del PDF); requiere Anamorphic License. 5.8K 17:9 en 8K: 5792x3056 (algunos distribuidores publican 5434x3056 para 17:9, que en realidad corresponde a 5.4K 16:9 segun Sony)."
+    },
+    {
+      "id": "sony_venice2_6k",
+      "marca": "Sony",
+      "modelo": "VENICE 2 (6K, MPC-3626)",
+      "tipo": "cine digital full frame 6K",
+      "montura": "PL (con adaptador PL suministrado); E-mount quitando el adaptador PL (fuente: manual FW3.0)",
+      "modos": [
+        {
+          "id": "6k_3_2",
+          "nombre": "6K 3:2 (full frame, licencia Full-Frame)",
+          "ancho_activo_mm": 35.9,
+          "alto_activo_mm": 24.0,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "6048x4032",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "6k_1_85",
+          "nombre": "6K 1.85:1 (full frame)",
+          "ancho_activo_mm": 36.0,
+          "alto_activo_mm": 19.4,
+          "relacion_aspecto": "1.85:1",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "6054x3272",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "6k_17_9",
+          "nombre": "6K 17:9 (full frame)",
+          "ancho_activo_mm": 36.0,
+          "alto_activo_mm": 19.0,
+          "relacion_aspecto": "17:9",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "6054x3192",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "6k_2_39",
+          "nombre": "6K 2.39:1 (full frame)",
+          "ancho_activo_mm": 35.9,
+          "alto_activo_mm": 15.1,
+          "relacion_aspecto": "2.39:1",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "6048x2536",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          },
+          "nota": "Manual FW 1.0: 6048x2534, 35.9 x 15.0 mm."
+        },
+        {
+          "id": "5_7k_16_9",
+          "nombre": "5.7K 16:9 (full frame)",
+          "ancho_activo_mm": 33.7,
+          "alto_activo_mm": 18.9,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.07,
+          "resolucion_px": "5674x3192",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "4k_6_5",
+          "nombre": "4K 6:5 (Super 35 anamorfico, licencia Anamorphic)",
+          "ancho_activo_mm": 24.3,
+          "alto_activo_mm": 20.4,
+          "relacion_aspecto": "6:5",
+          "factor_crop_vs_ff": 1.48,
+          "resolucion_px": "4096x3432",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, ANAMORPHIC LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "4k_4_3",
+          "nombre": "4K 4:3 (Super 35 anamorfico, licencia Anamorphic)",
+          "ancho_activo_mm": 24.3,
+          "alto_activo_mm": 18.0,
+          "relacion_aspecto": "4:3",
+          "factor_crop_vs_ff": 1.48,
+          "resolucion_px": "4096x3024",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, ANAMORPHIC LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "4k_17_9",
+          "nombre": "4K 17:9 DCI (Super 35, sin licencia)",
+          "ancho_activo_mm": 24.3,
+          "alto_activo_mm": 12.8,
+          "relacion_aspecto": "17:9",
+          "factor_crop_vs_ff": 1.48,
+          "resolucion_px": "4096x2160",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "4k_2_39",
+          "nombre": "4K 2.39:1 (Super 35, sin licencia)",
+          "ancho_activo_mm": 24.3,
+          "alto_activo_mm": 10.3,
+          "relacion_aspecto": "2.39:1",
+          "factor_crop_vs_ff": 1.48,
+          "resolucion_px": "4096x1716",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        },
+        {
+          "id": "3_8k_16_9",
+          "nombre": "3.8K 16:9 UHD (Super 35, sin licencia)",
+          "ancho_activo_mm": 22.8,
+          "alto_activo_mm": 12.8,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.58,
+          "resolucion_px": "3840x2160",
+          "derivado": false,
+          "fuente": {
+            "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+            "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+          }
+        }
+      ],
+      "notas": "W x H en mm literales de la tabla del manual Sony (pag. 6). Modos Surround View omitidos (monitoreo). No se leyo la tabla de de-squeeze del MPC-3626 (null). Discrepancia FW1.0 vs FW3.0 documentada en el reporte."
+    },
+    {
+      "id": "arri_alexa_mini_lf",
+      "marca": "ARRI",
+      "modelo": "ALEXA Mini LF",
+      "tipo": "cine digital large format",
+      "montura": "ARRI LPL (LBUS); PL via adaptador PL-a-LPL; EF (LBUS); Leitz M (fuente: hoja tecnica ARRI)",
+      "modos": [
+        {
+          "id": "lf_4_5k_3_2_og",
+          "nombre": "4.5K LF 3:2 Open Gate (ARRIRAW / ProRes)",
+          "ancho_activo_mm": 36.7,
+          "alto_activo_mm": 25.54,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 0.98,
+          "resolucion_px": "4448x3096",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+            "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+          },
+          "formatos_codec": "ARRIRAW 4448x3096; ProRes contenedor 4480x3096"
+        },
+        {
+          "id": "lf_4_5k_2_39",
+          "nombre": "4.5K LF 2.39:1 (ARRIRAW / ProRes)",
+          "ancho_activo_mm": 36.7,
+          "alto_activo_mm": 15.31,
+          "relacion_aspecto": "2.39:1",
+          "factor_crop_vs_ff": 0.98,
+          "resolucion_px": "4448x1856",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+            "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+          },
+          "formatos_codec": "ARRIRAW 4448x1856; ProRes contenedor 4480x1856"
+        },
+        {
+          "id": "lf_4_3k_16_9",
+          "nombre": "4.3K LF 16:9 (ProRes; salida UHD/HD)",
+          "ancho_activo_mm": 35.64,
+          "alto_activo_mm": 20.05,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.01,
+          "resolucion_px": "4320x2430",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+            "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+          },
+          "formatos_codec": "ProRes UHD 3840x2160 o HD 1920x1080"
+        },
+        {
+          "id": "lf_3_8k_16_9",
+          "nombre": "3.8K LF 16:9 (ARRIRAW UHD; ProRes UHD/2K/HD)",
+          "ancho_activo_mm": 31.68,
+          "alto_activo_mm": 17.82,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.14,
+          "resolucion_px": "3840x2160",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+            "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+          },
+          "formatos_codec": "ARRIRAW 3840x2160; ProRes UHD, 2K 2048x1152 o HD"
+        },
+        {
+          "id": "lf_2_8k_1_1",
+          "nombre": "2.8K LF 1:1 (ARRIRAW / ProRes)",
+          "ancho_activo_mm": 23.76,
+          "alto_activo_mm": 23.76,
+          "relacion_aspecto": "1:1",
+          "factor_crop_vs_ff": 1.52,
+          "resolucion_px": "2880x2880",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+            "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+          },
+          "formatos_codec": "ARRIRAW 2880x2880; ProRes contenedor 3072x2880"
+        },
+        {
+          "id": "s35_3_4k_3_2",
+          "nombre": "3.4K S35 3:2 (ARRIRAW)",
+          "ancho_activo_mm": 28.25,
+          "alto_activo_mm": 18.17,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 1.27,
+          "resolucion_px": "3424x2202",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+            "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+          }
+        },
+        {
+          "id": "s35_3_2k_16_9",
+          "nombre": "3.2K S35 16:9 (ProRes)",
+          "ancho_activo_mm": 26.4,
+          "alto_activo_mm": 14.85,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.36,
+          "resolucion_px": "3200x1800",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+            "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+          }
+        },
+        {
+          "id": "s35_2_8k_4_3",
+          "nombre": "2.8K S35 4:3 (ProRes)",
+          "ancho_activo_mm": 23.76,
+          "alto_activo_mm": 17.82,
+          "relacion_aspecto": "4:3",
+          "factor_crop_vs_ff": 1.52,
+          "resolucion_px": "2880x2160",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+            "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+          }
+        },
+        {
+          "id": "s35_2_8k_16_9",
+          "nombre": "2.8K S35 16:9 (ProRes HD)",
+          "ancho_activo_mm": 23.76,
+          "alto_activo_mm": 13.37,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.52,
+          "resolucion_px": "2880x1620",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+            "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+          },
+          "formatos_codec": "ProRes HD 1920x1080"
+        }
+      ],
+      "notas": "Todos los valores en mm vienen literalmente de la hoja tecnica ARRI. Sensor ALEV III (A2X) 4448x3096 = 36.70 x 25.54 mm, diametro 44.71 mm, pitch 8.25 um. factor_crop_vs_ff se calcula como 36.0/ancho (referencia FF = 36 mm; <1 significa area mas ancha que 36 mm). Recording Format Sheet oficial (alexa-mini-lf-recording-format-sheet-din-a4) confirma los nombres de modos pero no incluye mm."
+    },
+    {
+      "id": "arri_alexa_35",
+      "marca": "ARRI",
+      "modelo": "ALEXA 35",
+      "tipo": "cine digital Super 35 (4.6K)",
+      "montura": "ARRI LPL (LBUS); PL-a-LPL; PL (LBUS); PL (Hirose); EF (LBUS); Leitz M (fuente: pagina de producto ARRI, Technical Data)",
+      "modos": [
+        {
+          "id": "4_6k_3_2_og",
+          "nombre": "4.6K 3:2 Open Gate (ARRIRAW / ProRes)",
+          "ancho_activo_mm": 27.99,
+          "alto_activo_mm": 19.22,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 1.29,
+          "resolucion_px": "4608x3164",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+            "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+          }
+        },
+        {
+          "id": "4_6k_16_9",
+          "nombre": "4.6K 16:9 (ARRIRAW 4608x2592; ProRes graba 4096x2304)",
+          "ancho_activo_mm": 27.99,
+          "alto_activo_mm": 15.75,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.29,
+          "resolucion_px": "4608x2592",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+            "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+          }
+        },
+        {
+          "id": "4k_16_9",
+          "nombre": "4K 16:9 (ARRIRAW y ProRes; ProRes tambien UHD/2K/HD)",
+          "ancho_activo_mm": 24.88,
+          "alto_activo_mm": 14.0,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.45,
+          "resolucion_px": "4096x2304",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+            "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+          }
+        },
+        {
+          "id": "4k_2_1",
+          "nombre": "4K 2:1 (ARRIRAW y ProRes)",
+          "ancho_activo_mm": 24.88,
+          "alto_activo_mm": 12.44,
+          "relacion_aspecto": "2:1",
+          "factor_crop_vs_ff": 1.45,
+          "resolucion_px": "4096x2048",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+            "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+          }
+        },
+        {
+          "id": "3_8k_16_9",
+          "nombre": "3.8K 16:9 (ARRIRAW)",
+          "ancho_activo_mm": 23.33,
+          "alto_activo_mm": 13.12,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.54,
+          "resolucion_px": "3840x2160",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+            "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+          }
+        },
+        {
+          "id": "3_3k_6_5",
+          "nombre": "3.3K 6:5 (ARRIRAW y ProRes; ProRes tambien 4K 2.39:1 Ana 2x)",
+          "ancho_activo_mm": 20.22,
+          "alto_activo_mm": 16.95,
+          "relacion_aspecto": "6:5",
+          "factor_crop_vs_ff": 1.78,
+          "resolucion_px": "3328x2790",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+            "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+          },
+          "squeeze_anamorfico": 2.0,
+          "salida_anamorfica": "4K 2.39:1 Ana 2x, 4096x1716 (ProRes)"
+        },
+        {
+          "id": "3k_1_1",
+          "nombre": "3K 1:1 (ARRIRAW y ProRes; ProRes tambien 3.8K 2:1 Ana 2x)",
+          "ancho_activo_mm": 18.66,
+          "alto_activo_mm": 18.66,
+          "relacion_aspecto": "1:1",
+          "factor_crop_vs_ff": 1.93,
+          "resolucion_px": "3072x3072",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+            "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+          },
+          "squeeze_anamorfico": 2.0,
+          "salida_anamorfica": "3.8K 2:1 Ana 2x, 3840x1920 (ProRes)"
+        },
+        {
+          "id": "2_7k_8_9",
+          "nombre": "2.7K 8:9 (solo ProRes, UHD 16:9 Ana 2x)",
+          "ancho_activo_mm": 16.66,
+          "alto_activo_mm": 18.75,
+          "relacion_aspecto": "8:9",
+          "factor_crop_vs_ff": 2.16,
+          "resolucion_px": "2743x3086",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+            "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+          },
+          "squeeze_anamorfico": 2.0,
+          "salida_anamorfica": "UHD 16:9 Ana 2x, 3840x2160 (ProRes)"
+        },
+        {
+          "id": "2k_16_9_s16",
+          "nombre": "2K 16:9 S16 (solo ProRes)",
+          "ancho_activo_mm": 12.44,
+          "alto_activo_mm": 7.0,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 2.89,
+          "resolucion_px": "2048x1152",
+          "derivado": false,
+          "fuente": {
+            "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+            "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+          }
+        }
+      ],
+      "notas": "Sensor ALEV 4: 4608x3164 = 27.99 x 19.22 mm, diametro 33.96 mm, pitch 6.075 um (pagina de producto ARRI > Technical Data). La tabla de formatos es una imagen (no texto); los valores se leyeron de la imagen oficial descargada. Los modos anamorficos 2x: aspecto de salida = aspecto de sensor x squeeze segun la tabla. La pagina de producto menciona 'A total of 20 ARRIRAW and Apple ProRes recording formats' (cuenta de formatos de grabacion, no de sensor modes)."
+    },
+    {
+      "id": "canon_eos_r5",
+      "marca": "Canon",
+      "modelo": "EOS R5",
+      "tipo": "mirrorless full frame foto/video 8K",
+      "montura": "Canon RF (fuente: manual Canon > Specifications)",
+      "modos": [
+        {
+          "id": "foto_3_2",
+          "nombre": "Foto 3:2 full frame (44.8 MP)",
+          "ancho_activo_mm": 36.0,
+          "alto_activo_mm": 24.0,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "8192x5464",
+          "derivado": false,
+          "fuente": {
+            "texto": "Canon EOS R5 Product Manual > Specifications: Image sensor 'Approx. 36.0x24.0 mm', ~45.0 MP; Still photo pixel count (3:2 8192x5464; 1.6x crop 5088x3392)",
+            "url": "https://cam.start.canon/en/C003/manual/html/UG-09_Reference_0100.html"
+          }
+        },
+        {
+          "id": "foto_crop_1_6",
+          "nombre": "Foto 1.6x crop (17.3 MP)",
+          "ancho_activo_mm": 22.5,
+          "alto_activo_mm": 15.0,
+          "relacion_aspecto": "3:2",
+          "factor_crop_vs_ff": 1.6,
+          "resolucion_px": "5088x3392",
+          "derivado": true,
+          "fuente": {
+            "texto": "Canon EOS R5 Product Manual > Specifications: Image sensor 'Approx. 36.0x24.0 mm', ~45.0 MP; Still photo pixel count (3:2 8192x5464; 1.6x crop 5088x3392)",
+            "url": "https://cam.start.canon/en/C003/manual/html/UG-09_Reference_0100.html"
+          },
+          "calculo_derivado": "36.0/1.6 = 22.50 mm; 24.0/1.6 = 15.00 mm (Canon: 'Approx. 1.6 times'); alternativa por pixeles: 36.0 x 5088/8192 = 22.36 mm"
+        },
+        {
+          "id": "video_8k_dci",
+          "nombre": "Video 8K DCI 17:9 (RAW/ALL-I/IPB; sin crop)",
+          "ancho_activo_mm": 36.0,
+          "alto_activo_mm": 18.98,
+          "relacion_aspecto": "17:9",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "8192x4320",
+          "derivado": true,
+          "fuente": {
+            "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
+            "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0040.html"
+          },
+          "calculo_derivado": "ancho = 36.0 mm (8192 px = ancho de foto full frame; Image Area (2)); alto = 4320 px x (24.0 mm / 5464 px) = 18.98 mm"
+        },
+        {
+          "id": "video_8k_uhd",
+          "nombre": "Video 8K UHD 16:9 (sin crop)",
+          "ancho_activo_mm": 33.75,
+          "alto_activo_mm": 18.98,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.07,
+          "resolucion_px": "7680x4320",
+          "derivado": true,
+          "fuente": {
+            "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
+            "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0040.html"
+          },
+          "calculo_derivado": "ancho = 7680 x (36.0/8192) = 33.75 mm; alto = 18.98 mm (mismo alto que 8K DCI; Image Area (3))"
+        },
+        {
+          "id": "video_4k_dci",
+          "nombre": "Video 4K DCI 17:9 (sin crop)",
+          "ancho_activo_mm": 36.0,
+          "alto_activo_mm": 18.98,
+          "relacion_aspecto": "17:9",
+          "factor_crop_vs_ff": 1.0,
+          "resolucion_px": "4096x2160",
+          "derivado": true,
+          "fuente": {
+            "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
+            "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0040.html"
+          },
+          "calculo_derivado": "Segun 'Image Area', 8K DCI y 4K DCI comparten el area (2): 36.0 x 18.98 mm"
+        },
+        {
+          "id": "video_4k_uhd",
+          "nombre": "Video 4K UHD 16:9 (sin crop)",
+          "ancho_activo_mm": 33.75,
+          "alto_activo_mm": 18.98,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.07,
+          "resolucion_px": "3840x2160",
+          "derivado": true,
+          "fuente": {
+            "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
+            "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0040.html"
+          },
+          "calculo_derivado": "Area (3) = igual que 8K UHD: 33.75 x 18.98 mm"
+        },
+        {
+          "id": "video_fhd",
+          "nombre": "Video Full HD (sin crop)",
+          "ancho_activo_mm": 33.75,
+          "alto_activo_mm": 18.98,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.07,
+          "resolucion_px": "1920x1080",
+          "derivado": true,
+          "fuente": {
+            "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
+            "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0040.html"
+          },
+          "calculo_derivado": "Area (3) = igual que 8K/4K UHD"
+        },
+        {
+          "id": "video_4k_dci_crop",
+          "nombre": "Video 4K DCI con Movie cropping = Enable (1.6x)",
+          "ancho_activo_mm": 22.5,
+          "alto_activo_mm": 11.87,
+          "relacion_aspecto": "17:9",
+          "factor_crop_vs_ff": 1.6,
+          "resolucion_px": "4096x2160",
+          "derivado": true,
+          "fuente": {
+            "texto": "Canon EOS R5 Product Manual > Movie Cropping: el recorte equivale a usar lentes RF-S/EF-S; Specifications: 'Using RF-S or EF-S lenses: Approx. 1.6 times the indicated focal length'",
+            "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0050.html"
+          },
+          "calculo_derivado": "ancho = 36.0/1.6 = 22.50 mm (Canon: equivale a RF-S/EF-S, ~1.6x); alto = ancho x 2160/4096 = 11.87 mm",
+          "nota": "Con Digital IS = On/Enhanced el recorte aumenta (no cuantificado). 8K, High Frame Rate y 4K HQ no admiten Movie cropping."
+        },
+        {
+          "id": "video_4k_uhd_crop",
+          "nombre": "Video 4K UHD con Movie cropping = Enable (1.6x)",
+          "ancho_activo_mm": 21.09,
+          "alto_activo_mm": 11.87,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.71,
+          "resolucion_px": "3840x2160",
+          "derivado": true,
+          "fuente": {
+            "texto": "Canon EOS R5 Product Manual > Movie Cropping: el recorte equivale a usar lentes RF-S/EF-S; Specifications: 'Using RF-S or EF-S lenses: Approx. 1.6 times the indicated focal length'",
+            "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0050.html"
+          },
+          "calculo_derivado": "ancho = 22.5 x 3840/4096 = 21.09 mm; alto = 11.87 mm (area (6) = UHD/FHD dentro de la DCI recortada)",
+          "nota": "factor_crop_vs_ff es respecto al ancho 36.0 mm: 36.0/21.09; el factor de recorte de sensor es 1.6 (Canon)."
+        },
+        {
+          "id": "video_fhd_crop",
+          "nombre": "Video Full HD con Movie cropping = Enable (1.6x)",
+          "ancho_activo_mm": 21.09,
+          "alto_activo_mm": 11.87,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": 1.71,
+          "resolucion_px": "1920x1080",
+          "derivado": true,
+          "fuente": {
+            "texto": "Canon EOS R5 Product Manual > Movie Cropping: el recorte equivale a usar lentes RF-S/EF-S; Specifications: 'Using RF-S or EF-S lenses: Approx. 1.6 times the indicated focal length'",
+            "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0050.html"
+          },
+          "calculo_derivado": "igual que video_4k_uhd_crop"
+        }
+      ],
+      "notas": "Sensor 'Approx. 36.0x24.0 mm', ~45.0 MP. Canon no publica mm por modo de video; 8K y 4K sin crop usan el ancho completo segun la figura 'Image Area' del manual (figura leida: las areas 8K/4K comparten el mismo recuadro), por lo que los mm son derivados. Con RF-S/EF-S el recorte es el mismo que 'Movie cropping'. 4K 60p con crop: tiempo limitado a ~25 min por temperatura (Canon). 4K Alta tasa de cuadros (119.9/100 fps) y 4K HQ: la pagina 'Image Area' no los lista aparte, no se encontro dato de recorte adicional (no incluido)."
+    },
+    {
+      "id": "insta360_luna_ultra",
+      "marca": "Insta360",
+      "modelo": "Luna Ultra",
+      "tipo": "camara gimbal de lente fija doble (1\" + 1/1.3\")",
+      "montura": null,
+      "modos": [
+        {
+          "id": "lente_principal",
+          "nombre": "Lente principal (1\" , 20 mm eq.)",
+          "ancho_activo_mm": null,
+          "alto_activo_mm": null,
+          "relacion_aspecto": null,
+          "factor_crop_vs_ff": null,
+          "resolucion_px": null,
+          "derivado": false,
+          "fuente": {
+            "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+            "url": "https://www.insta360.com/specs/luna-ultra"
+          },
+          "motivo_null": "La ficha oficial da el formato opcional '1\"' (designacion comercial) y la focal equivalente 35 mm, pero no ancho/alto activo en mm ni el recorte por modo de video/foto."
+        },
+        {
+          "id": "lente_tele",
+          "nombre": "Lente teleobjetivo (1/1.3\", 60 mm eq.)",
+          "ancho_activo_mm": null,
+          "alto_activo_mm": null,
+          "relacion_aspecto": null,
+          "factor_crop_vs_ff": null,
+          "resolucion_px": null,
+          "derivado": false,
+          "fuente": {
+            "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+            "url": "https://www.insta360.com/specs/luna-ultra"
+          },
+          "motivo_null": "Igual que la lente principal: solo designacion '1/1.3\"' y focal equivalente."
+        }
+      ],
+      "lentes_integradas": [
+        {
+          "id": "principal",
+          "sensor_tipo_comercial": "1 inch",
+          "apertura": "F1.8",
+          "focal_equivalente_ff_mm": 20,
+          "distancia_minima_foco_cm": 9,
+          "fuente": {
+            "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+            "url": "https://www.insta360.com/specs/luna-ultra"
+          },
+          "fuente_secundaria": {
+            "texto": "Insta360 Online Manual 'Luna Series: Hardware Specifications': sensor main 1 inch, tele 1/1.3 inch; 35mm Equivalent 20mm / 60mm; efectivos ~50MP (8192x6144)",
+            "url": "https://onlinemanual.insta360.com/lunaultra/en-us/specs/specs"
+          }
+        },
+        {
+          "id": "tele",
+          "sensor_tipo_comercial": "1/1.3 inch",
+          "apertura": "F2.0",
+          "focal_equivalente_ff_mm": 60,
+          "distancia_minima_foco_cm": 15,
+          "fuente": {
+            "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+            "url": "https://www.insta360.com/specs/luna-ultra"
+          },
+          "fuente_secundaria": {
+            "texto": "Insta360 Online Manual 'Luna Series: Hardware Specifications': sensor main 1 inch, tele 1/1.3 inch; 35mm Equivalent 20mm / 60mm; efectivos ~50MP (8192x6144)",
+            "url": "https://onlinemanual.insta360.com/lunaultra/en-us/specs/specs"
+          }
+        }
+      ],
+      "zoom_digital": {
+        "foto": "1-15x",
+        "video": "1-15x",
+        "fuente": {
+          "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+          "url": "https://www.insta360.com/specs/luna-ultra"
+        }
+      },
+      "resolucion_efectiva_sensor_px": {
+        "valor": "aprox. 50MP (8192x6144)",
+        "fuente": {
+          "texto": "Insta360 Online Manual 'Luna Series: Hardware Specifications': sensor main 1 inch, tele 1/1.3 inch; 35mm Equivalent 20mm / 60mm; efectivos ~50MP (8192x6144)",
+          "url": "https://onlinemanual.insta360.com/lunaultra/en-us/specs/specs"
+        },
+        "nota": "La fuente no indica a cual lente corresponde; 8192x6144 es 4:3."
+      },
+      "notas": "Montura: lente fija (null). Ninguna ficha oficial da mm de sensor; '1\"' y '1/1.3\"' son designaciones de formato optico, no dimensiones, por eso quedan null. La ficha oficial no aclara si la focal equivalente es por diagonal u horizontal ni para que aspecto de imagen aplica (se asume la del sensor completo; no verificado). El modo 4K/8K, 2.35:1 y 1:1 pueden usar recortes del sensor no documentados."
+    }
+  ]
+}

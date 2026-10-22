@@ -1,0 +1,404 @@
+{
+  "schema_version": 1,
+  "etapa": 0,
+  "device": {
+    "manufacturer": "Sony",
+    "model": "SO-51B",
+    "device": "SO-51B",
+    "android": "13",
+    "sdk": "33"
+  },
+  "cameras": [
+    {
+      "id": "0",
+      "parent_id": null,
+      "facing": "back",
+      "is_logical": true,
+      "physical_ids": [
+        "2",
+        "3",
+        "4"
+      ],
+      "focal_lengths_mm": [
+        5.110000133514404
+      ],
+      "physical_size_mm": [
+        7.343999862670898,
+        5.9903998374938965
+      ],
+      "pixel_array": [
+        4080,
+        3328
+      ],
+      "active_array": [
+        4032,
+        3024
+      ],
+      "active_size_mm": [
+        7.257599864286535,
+        5.443199852338204
+      ],
+      "h_fov_deg": [
+        70.75993704418217
+      ],
+      "v_fov_deg": [
+        56.079771745533975
+      ],
+      "equiv_35mm": [
+        25.347223358476366
+      ],
+      "min_focus_diopters": 10,
+      "zoom_ratio_range": [
+        1,
+        5
+      ],
+      "max_digital_zoom": 5,
+      "hardware_level": "FULL",
+      "error": null
+    },
+    {
+      "id": "2",
+      "parent_id": "0",
+      "facing": "back",
+      "is_logical": false,
+      "physical_ids": [],
+      "focal_lengths_mm": [
+        5.110000133514404
+      ],
+      "physical_size_mm": [
+        7.343999862670898,
+        5.9903998374938965
+      ],
+      "pixel_array": [
+        4080,
+        3328
+      ],
+      "active_array": [
+        4032,
+        3024
+      ],
+      "active_size_mm": [
+        7.257599864286535,
+        5.443199852338204
+      ],
+      "h_fov_deg": [
+        70.75993704418217
+      ],
+      "v_fov_deg": [
+        56.079771745533975
+      ],
+      "equiv_35mm": [
+        25.347223358476366
+      ],
+      "min_focus_diopters": 10,
+      "zoom_ratio_range": [
+        1,
+        5
+      ],
+      "max_digital_zoom": 5,
+      "hardware_level": "FULL",
+      "error": null
+    },
+    {
+      "id": "3",
+      "parent_id": "0",
+      "facing": "back",
+      "is_logical": false,
+      "physical_ids": [],
+      "focal_lengths_mm": [
+        10.220000267028809
+      ],
+      "physical_size_mm": [
+        4.958079814910889,
+        3.816159963607788
+      ],
+      "pixel_array": [
+        4064,
+        3128
+      ],
+      "active_array": [
+        4032,
+        3024
+      ],
+      "active_size_mm": [
+        4.919039816368283,
+        3.6892799648177594
+      ],
+      "h_fov_deg": [
+        27.062698477228146
+      ],
+      "v_fov_deg": [
+        20.4626794325563
+      ],
+      "equiv_35mm": [
+        74.79508671362447
+      ],
+      "min_focus_diopters": 2,
+      "zoom_ratio_range": [
+        1,
+        5
+      ],
+      "max_digital_zoom": 5,
+      "hardware_level": "LIMITED",
+      "error": null
+    },
+    {
+      "id": "4",
+      "parent_id": "0",
+      "facing": "back",
+      "is_logical": false,
+      "physical_ids": [],
+      "focal_lengths_mm": [
+        2.6700000762939453
+      ],
+      "physical_size_mm": [
+        5.667199611663818,
+        4.435199737548828
+      ],
+      "pixel_array": [
+        4048,
+        3168
+      ],
+      "active_array": [
+        4032,
+        3024
+      ],
+      "active_size_mm": [
+        5.644799613198744,
+        4.233599749478427
+      ],
+      "h_fov_deg": [
+        93.17880038928487
+      ],
+      "v_fov_deg": [
+        76.8153893173802
+      ],
+      "equiv_35mm": [
+        17.0280628778802
+      ],
+      "min_focus_diopters": 10,
+      "zoom_ratio_range": [
+        1,
+        5
+      ],
+      "max_digital_zoom": 5,
+      "hardware_level": "LIMITED",
+      "error": null
+    },
+    {
+      "id": "1",
+      "parent_id": null,
+      "facing": "front",
+      "is_logical": false,
+      "physical_ids": [],
+      "focal_lengths_mm": [
+        2.7799999713897705
+      ],
+      "physical_size_mm": [
+        3.6825602054595947,
+        2.8246400356292725
+      ],
+      "pixel_array": [
+        3288,
+        2522
+      ],
+      "active_array": [
+        3264,
+        2448
+      ],
+      "active_size_mm": [
+        3.6556802039598897,
+        2.7417600345838458
+      ],
+      "h_fov_deg": [
+        66.64955521073445
+      ],
+      "v_fov_deg": [
+        52.4978695730436
+      ],
+      "equiv_35mm": [
+        27.376573821097242
+      ],
+      "min_focus_diopters": 0,
+      "zoom_ratio_range": [
+        1,
+        5
+      ],
+      "max_digital_zoom": 5,
+      "hardware_level": "LIMITED",
+      "error": null
+    },
+    {
+      "id": "2",
+      "parent_id": null,
+      "facing": "back",
+      "is_logical": false,
+      "physical_ids": [],
+      "focal_lengths_mm": [
+        5.110000133514404
+      ],
+      "physical_size_mm": [
+        7.343999862670898,
+        5.9903998374938965
+      ],
+      "pixel_array": [
+        4080,
+        3328
+      ],
+      "active_array": [
+        4032,
+        3024
+      ],
+      "active_size_mm": [
+        7.257599864286535,
+        5.443199852338204
+      ],
+      "h_fov_deg": [
+        70.75993704418217
+      ],
+      "v_fov_deg": [
+        56.079771745533975
+      ],
+      "equiv_35mm": [
+        25.347223358476366
+      ],
+      "min_focus_diopters": 10,
+      "zoom_ratio_range": [
+        1,
+        5
+      ],
+      "max_digital_zoom": 5,
+      "hardware_level": "FULL",
+      "error": null
+    },
+    {
+      "id": "3",
+      "parent_id": null,
+      "facing": "back",
+      "is_logical": false,
+      "physical_ids": [],
+      "focal_lengths_mm": [
+        10.220000267028809
+      ],
+      "physical_size_mm": [
+        4.958079814910889,
+        3.816159963607788
+      ],
+      "pixel_array": [
+        4064,
+        3128
+      ],
+      "active_array": [
+        4032,
+        3024
+      ],
+      "active_size_mm": [
+        4.919039816368283,
+        3.6892799648177594
+      ],
+      "h_fov_deg": [
+        27.062698477228146
+      ],
+      "v_fov_deg": [
+        20.4626794325563
+      ],
+      "equiv_35mm": [
+        74.79508671362447
+      ],
+      "min_focus_diopters": 2,
+      "zoom_ratio_range": [
+        1,
+        5
+      ],
+      "max_digital_zoom": 5,
+      "hardware_level": "LIMITED",
+      "error": null
+    },
+    {
+      "id": "4",
+      "parent_id": null,
+      "facing": "back",
+      "is_logical": false,
+      "physical_ids": [],
+      "focal_lengths_mm": [
+        2.6700000762939453
+      ],
+      "physical_size_mm": [
+        5.667199611663818,
+        4.435199737548828
+      ],
+      "pixel_array": [
+        4048,
+        3168
+      ],
+      "active_array": [
+        4032,
+        3024
+      ],
+      "active_size_mm": [
+        5.644799613198744,
+        4.233599749478427
+      ],
+      "h_fov_deg": [
+        93.17880038928487
+      ],
+      "v_fov_deg": [
+        76.8153893173802
+      ],
+      "equiv_35mm": [
+        17.0280628778802
+      ],
+      "min_focus_diopters": 10,
+      "zoom_ratio_range": [
+        1,
+        5
+      ],
+      "max_digital_zoom": 5,
+      "hardware_level": "LIMITED",
+      "error": null
+    },
+    {
+      "id": "5",
+      "parent_id": null,
+      "facing": "back",
+      "is_logical": false,
+      "physical_ids": [],
+      "focal_lengths_mm": [
+        2.140000104904175
+      ],
+      "physical_size_mm": [
+        2.3999998569488525,
+        1.7999999523162842
+      ],
+      "pixel_array": [
+        240,
+        180
+      ],
+      "active_array": [
+        240,
+        180
+      ],
+      "active_size_mm": [
+        2.3999998569488525,
+        1.7999999523162842
+      ],
+      "h_fov_deg": [
+        58.56284881191726
+      ],
+      "v_fov_deg": [
+        45.619419115566075
+      ],
+      "equiv_35mm": [
+        32.10000348687193
+      ],
+      "min_focus_diopters": 0,
+      "zoom_ratio_range": [
+        1,
+        1
+      ],
+      "max_digital_zoom": 1,
+      "hardware_level": "LIMITED",
+      "error": null
+    }
+  ]
+}

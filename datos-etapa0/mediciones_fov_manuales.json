@@ -1,0 +1,41 @@
+[
+  {
+    "fecha": "2026-10-21",
+    "dispositivo": "samsung SM-S948B",
+    "lente": "5 (principal, cámara física 5 de la lógica 0)",
+    "metodo": "papelitos con su borde sobre la marca 40 de la regla naranja de Mado, a ambos lados de la cruz; cinta entre papelitos",
+    "distancia_fisica_cm": 65.0,
+    "distancia_en_app_cm_SUPUESTA": null,
+    "separacion_papelitos_cm": 83.0,
+    "marca_pantalla_cm": 40,
+    "fov_teorico_deg": 74.0,
+    "fov_medido_deg": 71.6,
+    "error_pct": -3.2,
+    "estado": "confirmado por el usuario: lente 5, cinta a 65 cm, campo de la app en 60 cm, 83 cm entre papelitos en la marca 40. Rango por ±1 cm en la distancia: 70.8°–72.5°",
+    "incertidumbre": "±1 cm en la distancia mueve el FOV ~0.9°; lente no está al borde del teléfono; colocación de papelitos",
+    "distancia_en_app_cm": 60.0
+  },
+  {
+    "fecha": "2026-10-21",
+    "dispositivo": "samsung SM-S948B",
+    "lente": "5",
+    "metodo": "igual que la 1.ª, pero campo de la app = 65 cm = distancia física",
+    "distancia_fisica_cm": 65.0,
+    "distancia_en_app_cm": 65.0,
+    "separacion_papelitos_cm": 77.0,
+    "marca_pantalla_cm": 40,
+    "fov_teorico_deg": 74.0,
+    "fov_medido_deg": 71.9,
+    "error_pct": -2.8,
+    "estado": "confirmado por el usuario"
+  },
+  {
+    "resumen_lente_5": {
+      "fov_medido_promedio_deg": 71.8,
+      "error_pct": -3.0,
+      "factor_tan_semi_fov": 0.96,
+      "focal_efectiva_mm": 6.77,
+      "nota": "dos montajes distintos coinciden (71.6° y 71.9°): el FOV real del stream de preview 4:3 es ~3 % menor que el teórico"
+    }
+  }
+]

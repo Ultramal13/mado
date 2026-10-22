@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mado</string>
+    <string name="mode_diagnostics">diagnóstico</string>
+    <string name="diag_count">%1$d cámaras</string>
+    <string name="diag_safe">solo lectura · no abre la cámara</string>
+    <string name="diag_camera_id">cámara %1$s</string>
+    <string name="diag_logical">lógica · físicas %1$s</string>
+    <string name="diag_physical_of">física de %1$s</string>
+    <string name="diag_hfov_caption">fov horizontal, primera focal</string>
+    <string name="diag_focal_label">focal</string>
+    <string name="diag_equiv_label">equiv. 35mm</string>
+    <string name="diag_vfov_label">fov vertical</string>
+    <string name="diag_active_label">sensor activo</string>
+    <string name="diag_full_label">sensor completo</string>
+    <string name="diag_pixels_label">matriz px · activa</string>
+    <string name="diag_zoom_label">ratio zoom · digital máx.</string>
+    <string name="diag_level_label">nivel de hardware</string>
+    <string name="action_copy_json">copiar json</string>
+    <string name="action_share">compartir</string>
+    <string name="theme_auto">auto</string>
+    <string name="theme_light">claro</string>
+    <string name="theme_dark">oscuro</string>
+    <string name="theme_red">rojo</string>
+    <string name="mode_fov">fov</string>
+    <string name="fov_no_lenses">no se encontraron lentes traseras utilizables</string>
+    <string name="fov_start">iniciar preview</string>
+    <string name="fov_stop">detener</string>
+    <string name="fov_grant">permitir cámara</string>
+    <string name="fov_state_live">● en vivo</string>
+    <string name="fov_state_stopped">■ detenido</string>
+    <string name="fov_state_hot">■ caliente</string>
+    <string name="fov_state_error">● error</string>
+    <string name="fov_idle_msg">en pausa tras 90 s sin tocar · toca iniciar</string>
+    <string name="fov_max_msg">en pausa tras 5 min · toca iniciar</string>
+    <string name="fov_hot_msg">teléfono caliente: cámara apagada hasta que se enfríe</string>
+    <string name="fov_warm_msg">el teléfono se está calentando · detén al terminar</string>
+    <string name="fov_theory_caption">fov horizontal teórico de este stream</string>
+    <string name="fov_hint">1) pon el 0 de la cinta en el centro de la cruz y estírala hacia el borde de la imagen. 2) lee qué número marca la cinta en el borde: debería ser cerca de %1$s cm. 3) escribe ese número abajo.</string>
+    <string name="fov_thermal">térmico: %1$s</string>
+    <string name="fov_error_cam">error de cámara: %1$s</string>
+    <string name="fov_lens_label">lente (una a la vez)</string>
+    <string name="fov_distortion_label">corrección de distorsión</string>
+    <string name="fov_dist_auto">por defecto</string>
+    <string name="fov_dist_off">apagada</string>
+    <string name="fov_width_label">número que marca la cinta en el borde del visor (cm)</string>
+    <string name="fov_distance_label">distancia lente → pared (cm) · sugerida %1$d</string>
+    <string name="fov_measured">fov medido</string>
+    <string name="fov_error">error vs teoría</string>
+    <string name="fov_save">guardar</string>
+    <string name="fov_saved">guardado · %1$d</string>
+    <string name="fov_ruler_caption">borde a borde: %1$s cm a %2$s cm</string>
+    <string name="mode_framing">marco</string>
+    <string name="frm_target_caption">fov horizontal de la cámara objetivo</string>
+    <string name="frm_aspect_v">aspecto %1$s:1 · fov vertical %2$s°</string>
+    <string name="frm_frame">recuadro: %1$s %% × %2$s %% del visor</string>
+    <string name="frm_padding">más ancho de lo que ve el teléfono: el recuadro llena el visor y la imagen del teléfono se achica</string>
+    <string name="frm_no_target">ingresa una focal y un sensor válidos</string>
+    <string name="frm_verified">precisión: calibrada para esta lente</string>
+    <string name="frm_unverified">precisión no verificada para esta lente</string>
+    <string name="frm_phone_lens">lente del teléfono (fija, una a la vez)</string>
+    <string name="frm_camera">cámara</string>
+    <string name="frm_custom">personalizada</string>
+    <string name="frm_sensor_w">ancho de sensor (mm)</string>
+    <string name="frm_sensor_h">alto de sensor (mm)</string>
+    <string name="frm_mode">modo de grabación</string>
+    <string name="frm_lenses">lente integrada</string>
+    <string name="frm_lens_set">juego de lentes</string>
+    <string name="frm_focal">focal (mm)</string>
+    <string name="frm_derived">dato derivado: el fabricante no lo publica, calculado por nosotros</string>
+    <string name="frm_capture">capturar foto</string>
+    <string name="frm_capturing">capturando…</string>
+    <string name="frm_saved">guardada en Pictures/Mado: %1$s</string>
+    <string name="frm_capture_error">no se pudo capturar: %1$s</string>
+    <string name="frm_phone_lens_short">lente del teléfono</string>
+    <string name="frm_more_cameras">más cámaras…</string>
+    <string name="frm_fewer_cameras">menos cámaras</string>
+    <string name="frm_aspect">relación de aspecto</string>
+    <string name="action_save_file">guardar archivo</string>
+    <string name="toast_saved_in">guardado en %1$s</string>
+    <string name="toast_save_failed">no se pudo guardar: %1$s</string>
+    <string name="action_close">cerrar</string>
+    <string name="frm_kit">kit de focales (toca para sumar o quitar)</string>
+    <string name="lang_title">idioma</string>
+    <string name="lang_auto">Automático (idioma del teléfono)</string>
+    <string name="facing_back">trasera</string>
+    <string name="facing_front">frontal</string>
+    <string name="facing_external">externa</string>
+    <string name="facing_unknown">?</string>
+    <string name="orient_elev">elev</string>
+    <string name="orient_level">nivel</string>
+    <string name="gps_label">ubicación en las fotos (una lectura al disparar)</string>
+    <string name="opt_no">no</string>
+    <string name="opt_yes">sí</string>
+    <string name="gps_denied">permiso de ubicación denegado</string>
+    <string-array name="compass_points">
+        <item>N</item>
+        <item>NE</item>
+        <item>E</item>
+        <item>SE</item>
+        <item>S</item>
+        <item>SO</item>
+        <item>O</item>
+        <item>NO</item>
+    </string-array>
+    <string name="bar_verified">calibrada</string>
+    <string name="bar_unverified">sin verificar</string>
+    <string name="screen_viewer">visor</string>
+    <string name="screen_calibration">calibración</string>
+    <string name="menu_title">menú</string>
+    <string name="menu_calibration">calibrar lentes (medir FOV)</string>
+    <string name="menu_diagnostics">diagnóstico de cámaras</string>
+    <string name="menu_theme">tema</string>
+    <string name="cal_intro">mide el campo de visión real de esta lente para que los recuadros del visor sean exactos</string>
+</resources>

@@ -1,0 +1,203 @@
+{
+  "_nota": "Esquema inicial. Valores null = por completar desde ficha tecnica oficial. Cada dato numerico debe llevar su fuente.",
+  "schema_version": 1,
+  "actualizado": "2026-10-21",
+
+  "camaras": [
+    {
+      "id": "sony_a7_por_confirmar",
+      "marca": "Sony",
+      "modelo": "A7 (modelo exacto por confirmar)",
+      "tipo": "lente_intercambiable",
+      "montura": "Sony E",
+      "modos": [
+        {
+          "id": "full_frame_4k_169",
+          "nombre": "Full frame 4K 16:9",
+          "ancho_activo_mm": null,
+          "alto_activo_mm": null,
+          "relacion_aspecto": "16:9",
+          "factor_crop_vs_ff": null,
+          "fuente": { "texto": "Ficha oficial Sony", "url": null }
+        }
+      ]
+    },
+    {
+      "id": "sony_fx3",
+      "marca": "Sony",
+      "modelo": "FX3 (confirmar que no sea FX30)",
+      "tipo": "lente_intercambiable",
+      "montura": "Sony E",
+      "modos": [
+        {
+          "id": "por_completar",
+          "nombre": "Por completar",
+          "ancho_activo_mm": null,
+          "alto_activo_mm": null,
+          "relacion_aspecto": null,
+          "factor_crop_vs_ff": null,
+          "fuente": { "texto": "Ficha oficial Sony", "url": null }
+        }
+      ]
+    },
+    {
+      "id": "sony_venice_por_confirmar",
+      "marca": "Sony",
+      "modelo": "Venice / Venice 2 (por confirmar)",
+      "tipo": "lente_intercambiable",
+      "montura": "PL / E (verificar segun configuracion)",
+      "modos": [
+        {
+          "id": "por_completar",
+          "nombre": "Por completar (varios modos y aspectos)",
+          "ancho_activo_mm": null,
+          "alto_activo_mm": null,
+          "relacion_aspecto": null,
+          "factor_crop_vs_ff": null,
+          "fuente": { "texto": "Ficha oficial Sony", "url": null }
+        }
+      ]
+    },
+    {
+      "id": "arri_alexa_por_confirmar",
+      "marca": "ARRI",
+      "modelo": "Alexa (Mini / Mini LF / 35, por confirmar)",
+      "tipo": "lente_intercambiable",
+      "montura": "PL / LPL (verificar segun modelo)",
+      "modos": [
+        {
+          "id": "por_completar",
+          "nombre": "Por completar (formato de grabacion)",
+          "ancho_activo_mm": null,
+          "alto_activo_mm": null,
+          "relacion_aspecto": null,
+          "factor_crop_vs_ff": null,
+          "fuente": { "texto": "Ficha oficial ARRI", "url": null }
+        }
+      ]
+    },
+    {
+      "id": "canon_r5",
+      "marca": "Canon",
+      "modelo": "EOS R5",
+      "tipo": "lente_intercambiable",
+      "montura": "Canon RF",
+      "modos": [
+        {
+          "id": "por_completar",
+          "nombre": "Por completar (8K / 4K, con o sin crop)",
+          "ancho_activo_mm": null,
+          "alto_activo_mm": null,
+          "relacion_aspecto": null,
+          "factor_crop_vs_ff": null,
+          "fuente": { "texto": "Ficha oficial Canon", "url": null }
+        }
+      ]
+    },
+    {
+      "id": "insta360_luna_ultra",
+      "marca": "Insta360",
+      "modelo": "Luna Ultra",
+      "tipo": "lente_fija",
+      "montura": null,
+      "lentes_integradas": [
+        {
+          "id": "principal",
+          "nombre": "Principal (Leica Summicron)",
+          "focal_equivalente_ff_mm": 20,
+          "apertura_max": "f/1.8",
+          "sensor": "1 pulgada",
+          "verificar": true,
+          "fuente": {
+            "texto": "channelnews.com.au (reportado; contrastar con ficha oficial Insta360)",
+            "url": "https://www.channelnews.com.au/insta360-targets-vloggers-with-new-leica-powered-luna-ultra-camera/"
+          }
+        },
+        {
+          "id": "tele",
+          "nombre": "Telefoto",
+          "focal_equivalente_ff_mm": 60,
+          "apertura_max": "f/2.0",
+          "sensor": "1/1.3 pulgada",
+          "verificar": true,
+          "fuente": {
+            "texto": "channelnews.com.au (reportado; contrastar con ficha oficial Insta360)",
+            "url": "https://www.channelnews.com.au/insta360-targets-vloggers-with-new-leica-powered-luna-ultra-camera/"
+          }
+        }
+      ],
+      "zoom_intermedio": {
+        "mostrar_en_visor": false,
+        "_nota": "Decidir si se muestran focales de zoom digital, que no equivalen a una lente real."
+      },
+      "modos": [
+        {
+          "id": "por_completar",
+          "nombre": "Por completar (8K / 4K / vertical)",
+          "ancho_activo_mm": null,
+          "alto_activo_mm": null,
+          "relacion_aspecto": null,
+          "fuente": { "texto": "Ficha oficial Insta360", "url": null }
+        }
+      ]
+    }
+  ],
+
+  "juegos_de_lentes": [
+    {
+      "id": "ejemplo_primes_esfericos",
+      "nombre": "Ejemplo: primes esfericos (editable por el usuario)",
+      "montura": "Sony E",
+      "tipo": "esferico",
+      "squeeze": 1.0,
+      "focales_mm": [],
+      "apertura_max": null,
+      "foco_minimo_m": null
+    },
+    {
+      "id": "ejemplo_anamorfico_2x",
+      "nombre": "Ejemplo: anamorfico 2x (editable por el usuario)",
+      "montura": "PL",
+      "tipo": "anamorfico",
+      "squeeze": 2.0,
+      "focales_mm": [],
+      "apertura_max": null,
+      "foco_minimo_m": null
+    }
+  ],
+
+  "perfiles_telefono": [
+    {
+      "modelo_build": "por_completar",
+      "nombre_comercial": "Samsung Galaxy S26 Ultra",
+      "estado": "sin_calibrar",
+      "lentes": [
+        {
+          "id": "principal",
+          "fov_horizontal_medido_grados": null,
+          "fov_horizontal_reportado_grados": null,
+          "fecha_calibracion": null
+        },
+        {
+          "id": "ultra_gran_angular",
+          "fov_horizontal_medido_grados": null,
+          "fov_horizontal_reportado_grados": null,
+          "fecha_calibracion": null
+        },
+        {
+          "id": "tele",
+          "fov_horizontal_medido_grados": null,
+          "fov_horizontal_reportado_grados": null,
+          "fecha_calibracion": null
+        }
+      ]
+    }
+  ],
+
+  "formulas": {
+    "fov_horizontal": "2 * atan(ancho_activo_mm / (2 * focal_mm))",
+    "factor_recuadro": "tan(fov_objetivo / 2) / tan(fov_telefono / 2)",
+    "relacion_aspecto_anamorfica": "relacion_aspecto_sensor * squeeze",
+    "_nota": "Si factor_recuadro > 1 el FOV objetivo es mas ancho que el del telefono: mostrar padding."
+  }
+}

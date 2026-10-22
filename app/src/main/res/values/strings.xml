@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mado</string>
+    <string name="mode_diagnostics">diagnostics</string>
+    <string name="diag_count">%1$d cameras</string>
+    <string name="diag_safe">read-only · does not open the camera</string>
+    <string name="diag_camera_id">camera %1$s</string>
+    <string name="diag_logical">logical · physical %1$s</string>
+    <string name="diag_physical_of">physical of %1$s</string>
+    <string name="diag_hfov_caption">horizontal fov, first focal length</string>
+    <string name="diag_focal_label">focal length</string>
+    <string name="diag_equiv_label">35mm equiv.</string>
+    <string name="diag_vfov_label">vertical fov</string>
+    <string name="diag_active_label">active sensor</string>
+    <string name="diag_full_label">full sensor</string>
+    <string name="diag_pixels_label">px array · active</string>
+    <string name="diag_zoom_label">zoom ratio · max digital</string>
+    <string name="diag_level_label">hardware level</string>
+    <string name="action_copy_json">copy json</string>
+    <string name="action_share">share</string>
+    <string name="theme_auto">auto</string>
+    <string name="theme_light">light</string>
+    <string name="theme_dark">dark</string>
+    <string name="theme_red">red</string>
+    <string name="mode_fov">fov</string>
+    <string name="fov_no_lenses">no usable back lenses found</string>
+    <string name="fov_start">start preview</string>
+    <string name="fov_stop">stop</string>
+    <string name="fov_grant">allow camera</string>
+    <string name="fov_state_live">● live</string>
+    <string name="fov_state_stopped">■ stopped</string>
+    <string name="fov_state_hot">■ hot</string>
+    <string name="fov_state_error">● error</string>
+    <string name="fov_idle_msg">paused after 90 s without touch · tap start</string>
+    <string name="fov_max_msg">paused after 5 min · tap start</string>
+    <string name="fov_hot_msg">phone is hot: camera off until it cools down</string>
+    <string name="fov_warm_msg">phone is warming up · stop when you finish</string>
+    <string name="fov_theory_caption">theoretical horizontal fov of this stream</string>
+    <string name="fov_hint">1) put the tape\'s 0 at the center of the cross and run it toward the edge of the image. 2) read which number the tape shows at the edge. it should be about %1$s cm. 3) type that number below.</string>
+    <string name="fov_thermal">thermal: %1$s</string>
+    <string name="fov_error_cam">camera error: %1$s</string>
+    <string name="fov_lens_label">lens (one at a time)</string>
+    <string name="fov_distortion_label">lens distortion correction</string>
+    <string name="fov_dist_auto">default</string>
+    <string name="fov_dist_off">off</string>
+    <string name="fov_width_label">number the tape shows at the viewfinder edge (cm)</string>
+    <string name="fov_distance_label">distance lens → wall (cm) · suggested %1$d</string>
+    <string name="fov_measured">measured fov</string>
+    <string name="fov_error">error vs theory</string>
+    <string name="fov_save">save</string>
+    <string name="fov_saved">saved · %1$d</string>
+    <string name="fov_ruler_caption">edge to edge: %1$s cm at %2$s cm</string>
+    <string name="mode_framing">frame</string>
+    <string name="frm_target_caption">horizontal fov of the target camera</string>
+    <string name="frm_aspect_v">aspect %1$s:1 · vertical fov %2$s°</string>
+    <string name="frm_frame">frame: %1$s %% × %2$s %% of the viewfinder</string>
+    <string name="frm_padding">wider than the phone sees: the frame fills the viewfinder and the phone image shrinks</string>
+    <string name="frm_no_target">enter a valid focal length and sensor</string>
+    <string name="frm_verified">precision: calibrated for this lens</string>
+    <string name="frm_unverified">precision not verified for this lens</string>
+    <string name="frm_phone_lens">phone lens (fixed, one at a time)</string>
+    <string name="frm_camera">camera</string>
+    <string name="frm_custom">custom</string>
+    <string name="frm_sensor_w">sensor width (mm)</string>
+    <string name="frm_sensor_h">sensor height (mm)</string>
+    <string name="frm_mode">recording mode</string>
+    <string name="frm_lenses">built-in lens</string>
+    <string name="frm_lens_set">lens set</string>
+    <string name="frm_focal">focal length (mm)</string>
+    <string name="frm_derived">derived data: the maker does not publish it, calculated by us</string>
+    <string name="frm_capture">capture photo</string>
+    <string name="frm_capturing">capturing…</string>
+    <string name="frm_saved">saved in Pictures/Mado: %1$s</string>
+    <string name="frm_capture_error">could not capture: %1$s</string>
+    <string name="frm_phone_lens_short">phone lens</string>
+    <string name="frm_more_cameras">more cameras…</string>
+    <string name="frm_fewer_cameras">fewer cameras</string>
+    <string name="frm_aspect">aspect ratio</string>
+    <string name="action_save_file">save file</string>
+    <string name="toast_saved_in">saved in %1$s</string>
+    <string name="toast_save_failed">could not save: %1$s</string>
+    <string name="action_close">close</string>
+    <string name="frm_kit">focal kit (tap to add or remove)</string>
+    <string name="lang_title">language</string>
+    <string name="lang_auto">Automatic (phone language)</string>
+    <string name="facing_back">rear</string>
+    <string name="facing_front">front</string>
+    <string name="facing_external">external</string>
+    <string name="facing_unknown">?</string>
+    <string name="orient_elev">elev</string>
+    <string name="orient_level">level</string>
+    <string name="gps_label">location in photos (one reading when you shoot)</string>
+    <string name="opt_no">no</string>
+    <string name="opt_yes">yes</string>
+    <string name="gps_denied">location permission denied</string>
+    <string-array name="compass_points">
+        <item>N</item>
+        <item>NE</item>
+        <item>E</item>
+        <item>SE</item>
+        <item>S</item>
+        <item>SW</item>
+        <item>W</item>
+        <item>NW</item>
+    </string-array>
+    <string name="bar_verified">calibrated</string>
+    <string name="bar_unverified">unverified</string>
+    <string name="screen_viewer">viewfinder</string>
+    <string name="screen_calibration">calibration</string>
+    <string name="menu_title">menu</string>
+    <string name="menu_calibration">calibrate lenses (measure FOV)</string>
+    <string name="menu_diagnostics">camera diagnostics</string>
+    <string name="menu_theme">theme</string>
+    <string name="cal_intro">measures this lens\'s real field of view so the viewfinder frames are accurate</string>
+</resources>

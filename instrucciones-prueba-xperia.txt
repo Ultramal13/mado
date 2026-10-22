@@ -1,0 +1,24 @@
+Prueba de Mado en el Xperia / Xperia test / Xperia テスト手順
+
+APK: mado-prueba-xperia.apk (versión de prueba, 30 MB). Android 10 o superior.
+
+Español (para quien envía el archivo)
+1. Instala el APK. Si Android pregunta por «fuentes desconocidas», permítelo solo para esa app (navegador o gestor de archivos).
+2. Abre Mado. Arranca en «0 diagnóstico»: esa pantalla no abre la cámara.
+3. Toca guardar archivo: el JSON queda en la carpeta Descargas/Mado del teléfono (app «Archivos»). Luego toca compartir para enviarlo como adjunto. Si no funciona, copiar json lo copia como texto para pegarlo en un mensaje.
+4. (Opcional) Toca «2 marco» → «iniciar preview» → permite la cámara → mira si aparece imagen unos 10 segundos → «detener». Cambia de lente con los botones numerados y dime con cuáles aparece imagen.
+5. Termina siempre con detener. Si el teléfono se calienta, detén al tiro.
+
+English
+1. Install the APK. If Android asks about "unknown sources", allow it only for the app you opened the file with.
+2. Open Mado. It starts on "0 diagnostics": this screen does not open the camera.
+3. Tap save file: the JSON is saved in the Downloads/Mado folder (Files app). Then tap share to send it as an attachment. If that fails, copy json copies it as text to paste into a message.
+4. (Optional) Tap "2 frame" → "start preview" → allow the camera → check for about 10 seconds that an image appears → "stop". Switch lens with the numbered buttons and tell me which ones show an image.
+5. Always finish with stop. If the phone gets warm, stop right away.
+
+日本語（※翻訳は未確認です）
+1. APK をインストールします。「提供元不明のアプリ」の許可を求められたら、ファイルを開いたアプリにだけ許可してください。
+2. Mado を開きます。最初の画面は「診断」です（この画面ではカメラは起動しません）。
+3. 「ファイル保存」をタップすると、JSON が「ダウンロード/Mado」フォルダ（「ファイル」アプリ）に保存されます。続けて「共有」をタップして添付として送ってください。うまくいかない場合は「JSONをコピー」でテキストをコピーし、メッセージに貼り付けてください。
+4. （任意）上の「枠」をタップ →「プレビュー開始」→ カメラを許可 → 10秒ほど映像が出るか確認 →「停止」。番号のボタンでレンズを切り替えて、どのレンズで映像が出たか教えてください。
+5. 終わったら必ず「停止」を押してください。本体が熱くなったらすぐ停止してください。

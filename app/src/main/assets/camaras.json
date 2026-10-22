@@ -1,0 +1,3362 @@
+{
+ "_nota": "Datos de cámaras investigados el 2026-10-21 con fuentes oficiales (ver cada modo). derivado=true: valor calculado, no publicado por el fabricante. Pendiente revisión visual puntual: ARRI Alexa 35 (leído de imagen) y de-squeeze del Venice 2. Insta360 Luna Ultra: sin mm de sensor, la focal equivalente se asume horizontal. Cámaras principales (principal_orden): Canon EOS R5, Insta360 Luna Ultra y Sony FX3; el resto va bajo «más cámaras». 2026-10-21: agregadas RED V-RAPTOR (VV y S35), RED KOMODO y KOMODO-X, Sony Burano, ARRI Alexa Mini, ARRI Alexa original (Classic y XT). Sony FX6 pendiente de fuente oficial (sin mm).",
+ "schema_version": 1,
+ "actualizado": "2026-10-21",
+ "camaras": [
+  {
+   "id": "sony_a7_iv",
+   "marca": "Sony",
+   "modelo": "A7 IV (ILCE-7M4)",
+   "tipo": "mirrorless full frame foto/video",
+   "montura": "Sony E (fuente: Help Guide 'Sony E-mount lens'; sony.jp 'Eマウント')",
+   "modos": [
+    {
+     "id": "foto_ff_3_2_L",
+     "nombre": "Foto FF 3:2 (L, 33 MP)",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 23.9,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "7008x4672",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7M4, 'Specifications > Image sensor': 35 mm full frame (35.9 mm x 23.9 mm), approx. 33.0 MP effective; cuadro 'Still image size' (JPEG Image Size)",
+      "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+     }
+    },
+    {
+     "id": "foto_ff_4_3_L",
+     "nombre": "Foto FF 4:3 (L, 29 MP)",
+     "ancho_activo_mm": 31.88,
+     "alto_activo_mm": 23.9,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.13,
+     "resolucion_px": "6224x4672",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7M4, 'Specifications > Image sensor': 35 mm full frame (35.9 mm x 23.9 mm), approx. 33.0 MP effective; cuadro 'Still image size' (JPEG Image Size)",
+      "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 6224 px x (35.9 mm / 7008 px) = 31.88 mm; alto = 23.9 mm (altura completa, 4672 px)"
+    },
+    {
+     "id": "foto_ff_16_9_L",
+     "nombre": "Foto FF 16:9 (L, 28 MP)",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 20.18,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "7008x3944",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7M4, 'Specifications > Image sensor': 35 mm full frame (35.9 mm x 23.9 mm), approx. 33.0 MP effective; cuadro 'Still image size' (JPEG Image Size)",
+      "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+     },
+     "calculo_derivado": "alto = 3944 px x (23.9 mm / 4672 px) = 20.18 mm; ancho = 35.9 mm"
+    },
+    {
+     "id": "foto_ff_1_1_L",
+     "nombre": "Foto FF 1:1 (L, 22 MP)",
+     "ancho_activo_mm": 23.93,
+     "alto_activo_mm": 23.9,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "4672x4672",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7M4, 'Specifications > Image sensor': 35 mm full frame (35.9 mm x 23.9 mm), approx. 33.0 MP effective; cuadro 'Still image size' (JPEG Image Size)",
+      "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 4672 px x (35.9 mm / 7008 px) = 23.93 mm; alto = 23.9 mm (4672 px de alto completo)"
+    },
+    {
+     "id": "foto_aps_c_3_2_M",
+     "nombre": "Foto APS-C/S35 3:2 (M, 14 MP)",
+     "ancho_activo_mm": 23.61,
+     "alto_activo_mm": 15.72,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.52,
+     "resolucion_px": "4608x3072",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7M4, 'Specifications > Image sensor': 35 mm full frame (35.9 mm x 23.9 mm), approx. 33.0 MP effective; cuadro 'Still image size' (JPEG Image Size)",
+      "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 4608 x (35.9/7008) = 23.61 mm; alto = 3072 x (23.9/4672) = 15.72 mm (supone que 4608x3072 es la lectura APS-C completa; Sony solo dice 'aprox. 1.5x')",
+     "nota": "Factor por pixeles = 35.9/23.61 = 1.521; Sony declara 'approx. 1.5 times'."
+    },
+    {
+     "id": "video_4k_ff",
+     "nombre": "Video 4K UHD full frame (XAVC S/HS/S-I; 24p/30p, y 60p solo con S35)",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 20.19,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "3840x2160",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Japan, pagina de especificaciones ILCE-7M4 (撮像素子 35 mm フルサイズ 35.9 x 23.9 mm; 動画記録モード XAVC HS/S/S-I 4K 3840x2160 y HD; nota *5: en 4K 60p 'APS-C S35 撮影' queda fijo en ON)",
+      "url": "https://www.sony.jp/ichigan/products/ILCE-7M4/spec.html"
+     },
+     "calculo_derivado": "alto = 35.9 mm x 9/16 = 20.19 mm; supone lectura de ancho completo con [APS-C S35]=Off (la Help Guide dice que con Off el angulo es el de full frame)",
+     "nota": "4K 60p/50p no esta disponible en full frame: queda bloqueado en S35 (ver video_4k_s35)."
+    },
+    {
+     "id": "video_fhd_ff",
+     "nombre": "Video FHD full frame (XAVC S/S-I)",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 20.19,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "1920x1080",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Japan, pagina de especificaciones ILCE-7M4 (撮像素子 35 mm フルサイズ 35.9 x 23.9 mm; 動画記録モード XAVC HS/S/S-I 4K 3840x2160 y HD; nota *5: en 4K 60p 'APS-C S35 撮影' queda fijo en ON)",
+      "url": "https://www.sony.jp/ichigan/products/ILCE-7M4/spec.html"
+     },
+     "calculo_derivado": "igual que 4K FF: alto = 35.9 x 9/16 = 20.19 mm"
+    },
+    {
+     "id": "video_4k_s35",
+     "nombre": "Video 4K UHD Super 35 (crop ~1.5x; obligatorio a 4K 60p/50p)",
+     "ancho_activo_mm": 23.93,
+     "alto_activo_mm": 13.46,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "3840x2160",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7M4, 'APS-C S35 (Super 35mm) Shooting' y 'Angle of view': con [On] el angulo de vision es ~1.5x la focal indicada; bloqueado en [On] al grabar 4K 60p/50p",
+      "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 35.9 mm / 1.5 = 23.93 mm; alto = ancho x 9/16 = 13.46 mm",
+     "nota": "Factor 1.5 declarado por Sony como 'approx.'. Alternativa por pixeles de foto APS-C: ancho 23.61 mm (factor 1.52)."
+    },
+    {
+     "id": "video_fhd_s35",
+     "nombre": "Video FHD Super 35 (crop ~1.5x)",
+     "ancho_activo_mm": 23.93,
+     "alto_activo_mm": 13.46,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "1920x1080",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7M4, 'APS-C S35 (Super 35mm) Shooting' y 'Angle of view': con [On] el angulo de vision es ~1.5x la focal indicada; bloqueado en [On] al grabar 4K 60p/50p",
+      "url": "https://helpguide.sony.net/ilc/2110/v1/en/print.pdf"
+     },
+     "calculo_derivado": "igual que video_4k_s35",
+     "nota": "Nota *7 de Sony Japan: con S35 activado, a 120 fps la lectura efectiva del sensor es 1,570x886 px; no se pudo traducir a mm (null para 120p)."
+    }
+   ],
+   "notas": "Sensor Exmor R CMOS 35.9 x 23.9 mm, ~33.0 MP efectivos (7008x4672). Sony no publica ancho/alto en mm por modo de video; los modos de video son derivados (ratio de aspecto y factor 1.5 oficial). Nota: la pagina sony.jp contiene una fila 'XAVC HS 8K 7680x4320' con '-' en frame rates (no soportado en A7 IV); no se incluyo. Los dimensiones 'oficiales' de sensor son nominales (la relacion 35.9/7008 vs 23.9/4672 da pitches ligeramente distintos, 5.123 vs 5.116 um), error esperado <=0.1 mm."
+  },
+  {
+   "id": "sony_fx3",
+   "marca": "Sony",
+   "modelo": "FX3 (ILME-FX3)",
+   "tipo": "cine line full frame compacta",
+   "montura": "Sony E (fuente: Help Guide 'Sony E-mount lens')",
+   "modos": [
+    {
+     "id": "foto_ff_3_2_L",
+     "nombre": "Foto FF 3:2 (L, 12 MP)",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 23.8,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "4240x2832",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Help Guide ILME-FX3, 'Specifications > Image sensor': 35 mm full frame (35.6 mm x 23.8 mm), approx. 12.1 MP efectivos; 'JPEG Image Size' (L 12M 4240x2832; APS-C L 5.1M 2768x1848)",
+      "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+     }
+    },
+    {
+     "id": "foto_aps_c_3_2_L",
+     "nombre": "Foto APS-C/S35 3:2 (L, 5.1 MP)",
+     "ancho_activo_mm": 23.73,
+     "alto_activo_mm": 15.87,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "2768x1848",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILME-FX3, 'Specifications > Image sensor': 35 mm full frame (35.6 mm x 23.8 mm), approx. 12.1 MP efectivos; 'JPEG Image Size' (L 12M 4240x2832; APS-C L 5.1M 2768x1848)",
+      "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+     },
+     "calculo_derivado": "35.6/1.5 = 23.73; 23.8/1.5 = 15.87 (Sony: 'approximately 1.5 times')",
+     "nota": "Alternativa por pixeles: 35.6 x 2768/4240 = 23.24 mm (factor 1.53)."
+    },
+    {
+     "id": "video_4k_ff",
+     "nombre": "Video 4K UHD full frame (24/25/30/50/60/100/120p)",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 20.03,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "3840x2160",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILME-FX3, 'File Format (movie)' (XAVC S 4K/HD, S-I, HS: 3840x2160 y 1920x1080) y 'APS-C S35 (Super 35mm) Shooting': 4K no se puede grabar con [On]; con [On] angulo ~1.5x la focal",
+      "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+     },
+     "calculo_derivado": "alto = 35.6 x 9/16 = 20.03 mm; supone ancho completo: la Help Guide indica que 4K solo se graba con [APS-C S35]=Off (angulo de full frame)",
+     "nota": "La Help Guide no documenta un recorte adicional para 4K 120p/100p; no se pudo verificar en esta fuente (dato no incluido)."
+    },
+    {
+     "id": "video_fhd_ff",
+     "nombre": "Video FHD full frame",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 20.03,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "1920x1080",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILME-FX3, 'File Format (movie)' (XAVC S 4K/HD, S-I, HS: 3840x2160 y 1920x1080) y 'APS-C S35 (Super 35mm) Shooting': 4K no se puede grabar con [On]; con [On] angulo ~1.5x la focal",
+      "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+     },
+     "calculo_derivado": "alto = 35.6 x 9/16 = 20.03 mm"
+    },
+    {
+     "id": "video_fhd_s35",
+     "nombre": "Video FHD Super 35 (crop ~1.5x)",
+     "ancho_activo_mm": 23.73,
+     "alto_activo_mm": 13.35,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "1920x1080",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILME-FX3, 'File Format (movie)' (XAVC S 4K/HD, S-I, HS: 3840x2160 y 1920x1080) y 'APS-C S35 (Super 35mm) Shooting': 4K no se puede grabar con [On]; con [On] angulo ~1.5x la focal",
+      "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 35.6/1.5 = 23.73 mm; alto = ancho x 9/16 = 13.35 mm"
+    }
+   ],
+   "notas": "Guia usada: ILME-FX3 (helpguide ilc/2035), no FX3A ni FX30. La Help Guide solo lista 4K como 3840x2160 (UHD); no se encontro 4096x2160 en esta fuente. Sony no publica mm por modo de video; todo derivado. Modos de video con estabilizacion (Active/Dynamic) o 'Cinematic' pueden recortar mas: no cuantificado en la fuente.",
+   "principal_orden": 3
+  },
+  {
+   "id": "sony_venice2_8k",
+   "marca": "Sony",
+   "modelo": "VENICE 2 8K (MPC-3628)",
+   "tipo": "cine digital full frame 8.6K",
+   "montura": "PL (con adaptador PL suministrado); E-mount quitando el adaptador PL (fuente: manual FW3.0 pag. 3-4 'E-mount lens support')",
+   "modos": [
+    {
+     "id": "8_6k_3_2",
+     "nombre": "8.6K 3:2 (full frame, licencia Full-Frame)",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 24.0,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "8640x5760",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     },
+     "desqueeze_soportado": [
+      1.25,
+      1.3,
+      1.5,
+      1.6,
+      1.8,
+      2.0
+     ],
+     "licencia_anamorfica_requerida_para_desqueeze": true
+    },
+    {
+     "id": "8_6k_17_9",
+     "nombre": "8.6K 17:9 (full frame)",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 19.0,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "8640x4556",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     },
+     "desqueeze_soportado": [
+      1.25,
+      1.3,
+      1.6,
+      1.8,
+      2.0
+     ],
+     "licencia_anamorfica_requerida_para_desqueeze": true
+    },
+    {
+     "id": "8_2k_2_39",
+     "nombre": "8.2K 2.39:1 (full frame)",
+     "ancho_activo_mm": 34.1,
+     "alto_activo_mm": 14.3,
+     "relacion_aspecto": "2.39:1",
+     "factor_crop_vs_ff": 1.06,
+     "resolucion_px": "8192x3432",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "8_2k_17_9",
+     "nombre": "8.2K 17:9 (full frame)",
+     "ancho_activo_mm": 34.1,
+     "alto_activo_mm": 18.0,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.06,
+     "resolucion_px": "8192x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     },
+     "desqueeze_soportado": [
+      1.25,
+      1.3,
+      1.6,
+      1.8,
+      2.0
+     ],
+     "licencia_anamorfica_requerida_para_desqueeze": true
+    },
+    {
+     "id": "8_1k_16_9",
+     "nombre": "8.1K 16:9 (full frame)",
+     "ancho_activo_mm": 33.7,
+     "alto_activo_mm": 19.0,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.07,
+     "resolucion_px": "8100x4556",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "7_6k_16_9",
+     "nombre": "7.6K 16:9 (full frame)",
+     "ancho_activo_mm": 31.9,
+     "alto_activo_mm": 18.0,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.13,
+     "resolucion_px": "7680x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     },
+     "nota": "En el manual FW 1.0 este modo figura con 32.0 x 18.0 mm (ver notas)."
+    },
+    {
+     "id": "5_8k_6_5",
+     "nombre": "5.8K 6:5 (Super 35 anamorfico, licencia Anamorphic)",
+     "ancho_activo_mm": 24.1,
+     "alto_activo_mm": 20.2,
+     "relacion_aspecto": "6:5",
+     "factor_crop_vs_ff": 1.49,
+     "resolucion_px": "5792x4854",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, ANAMORPHIC LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     },
+     "desqueeze_soportado": [
+      2.0
+     ],
+     "licencia_anamorfica_requerida_para_desqueeze": true,
+     "nota": "Con de-squeeze 2.0x el aspecto resultante es 6:5 x 2.0 = 2.4:1 (calculo, no cifra del manual)."
+    },
+    {
+     "id": "5_8k_4_3",
+     "nombre": "5.8K 4:3 (Super 35 anamorfico, licencia Anamorphic)",
+     "ancho_activo_mm": 24.1,
+     "alto_activo_mm": 17.8,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.49,
+     "resolucion_px": "5792x4276",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, ANAMORPHIC LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     },
+     "desqueeze_soportado": [
+      1.3,
+      1.6,
+      1.8,
+      2.0
+     ],
+     "licencia_anamorfica_requerida_para_desqueeze": true
+    },
+    {
+     "id": "5_8k_17_9",
+     "nombre": "5.8K 17:9 (Super 35, sin licencia)",
+     "ancho_activo_mm": 24.1,
+     "alto_activo_mm": 12.7,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.49,
+     "resolucion_px": "5792x3056",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     },
+     "desqueeze_soportado": [
+      1.25,
+      1.3,
+      1.6,
+      1.8,
+      2.0
+     ],
+     "licencia_anamorfica_requerida_para_desqueeze": true
+    },
+    {
+     "id": "5_5k_2_39",
+     "nombre": "5.5K 2.39:1 (Super 35, sin licencia)",
+     "ancho_activo_mm": 22.8,
+     "alto_activo_mm": 9.6,
+     "relacion_aspecto": "2.39:1",
+     "factor_crop_vs_ff": 1.58,
+     "resolucion_px": "5480x2296",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "5_4k_16_9",
+     "nombre": "5.4K 16:9 (Super 35, sin licencia)",
+     "ancho_activo_mm": 22.6,
+     "alto_activo_mm": 12.7,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.59,
+     "resolucion_px": "5434x3056",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 5: tabla 'Software Licenses' (MPC-3628, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    }
+   ],
+   "notas": "Dimensiones W x H en mm tomadas literalmente de la tabla del manual Sony (pag. 5). Modos 'Surround View' (marco +5%) son solo de monitoreo y no se incluyeron. De-squeeze: 1.25x, 1.3x, 1.5x, 1.6x, 1.8x, 2.0x segun modo (tabla pag. 6, leida de imagen del PDF); requiere Anamorphic License. 5.8K 17:9 en 8K: 5792x3056 (algunos distribuidores publican 5434x3056 para 17:9, que en realidad corresponde a 5.4K 16:9 segun Sony)."
+  },
+  {
+   "id": "sony_venice2_6k",
+   "marca": "Sony",
+   "modelo": "VENICE 2 6K (MPC-3626)",
+   "tipo": "cine digital full frame 6K",
+   "montura": "PL (con adaptador PL suministrado); E-mount quitando el adaptador PL (fuente: manual FW3.0)",
+   "modos": [
+    {
+     "id": "6k_3_2",
+     "nombre": "6K 3:2 (full frame, licencia Full-Frame)",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 24.0,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "6048x4032",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "6k_1_85",
+     "nombre": "6K 1.85:1 (full frame)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 19.4,
+     "relacion_aspecto": "1.85:1",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "6054x3272",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "6k_17_9",
+     "nombre": "6K 17:9 (full frame)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 19.0,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "6054x3192",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "6k_2_39",
+     "nombre": "6K 2.39:1 (full frame)",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 15.1,
+     "relacion_aspecto": "2.39:1",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "6048x2536",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     },
+     "nota": "Manual FW 1.0: 6048x2534, 35.9 x 15.0 mm."
+    },
+    {
+     "id": "5_7k_16_9",
+     "nombre": "5.7K 16:9 (full frame)",
+     "ancho_activo_mm": 33.7,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.07,
+     "resolucion_px": "5674x3192",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, FULL-FRAME LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "4k_6_5",
+     "nombre": "4K 6:5 (Super 35 anamorfico, licencia Anamorphic)",
+     "ancho_activo_mm": 24.3,
+     "alto_activo_mm": 20.4,
+     "relacion_aspecto": "6:5",
+     "factor_crop_vs_ff": 1.48,
+     "resolucion_px": "4096x3432",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, ANAMORPHIC LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "4k_4_3",
+     "nombre": "4K 4:3 (Super 35 anamorfico, licencia Anamorphic)",
+     "ancho_activo_mm": 24.3,
+     "alto_activo_mm": 18.0,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.48,
+     "resolucion_px": "4096x3024",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, ANAMORPHIC LICENSE). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "4k_17_9",
+     "nombre": "4K 17:9 DCI (Super 35, sin licencia)",
+     "ancho_activo_mm": 24.3,
+     "alto_activo_mm": 12.8,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.48,
+     "resolucion_px": "4096x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "4k_2_39",
+     "nombre": "4K 2.39:1 (Super 35, sin licencia)",
+     "ancho_activo_mm": 24.3,
+     "alto_activo_mm": 10.3,
+     "relacion_aspecto": "2.39:1",
+     "factor_crop_vs_ff": 1.48,
+     "resolucion_px": "4096x1716",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    },
+    {
+     "id": "3_8k_16_9",
+     "nombre": "3.8K 16:9 UHD (Super 35, sin licencia)",
+     "ancho_activo_mm": 22.8,
+     "alto_activo_mm": 12.8,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.58,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony 'Digital Motion Picture Camera Operating Instructions MPC-3628/MPC-3626' (c) 2022 Sony Corporation, Firmware 3.0, pag. 6: tabla 'Software Licenses' (MPC-3626, License not required). Copia del PDF alojada por Lensrentals; Sony pro.sony devolvio 403 al acceso automatizado.",
+      "url": "https://www.lensrentals.com/product-assets/ebfd8bc2-cc7d-4a83-9854-96b736d838cd/VENICE%202%20UG.pdf"
+     }
+    }
+   ],
+   "notas": "W x H en mm literales de la tabla del manual Sony (pag. 6). Modos Surround View omitidos (monitoreo). No se leyo la tabla de de-squeeze del MPC-3626 (null). Discrepancia FW1.0 vs FW3.0 documentada en el reporte."
+  },
+  {
+   "id": "arri_alexa_mini_lf",
+   "marca": "ARRI",
+   "modelo": "ALEXA Mini LF",
+   "tipo": "cine digital large format",
+   "montura": "ARRI LPL (LBUS); PL via adaptador PL-a-LPL; EF (LBUS); Leitz M (fuente: hoja tecnica ARRI)",
+   "modos": [
+    {
+     "id": "lf_4_5k_3_2_og",
+     "nombre": "4.5K LF 3:2 Open Gate (ARRIRAW / ProRes)",
+     "ancho_activo_mm": 36.7,
+     "alto_activo_mm": 25.54,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 0.98,
+     "resolucion_px": "4448x3096",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+      "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+     },
+     "formatos_codec": "ARRIRAW 4448x3096; ProRes contenedor 4480x3096"
+    },
+    {
+     "id": "lf_4_5k_2_39",
+     "nombre": "4.5K LF 2.39:1 (ARRIRAW / ProRes)",
+     "ancho_activo_mm": 36.7,
+     "alto_activo_mm": 15.31,
+     "relacion_aspecto": "2.39:1",
+     "factor_crop_vs_ff": 0.98,
+     "resolucion_px": "4448x1856",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+      "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+     },
+     "formatos_codec": "ARRIRAW 4448x1856; ProRes contenedor 4480x1856"
+    },
+    {
+     "id": "lf_4_3k_16_9",
+     "nombre": "4.3K LF 16:9 (ProRes; salida UHD/HD)",
+     "ancho_activo_mm": 35.64,
+     "alto_activo_mm": 20.05,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "4320x2430",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+      "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+     },
+     "formatos_codec": "ProRes UHD 3840x2160 o HD 1920x1080"
+    },
+    {
+     "id": "lf_3_8k_16_9",
+     "nombre": "3.8K LF 16:9 (ARRIRAW UHD; ProRes UHD/2K/HD)",
+     "ancho_activo_mm": 31.68,
+     "alto_activo_mm": 17.82,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.14,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+      "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+     },
+     "formatos_codec": "ARRIRAW 3840x2160; ProRes UHD, 2K 2048x1152 o HD"
+    },
+    {
+     "id": "lf_2_8k_1_1",
+     "nombre": "2.8K LF 1:1 (ARRIRAW / ProRes)",
+     "ancho_activo_mm": 23.76,
+     "alto_activo_mm": 23.76,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.52,
+     "resolucion_px": "2880x2880",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+      "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+     },
+     "formatos_codec": "ARRIRAW 2880x2880; ProRes contenedor 3072x2880"
+    },
+    {
+     "id": "s35_3_4k_3_2",
+     "nombre": "3.4K S35 3:2 (ARRIRAW)",
+     "ancho_activo_mm": 28.25,
+     "alto_activo_mm": 18.17,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.27,
+     "resolucion_px": "3424x2202",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+      "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+     }
+    },
+    {
+     "id": "s35_3_2k_16_9",
+     "nombre": "3.2K S35 16:9 (ProRes)",
+     "ancho_activo_mm": 26.4,
+     "alto_activo_mm": 14.85,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.36,
+     "resolucion_px": "3200x1800",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+      "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+     }
+    },
+    {
+     "id": "s35_2_8k_4_3",
+     "nombre": "2.8K S35 4:3 (ProRes)",
+     "ancho_activo_mm": 23.76,
+     "alto_activo_mm": 17.82,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.52,
+     "resolucion_px": "2880x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+      "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+     }
+    },
+    {
+     "id": "s35_2_8k_16_9",
+     "nombre": "2.8K S35 16:9 (ProRes HD)",
+     "ancho_activo_mm": 23.76,
+     "alto_activo_mm": 13.37,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.52,
+     "resolucion_px": "2880x1620",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA Mini LF Technical Details' (hoja tecnica oficial, fecha 17-sep-2021), 'Sensor Active Image Area (dimensions)'; sensor 36.70 x 25.54 mm, 4448x3096, pitch 8.25 um",
+      "url": "https://www.arri.com/resource/blob/261224/0654da7b1dda042b23b1b6c254c1f8c3/alexa-mini-lf-flyer-technical-data-sheet-data.pdf"
+     },
+     "formatos_codec": "ProRes HD 1920x1080"
+    }
+   ],
+   "notas": "Todos los valores en mm vienen literalmente de la hoja tecnica ARRI. Sensor ALEV III (A2X) 4448x3096 = 36.70 x 25.54 mm, diametro 44.71 mm, pitch 8.25 um. factor_crop_vs_ff se calcula como 36.0/ancho (referencia FF = 36 mm; <1 significa area mas ancha que 36 mm). Recording Format Sheet oficial (alexa-mini-lf-recording-format-sheet-din-a4) confirma los nombres de modos pero no incluye mm."
+  },
+  {
+   "id": "arri_alexa_35",
+   "marca": "ARRI",
+   "modelo": "ALEXA 35",
+   "tipo": "cine digital Super 35 (4.6K)",
+   "montura": "ARRI LPL (LBUS); PL-a-LPL; PL (LBUS); PL (Hirose); EF (LBUS); Leitz M (fuente: pagina de producto ARRI, Technical Data)",
+   "modos": [
+    {
+     "id": "4_6k_3_2_og",
+     "nombre": "4.6K 3:2 Open Gate (ARRIRAW / ProRes)",
+     "ancho_activo_mm": 27.99,
+     "alto_activo_mm": 19.22,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.29,
+     "resolucion_px": "4608x3164",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+      "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+     }
+    },
+    {
+     "id": "4_6k_16_9",
+     "nombre": "4.6K 16:9 (ARRIRAW 4608x2592; ProRes graba 4096x2304)",
+     "ancho_activo_mm": 27.99,
+     "alto_activo_mm": 15.75,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.29,
+     "resolucion_px": "4608x2592",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+      "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+     }
+    },
+    {
+     "id": "4k_16_9",
+     "nombre": "4K 16:9 (ARRIRAW y ProRes; ProRes tambien UHD/2K/HD)",
+     "ancho_activo_mm": 24.88,
+     "alto_activo_mm": 14.0,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.45,
+     "resolucion_px": "4096x2304",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+      "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+     }
+    },
+    {
+     "id": "4k_2_1",
+     "nombre": "4K 2:1 (ARRIRAW y ProRes)",
+     "ancho_activo_mm": 24.88,
+     "alto_activo_mm": 12.44,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.45,
+     "resolucion_px": "4096x2048",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+      "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+     }
+    },
+    {
+     "id": "3_8k_16_9",
+     "nombre": "3.8K 16:9 (ARRIRAW)",
+     "ancho_activo_mm": 23.33,
+     "alto_activo_mm": 13.12,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.54,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+      "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+     }
+    },
+    {
+     "id": "3_3k_6_5",
+     "nombre": "3.3K 6:5 (ARRIRAW y ProRes; ProRes tambien 4K 2.39:1 Ana 2x)",
+     "ancho_activo_mm": 20.22,
+     "alto_activo_mm": 16.95,
+     "relacion_aspecto": "6:5",
+     "factor_crop_vs_ff": 1.78,
+     "resolucion_px": "3328x2790",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+      "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+     },
+     "squeeze_anamorfico": 2.0,
+     "salida_anamorfica": "4K 2.39:1 Ana 2x, 4096x1716 (ProRes)"
+    },
+    {
+     "id": "3k_1_1",
+     "nombre": "3K 1:1 (ARRIRAW y ProRes; ProRes tambien 3.8K 2:1 Ana 2x)",
+     "ancho_activo_mm": 18.66,
+     "alto_activo_mm": 18.66,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.93,
+     "resolucion_px": "3072x3072",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+      "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+     },
+     "squeeze_anamorfico": 2.0,
+     "salida_anamorfica": "3.8K 2:1 Ana 2x, 3840x1920 (ProRes)"
+    },
+    {
+     "id": "2_7k_8_9",
+     "nombre": "2.7K 8:9 (solo ProRes, UHD 16:9 Ana 2x)",
+     "ancho_activo_mm": 16.66,
+     "alto_activo_mm": 18.75,
+     "relacion_aspecto": "8:9",
+     "factor_crop_vs_ff": 2.16,
+     "resolucion_px": "2743x3086",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+      "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+     },
+     "squeeze_anamorfico": 2.0,
+     "salida_anamorfica": "UHD 16:9 Ana 2x, 3840x2160 (ProRes)"
+    },
+    {
+     "id": "2k_16_9_s16",
+     "nombre": "2K 16:9 S16 (solo ProRes)",
+     "ancho_activo_mm": 12.44,
+     "alto_activo_mm": 7.0,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 2.89,
+     "resolucion_px": "2048x1152",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI 'ALEXA 35 Recording Formats' (tabla oficial, imagen 2023-05-09): columnas Sensor Photosites H/V, H mm, V mm, diametro. Imagen: https://www.arri.com/resource/blob/318728/cf427876ca2c4f0087cdad3fe2db84e2/2023-05-09-pia-recording-formats-m08-1160x653-data.jpg",
+      "url": "https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35/alexa-35-recording-formats"
+     }
+    }
+   ],
+   "notas": "Sensor ALEV 4: 4608x3164 = 27.99 x 19.22 mm, diametro 33.96 mm, pitch 6.075 um (pagina de producto ARRI > Technical Data). La tabla de formatos es una imagen (no texto); los valores se leyeron de la imagen oficial descargada. Los modos anamorficos 2x: aspecto de salida = aspecto de sensor x squeeze segun la tabla. La pagina de producto menciona 'A total of 20 ARRIRAW and Apple ProRes recording formats' (cuenta de formatos de grabacion, no de sensor modes)."
+  },
+  {
+   "id": "canon_eos_r5",
+   "marca": "Canon",
+   "modelo": "EOS R5",
+   "tipo": "mirrorless full frame foto/video 8K",
+   "montura": "Canon RF (fuente: manual Canon > Specifications)",
+   "modos": [
+    {
+     "id": "foto_3_2",
+     "nombre": "Foto 3:2 full frame (44.8 MP)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 24.0,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "8192x5464",
+     "derivado": false,
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Specifications: Image sensor 'Approx. 36.0x24.0 mm', ~45.0 MP; Still photo pixel count (3:2 8192x5464; 1.6x crop 5088x3392)",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-09_Reference_0100.html"
+     }
+    },
+    {
+     "id": "foto_crop_1_6",
+     "nombre": "Foto 1.6x crop (17.3 MP)",
+     "ancho_activo_mm": 22.5,
+     "alto_activo_mm": 15.0,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.6,
+     "resolucion_px": "5088x3392",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Specifications: Image sensor 'Approx. 36.0x24.0 mm', ~45.0 MP; Still photo pixel count (3:2 8192x5464; 1.6x crop 5088x3392)",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-09_Reference_0100.html"
+     },
+     "calculo_derivado": "36.0/1.6 = 22.50 mm; 24.0/1.6 = 15.00 mm (Canon: 'Approx. 1.6 times'); alternativa por pixeles: 36.0 x 5088/8192 = 22.36 mm"
+    },
+    {
+     "id": "video_8k_dci",
+     "nombre": "Video 8K DCI 17:9 (RAW/ALL-I/IPB; sin crop)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "8192x4320",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "ancho = 36.0 mm (8192 px = ancho de foto full frame; Image Area (2)); alto = 4320 px x (24.0 mm / 5464 px) = 18.98 mm"
+    },
+    {
+     "id": "video_8k_uhd",
+     "nombre": "Video 8K UHD 16:9 (sin crop)",
+     "ancho_activo_mm": 33.75,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.07,
+     "resolucion_px": "7680x4320",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "ancho = 7680 x (36.0/8192) = 33.75 mm; alto = 18.98 mm (mismo alto que 8K DCI; Image Area (3))"
+    },
+    {
+     "id": "video_4k_dci",
+     "nombre": "Video 4K DCI 17:9 (sin crop)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "4096x2160",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "Segun 'Image Area', 8K DCI y 4K DCI comparten el area (2): 36.0 x 18.98 mm"
+    },
+    {
+     "id": "video_4k_uhd",
+     "nombre": "Video 4K UHD 16:9 (sin crop)",
+     "ancho_activo_mm": 33.75,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.07,
+     "resolucion_px": "3840x2160",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "Area (3) = igual que 8K UHD: 33.75 x 18.98 mm"
+    },
+    {
+     "id": "video_fhd",
+     "nombre": "Video Full HD (sin crop)",
+     "ancho_activo_mm": 33.75,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.07,
+     "resolucion_px": "1920x1080",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "Area (3) = igual que 8K/4K UHD"
+    },
+    {
+     "id": "video_4k_dci_crop",
+     "nombre": "Video 4K DCI con Movie cropping = Enable (1.6x)",
+     "ancho_activo_mm": 22.5,
+     "alto_activo_mm": 11.87,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.6,
+     "resolucion_px": "4096x2160",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Movie Cropping: el recorte equivale a usar lentes RF-S/EF-S; Specifications: 'Using RF-S or EF-S lenses: Approx. 1.6 times the indicated focal length'",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0050.html"
+     },
+     "calculo_derivado": "ancho = 36.0/1.6 = 22.50 mm (Canon: equivale a RF-S/EF-S, ~1.6x); alto = ancho x 2160/4096 = 11.87 mm",
+     "nota": "Con Digital IS = On/Enhanced el recorte aumenta (no cuantificado). 8K, High Frame Rate y 4K HQ no admiten Movie cropping."
+    },
+    {
+     "id": "video_4k_uhd_crop",
+     "nombre": "Video 4K UHD con Movie cropping = Enable (1.6x)",
+     "ancho_activo_mm": 21.09,
+     "alto_activo_mm": 11.87,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.71,
+     "resolucion_px": "3840x2160",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Movie Cropping: el recorte equivale a usar lentes RF-S/EF-S; Specifications: 'Using RF-S or EF-S lenses: Approx. 1.6 times the indicated focal length'",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0050.html"
+     },
+     "calculo_derivado": "ancho = 22.5 x 3840/4096 = 21.09 mm; alto = 11.87 mm (area (6) = UHD/FHD dentro de la DCI recortada)",
+     "nota": "factor_crop_vs_ff es respecto al ancho 36.0 mm: 36.0/21.09; el factor de recorte de sensor es 1.6 (Canon)."
+    },
+    {
+     "id": "video_fhd_crop",
+     "nombre": "Video Full HD con Movie cropping = Enable (1.6x)",
+     "ancho_activo_mm": 21.09,
+     "alto_activo_mm": 11.87,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.71,
+     "resolucion_px": "1920x1080",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Movie Cropping: el recorte equivale a usar lentes RF-S/EF-S; Specifications: 'Using RF-S or EF-S lenses: Approx. 1.6 times the indicated focal length'",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0050.html"
+     },
+     "calculo_derivado": "igual que video_4k_uhd_crop"
+    }
+   ],
+   "notas": "Sensor 'Approx. 36.0x24.0 mm', ~45.0 MP. Canon no publica mm por modo de video; 8K y 4K sin crop usan el ancho completo segun la figura 'Image Area' del manual (figura leida: las areas 8K/4K comparten el mismo recuadro), por lo que los mm son derivados. Con RF-S/EF-S el recorte es el mismo que 'Movie cropping'. 4K 60p con crop: tiempo limitado a ~25 min por temperatura (Canon). 4K Alta tasa de cuadros (119.9/100 fps) y 4K HQ: la pagina 'Image Area' no los lista aparte, no se encontro dato de recorte adicional (no incluido).",
+   "principal_orden": 1
+  },
+  {
+   "id": "insta360_luna_ultra",
+   "marca": "Insta360",
+   "modelo": "Luna Ultra",
+   "tipo": "lente_fija",
+   "montura": null,
+   "modos": [
+    {
+     "id": "lente_principal",
+     "nombre": "Lente principal (1\" , 20 mm eq.)",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": null,
+     "factor_crop_vs_ff": null,
+     "resolucion_px": null,
+     "derivado": false,
+     "fuente": {
+      "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     },
+     "motivo_null": "La ficha oficial da el formato opcional '1\"' (designacion comercial) y la focal equivalente 35 mm, pero no ancho/alto activo en mm ni el recorte por modo de video/foto."
+    },
+    {
+     "id": "lente_tele",
+     "nombre": "Lente teleobjetivo (1/1.3\", 60 mm eq.)",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": null,
+     "factor_crop_vs_ff": null,
+     "resolucion_px": null,
+     "derivado": false,
+     "fuente": {
+      "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     },
+     "motivo_null": "Igual que la lente principal: solo designacion '1/1.3\"' y focal equivalente."
+    }
+   ],
+   "lentes_integradas": [
+    {
+     "id": "principal",
+     "sensor_tipo_comercial": "1 inch",
+     "apertura": "F1.8",
+     "focal_equivalente_ff_mm": 20,
+     "distancia_minima_foco_cm": 9,
+     "fuente": {
+      "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     },
+     "fuente_secundaria": {
+      "texto": "Insta360 Online Manual 'Luna Series: Hardware Specifications': sensor main 1 inch, tele 1/1.3 inch; 35mm Equivalent 20mm / 60mm; efectivos ~50MP (8192x6144)",
+      "url": "https://onlinemanual.insta360.com/lunaultra/en-us/specs/specs"
+     }
+    },
+    {
+     "id": "tele",
+     "sensor_tipo_comercial": "1/1.3 inch",
+     "apertura": "F2.0",
+     "focal_equivalente_ff_mm": 60,
+     "distancia_minima_foco_cm": 15,
+     "fuente": {
+      "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     },
+     "fuente_secundaria": {
+      "texto": "Insta360 Online Manual 'Luna Series: Hardware Specifications': sensor main 1 inch, tele 1/1.3 inch; 35mm Equivalent 20mm / 60mm; efectivos ~50MP (8192x6144)",
+      "url": "https://onlinemanual.insta360.com/lunaultra/en-us/specs/specs"
+     }
+    }
+   ],
+   "zoom_digital": {
+    "foto": "1-15x",
+    "video": "1-15x",
+    "fuente": {
+     "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+     "url": "https://www.insta360.com/specs/luna-ultra"
+    }
+   },
+   "resolucion_efectiva_sensor_px": {
+    "valor": "aprox. 50MP (8192x6144)",
+    "fuente": {
+     "texto": "Insta360 Online Manual 'Luna Series: Hardware Specifications': sensor main 1 inch, tele 1/1.3 inch; 35mm Equivalent 20mm / 60mm; efectivos ~50MP (8192x6144)",
+     "url": "https://onlinemanual.insta360.com/lunaultra/en-us/specs/specs"
+    },
+    "nota": "La fuente no indica a cual lente corresponde; 8192x6144 es 4:3."
+   },
+   "notas": "Montura: lente fija (null). Ninguna ficha oficial da mm de sensor; '1\"' y '1/1.3\"' son designaciones de formato optico, no dimensiones, por eso quedan null. La ficha oficial no aclara si la focal equivalente es por diagonal u horizontal ni para que aspecto de imagen aplica (se asume la del sensor completo; no verificado). El modo 4K/8K, 2.35:1 y 1:1 pueden usar recortes del sensor no documentados.",
+   "principal_orden": 2,
+   "descripcion": "camara gimbal de lente fija doble (1\" + 1/1.3\")"
+  },
+  {
+   "id": "red_v_raptor_8k_vv",
+   "marca": "RED",
+   "modelo": "V-RAPTOR 8K VV (también XL, [X] y XL [X])",
+   "tipo": "lente_intercambiable",
+   "montura": "RF integrada (Canon RF) con soporte de lentes RF; Canon EF con adaptador RF-EF compatible (RED 955-0198 V2.1 Rev A, Technical Specifications, p. 266)",
+   "modos": [
+    {
+     "id": "vraptor_vv_8k_17_9",
+     "nombre": "8K 17:9",
+     "ancho_activo_mm": 40.96,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 0.879,
+     "resolucion_px": "8192x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 17:9\": 8192 x 4320 px = 40.96 x 21.6 mm (diagonal 46.31 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_2_1",
+     "nombre": "8K 2:1",
+     "ancho_activo_mm": 40.96,
+     "alto_activo_mm": 20.48,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 0.879,
+     "resolucion_px": "8192x4096",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 2:1\": 8192 x 4096 px = 40.96 x 20.48 mm (diagonal 45.79 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_2_4_1",
+     "nombre": "8K 2.4:1",
+     "ancho_activo_mm": 40.96,
+     "alto_activo_mm": 17.28,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 0.879,
+     "resolucion_px": "8192x3456",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 2.4:1\": 8192 x 3456 px = 40.96 x 17.28 mm (diagonal 44.46 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_16_9",
+     "nombre": "8K 16:9",
+     "ancho_activo_mm": 38.4,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 0.938,
+     "resolucion_px": "7680x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 16:9\": 7680 x 4320 px = 38.4 x 21.6 mm (diagonal 44.06 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_1_1",
+     "nombre": "8K 1:1",
+     "ancho_activo_mm": 21.6,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.667,
+     "resolucion_px": "4320x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 1:1\": 4320 x 4320 px = 21.6 x 21.6 mm (diagonal 30.55 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_4_3_2x",
+     "nombre": "8K 4:3 2x (anamorfico 2x)",
+     "ancho_activo_mm": 28.8,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.25,
+     "resolucion_px": "5760x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 4:3 2x\": 5760 x 4320 px = 28.8 x 21.6 mm (diagonal 36.0 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_6_5_2x",
+     "nombre": "8K 6:5 2x (anamorfico 2x)",
+     "ancho_activo_mm": 25.92,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "6:5",
+     "factor_crop_vs_ff": 1.389,
+     "resolucion_px": "5184x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 6:5 2x\": 5184 x 4320 px = 25.92 x 21.6 mm (diagonal 33.74 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_1_1_2x",
+     "nombre": "8K 1:1 2x (anamorfico 2x)",
+     "ancho_activo_mm": 21.6,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.667,
+     "resolucion_px": "4320x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 1:1 2x\": 4320 x 4320 px = 21.6 x 21.6 mm (diagonal 30.55 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_3_2_1_8x",
+     "nombre": "8K 3:2 1.8x (anamorfico 1.8x)",
+     "ancho_activo_mm": 32.4,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.111,
+     "resolucion_px": "6480x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 3:2 1.8x\": 6480 x 4320 px = 32.4 x 21.6 mm (diagonal 38.94 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_4_3_1_8x",
+     "nombre": "8K 4:3 1.8x (anamorfico 1.8x)",
+     "ancho_activo_mm": 28.8,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.25,
+     "resolucion_px": "5758x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 4:3 1.8x\": 5758 x 4320 px = 28.8 x 21.6 mm (diagonal 36.0 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_3_2_1_6x",
+     "nombre": "8K 3:2 1.6x (anamorfico 1.6x)",
+     "ancho_activo_mm": 32.4,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.111,
+     "resolucion_px": "6480x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 3:2 1.6x\": 6480 x 4320 px = 32.4 x 21.6 mm (diagonal 38.94 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_16_9_1_5x",
+     "nombre": "8K 16:9 1.5x (anamorfico 1.5x)",
+     "ancho_activo_mm": 38.4,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 0.938,
+     "resolucion_px": "7680x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 16:9 1.5x\": 7680 x 4320 px = 38.4 x 21.6 mm (diagonal 44.06 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_17_9_1_3x",
+     "nombre": "8K 17:9 1.3x (anamorfico 1.3x)",
+     "ancho_activo_mm": 40.96,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 0.879,
+     "resolucion_px": "8192x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 17:9 1.3x\": 8192 x 4320 px = 40.96 x 21.6 mm (diagonal 46.31 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_16_9_1_3x",
+     "nombre": "8K 16:9 1.3x (anamorfico 1.3x)",
+     "ancho_activo_mm": 38.4,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 0.938,
+     "resolucion_px": "7680x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 16:9 1.3x\": 7680 x 4320 px = 38.4 x 21.6 mm (diagonal 44.06 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_8k_17_9_1_25x",
+     "nombre": "8K 17:9 1.25x (anamorfico 1.25x)",
+     "ancho_activo_mm": 40.96,
+     "alto_activo_mm": 21.6,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 0.879,
+     "resolucion_px": "8192x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"8K 17:9 1.25x\": 8192 x 4320 px = 40.96 x 21.6 mm (diagonal 46.31 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_17_9",
+     "nombre": "7K 17:9",
+     "ancho_activo_mm": 35.84,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.004,
+     "resolucion_px": "7168x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 17:9\": 7168 x 3780 px = 35.84 x 18.9 mm (diagonal 40.52 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_2_1",
+     "nombre": "7K 2:1",
+     "ancho_activo_mm": 35.84,
+     "alto_activo_mm": 17.92,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.004,
+     "resolucion_px": "7168x3584",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 2:1\": 7168 x 3584 px = 35.84 x 17.92 mm (diagonal 40.07 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_2_4_1",
+     "nombre": "7K 2.4:1",
+     "ancho_activo_mm": 35.84,
+     "alto_activo_mm": 15.01,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 1.004,
+     "resolucion_px": "7168x3002",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 2.4:1\": 7168 x 3002 px = 35.84 x 15.01 mm (diagonal 38.86 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_16_9",
+     "nombre": "7K 16:9",
+     "ancho_activo_mm": 33.6,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.071,
+     "resolucion_px": "6720x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 16:9\": 6720 x 3780 px = 33.6 x 18.9 mm (diagonal 38.55 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_1_1",
+     "nombre": "7K 1:1",
+     "ancho_activo_mm": 18.9,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.905,
+     "resolucion_px": "3780x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 1:1\": 3780 x 3780 px = 18.9 x 18.9 mm (diagonal 26.73 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_4_3_2x",
+     "nombre": "7K 4:3 2x (anamorfico 2x)",
+     "ancho_activo_mm": 25.2,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.429,
+     "resolucion_px": "5040x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 4:3 2x\": 5040 x 3780 px = 25.2 x 18.9 mm (diagonal 31.5 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_6_5_2x",
+     "nombre": "7K 6:5 2x (anamorfico 2x)",
+     "ancho_activo_mm": 22.68,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "6:5",
+     "factor_crop_vs_ff": 1.587,
+     "resolucion_px": "4536x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 6:5 2x\": 4536 x 3780 px = 22.68 x 18.9 mm (diagonal 29.52 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_1_1_2x",
+     "nombre": "7K 1:1 2x (anamorfico 2x)",
+     "ancho_activo_mm": 18.9,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.905,
+     "resolucion_px": "3780x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 1:1 2x\": 3780 x 3780 px = 18.9 x 18.9 mm (diagonal 26.73 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_3_2_1_8x",
+     "nombre": "7K 3:2 1.8x (anamorfico 1.8x)",
+     "ancho_activo_mm": 28.35,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.27,
+     "resolucion_px": "5670x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 3:2 1.8x\": 5670 x 3780 px = 28.35 x 18.9 mm (diagonal 28.14 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_4_3_1_8x",
+     "nombre": "7K 4:3 1.8x (anamorfico 1.8x)",
+     "ancho_activo_mm": 25.2,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.429,
+     "resolucion_px": "5040x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 4:3 1.8x\": 5040 x 3780 px = 25.2 x 18.9 mm (diagonal 31.5 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_7k_3_2_1_6x",
+     "nombre": "7K 3:2 1.6x (anamorfico 1.6x)",
+     "ancho_activo_mm": 28.35,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.27,
+     "resolucion_px": "5670x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"7K 3:2 1.6x\": 5670 x 3780 px = 28.35 x 18.9 mm (diagonal 28.14 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_6k_17_9",
+     "nombre": "6K 17:9",
+     "ancho_activo_mm": 30.72,
+     "alto_activo_mm": 16.2,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.172,
+     "resolucion_px": "6144x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"6K 17:9\": 6144 x 3240 px = 30.72 x 16.2 mm (diagonal 34.73 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_6k_2_1",
+     "nombre": "6K 2:1",
+     "ancho_activo_mm": 30.72,
+     "alto_activo_mm": 15.36,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.172,
+     "resolucion_px": "6144x3072",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"6K 2:1\": 6144 x 3072 px = 30.72 x 15.36 mm (diagonal 34.35 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_6k_2_4_1",
+     "nombre": "6K 2.4:1",
+     "ancho_activo_mm": 30.72,
+     "alto_activo_mm": 12.87,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 1.172,
+     "resolucion_px": "6144x2592",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"6K 2.4:1\": 6144 x 2592 px = 30.72 x 12.87 mm (diagonal 33.31 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     },
+     "nota": "El alto de la tabla oficial (12.87 mm) difiere de pixeles x pitch (2592 px -> 12.96 mm); el ancho (que fija el FOV horizontal) es consistente. Se conserva el valor del fabricante."
+    },
+    {
+     "id": "vraptor_vv_6k_16_9",
+     "nombre": "6K 16:9",
+     "ancho_activo_mm": 28.8,
+     "alto_activo_mm": 16.2,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.25,
+     "resolucion_px": "5760x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"6K 16:9\": 5760 x 3240 px = 28.8 x 16.2 mm (diagonal 33.04 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_6k_1_1",
+     "nombre": "6K 1:1",
+     "ancho_activo_mm": 16.2,
+     "alto_activo_mm": 16.2,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.222,
+     "resolucion_px": "3240x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"6K 1:1\": 3240 x 3240 px = 16.2 x 16.2 mm (diagonal 22.91 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_6k_16_9_1_5x",
+     "nombre": "6K 16:9 1.5x (anamorfico 1.5x)",
+     "ancho_activo_mm": 28.8,
+     "alto_activo_mm": 16.2,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.25,
+     "resolucion_px": "5760x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"6K 16:9 1.5x\": 5760 x 3240 px = 28.8 x 16.2 mm (diagonal 33.04 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_6k_17_9_1_3x",
+     "nombre": "6K 17:9 1.3x (anamorfico 1.3x)",
+     "ancho_activo_mm": 30.72,
+     "alto_activo_mm": 16.2,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.172,
+     "resolucion_px": "6144x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"6K 17:9 1.3x\": 6144 x 3240 px = 30.72 x 16.2 mm (diagonal 34.73 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_6k_16_9_1_3x",
+     "nombre": "6K 16:9 1.3x (anamorfico 1.3x)",
+     "ancho_activo_mm": 28.8,
+     "alto_activo_mm": 16.2,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.25,
+     "resolucion_px": "5760x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"6K 16:9 1.3x\": 5760 x 3240 px = 28.8 x 16.2 mm (diagonal 33.04 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_6k_17_9_1_25x",
+     "nombre": "6K 17:9 1.25x (anamorfico 1.25x)",
+     "ancho_activo_mm": 30.72,
+     "alto_activo_mm": 16.2,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.172,
+     "resolucion_px": "6144x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"6K 17:9 1.25x\": 6144 x 3240 px = 30.72 x 16.2 mm (diagonal 34.73 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_5k_17_9",
+     "nombre": "5K 17:9",
+     "ancho_activo_mm": 25.6,
+     "alto_activo_mm": 13.5,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.406,
+     "resolucion_px": "5120x2700",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"5K 17:9\": 5120 x 2700 px = 25.6 x 13.5 mm (diagonal 28.94 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_5k_2_1",
+     "nombre": "5K 2:1",
+     "ancho_activo_mm": 25.6,
+     "alto_activo_mm": 12.8,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.406,
+     "resolucion_px": "5120x2560",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"5K 2:1\": 5120 x 2560 px = 25.6 x 12.8 mm (diagonal 28.62 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_5k_2_4_1",
+     "nombre": "5K 2.4:1",
+     "ancho_activo_mm": 25.6,
+     "alto_activo_mm": 10.8,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 1.406,
+     "resolucion_px": "5120x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"5K 2.4:1\": 5120 x 2160 px = 25.6 x 10.8 mm (diagonal 27.78 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_5k_16_9",
+     "nombre": "5K 16:9",
+     "ancho_activo_mm": 24.0,
+     "alto_activo_mm": 13.5,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "4800x2700",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"5K 16:9\": 4800 x 2700 px = 24.0 x 13.5 mm (diagonal 27.54 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_5k_1_1",
+     "nombre": "5K 1:1",
+     "ancho_activo_mm": 13.5,
+     "alto_activo_mm": 13.5,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.667,
+     "resolucion_px": "2700x2700",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"5K 1:1\": 2700 x 2700 px = 13.5 x 13.5 mm (diagonal 19.09 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_4k_17_9",
+     "nombre": "4K 17:9",
+     "ancho_activo_mm": 20.48,
+     "alto_activo_mm": 10.8,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.758,
+     "resolucion_px": "4096x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"4K 17:9\": 4096 x 2160 px = 20.48 x 10.8 mm (diagonal 23.15 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_4k_2_1",
+     "nombre": "4K 2:1",
+     "ancho_activo_mm": 20.48,
+     "alto_activo_mm": 10.24,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.758,
+     "resolucion_px": "4096x2048",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"4K 2:1\": 4096 x 2048 px = 20.48 x 10.24 mm (diagonal 22.9 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_4k_2_4_1",
+     "nombre": "4K 2.4:1",
+     "ancho_activo_mm": 20.48,
+     "alto_activo_mm": 8.64,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 1.758,
+     "resolucion_px": "4096x1728",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"4K 2.4:1\": 4096 x 1728 px = 20.48 x 8.64 mm (diagonal 22.23 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_4k_16_9",
+     "nombre": "4K 16:9",
+     "ancho_activo_mm": 19.2,
+     "alto_activo_mm": 10.8,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.875,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"4K 16:9\": 3840 x 2160 px = 19.2 x 10.8 mm (diagonal 22.03 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_vv_4k_1_1",
+     "nombre": "4K 1:1",
+     "ancho_activo_mm": 10.8,
+     "alto_activo_mm": 10.8,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 3.333,
+     "resolucion_px": "2160x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K VV Operation Guide 955-0198 V2.1 Rev A, Project Settings > Sensor Format > All Formats (pp. 67-68); fila \"4K 1:1\": 2160 x 2160 px = 10.8 x 10.8 mm (diagonal 15.27 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0198/955-0198_V2.1%20Rev-A%20RED%20PS,%20V-RAPTOR%208K%20VV%206K%20S35%20(Dual%20Format)%20Operation%20Guide.pdf"
+     }
+    }
+   ],
+   "nota": "Variante 1 de 6 de V-RAPTOR (separadas porque RED publica una guia/ficha por cada una). Sensor de 8K VV: 40.96 x 21.60 mm, 8192 x 4320 px (Technical Specifications p. 266). Los modos \"6K ...\" de esta camara son ventanas Super 35 del mismo sensor (RED: \"Super 35 (6K)\"), no un sensor distinto. Se omiten por brevedad las ventanas 3K/2K y 4K 8:1 (existen en la tabla oficial). En 6K 2.4:1 RED da alto 12.87 mm pero 2592 px x 5.0 um = 12.96 mm (el ancho es consistente; se conserva el valor de RED). Para anamorficos, \"ancho_activo_mm\" es el area de sensor usada; la relacion de aspecto del resultado = relacion indicada x squeeze (el squeeze va en el nombre del modo). Las variantes XL, [X] y XL [X] comparten exactamente los mismos modos y dimensiones (verificado al comparar las cuatro tablas)."
+  },
+  {
+   "id": "red_v_raptor_8k_s35",
+   "marca": "RED",
+   "modelo": "V-RAPTOR 8K S35 (también XL)",
+   "tipo": "lente_intercambiable",
+   "montura": "RF integrada con soporte de lentes RF; Canon EF con adaptador RF-EF compatible (RED 955-0215 V1.4 Rev B, Technical Specifications)",
+   "modos": [
+    {
+     "id": "vraptor_s35_8k_17_9",
+     "nombre": "8K 17:9",
+     "ancho_activo_mm": 26.21,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.374,
+     "resolucion_px": "8192x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 17:9\": 8192 x 4320 px = 26.21 x 13.82 mm (diagonal 29.64 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_2_1",
+     "nombre": "8K 2:1",
+     "ancho_activo_mm": 26.21,
+     "alto_activo_mm": 13.11,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.374,
+     "resolucion_px": "8192x4096",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 2:1\": 8192 x 4096 px = 26.21 x 13.11 mm (diagonal 29.31 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_2_4_1",
+     "nombre": "8K 2.4:1",
+     "ancho_activo_mm": 26.21,
+     "alto_activo_mm": 11.06,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 1.374,
+     "resolucion_px": "8192x3456",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 2.4:1\": 8192 x 3456 px = 26.21 x 11.06 mm (diagonal 28.45 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_16_9",
+     "nombre": "8K 16:9",
+     "ancho_activo_mm": 24.58,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.465,
+     "resolucion_px": "7680x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 16:9\": 7680 x 4320 px = 24.58 x 13.82 mm (diagonal 28.2 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_1_1",
+     "nombre": "8K 1:1",
+     "ancho_activo_mm": 13.82,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.605,
+     "resolucion_px": "4320x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 1:1\": 4320 x 4320 px = 13.82 x 13.82 mm (diagonal 19.55 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_3_2_1_8x",
+     "nombre": "8K 3:2 1.8x (anamorfico 1.8x)",
+     "ancho_activo_mm": 20.74,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.736,
+     "resolucion_px": "6480x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 3:2 1.8x\": 6480 x 4320 px = 20.74 x 13.82 mm (diagonal 24.92 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_4_3_2x",
+     "nombre": "8K 4:3 2x (anamorfico 2x)",
+     "ancho_activo_mm": 18.43,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.953,
+     "resolucion_px": "5760x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 4:3 2x\": 5760 x 4320 px = 18.43 x 13.82 mm (diagonal 23.04 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_6_5_2x",
+     "nombre": "8K 6:5 2x (anamorfico 2x)",
+     "ancho_activo_mm": 16.59,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "6:5",
+     "factor_crop_vs_ff": 2.17,
+     "resolucion_px": "5184x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 6:5 2x\": 5184 x 4320 px = 16.59 x 13.82 mm (diagonal 21.59 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_1_1_2x",
+     "nombre": "8K 1:1 2x (anamorfico 2x)",
+     "ancho_activo_mm": 13.82,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.605,
+     "resolucion_px": "4320x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 1:1 2x\": 4320 x 4320 px = 13.82 x 13.82 mm (diagonal 19.55 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_4_3_1_8x",
+     "nombre": "8K 4:3 1.8x (anamorfico 1.8x)",
+     "ancho_activo_mm": 18.43,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.953,
+     "resolucion_px": "5760x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 4:3 1.8x\": 5760 x 4320 px = 18.43 x 13.82 mm (diagonal 23.04 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_3_2_1_6x",
+     "nombre": "8K 3:2 1.6x (anamorfico 1.6x)",
+     "ancho_activo_mm": 20.74,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.736,
+     "resolucion_px": "6480x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 3:2 1.6x\": 6480 x 4320 px = 20.74 x 13.82 mm (diagonal 24.92 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_16_9_1_5x",
+     "nombre": "8K 16:9 1.5x (anamorfico 1.5x)",
+     "ancho_activo_mm": 24.58,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.465,
+     "resolucion_px": "7680x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 16:9 1.5x\": 7680 x 4320 px = 24.58 x 13.82 mm (diagonal 28.2 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_17_9_1_3x",
+     "nombre": "8K 17:9 1.3x (anamorfico 1.3x)",
+     "ancho_activo_mm": 26.21,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.374,
+     "resolucion_px": "8192x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 17:9 1.3x\": 8192 x 4320 px = 26.21 x 13.82 mm (diagonal 29.64 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_16_9_1_3x",
+     "nombre": "8K 16:9 1.3x (anamorfico 1.3x)",
+     "ancho_activo_mm": 24.58,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.465,
+     "resolucion_px": "7680x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 16:9 1.3x\": 7680 x 4320 px = 24.58 x 13.82 mm (diagonal 28.2 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_8k_17_9_1_25x",
+     "nombre": "8K 17:9 1.25x (anamorfico 1.25x)",
+     "ancho_activo_mm": 26.21,
+     "alto_activo_mm": 13.82,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.374,
+     "resolucion_px": "8192x4320",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"8K 17:9 1.25x\": 8192 x 4320 px = 26.21 x 13.82 mm (diagonal 29.64 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_7k_17_9",
+     "nombre": "7K 17:9",
+     "ancho_activo_mm": 22.94,
+     "alto_activo_mm": 12.1,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.569,
+     "resolucion_px": "7168x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"7K 17:9\": 7168 x 3780 px = 22.94 x 12.1 mm (diagonal 25.93 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_7k_2_1",
+     "nombre": "7K 2:1",
+     "ancho_activo_mm": 22.94,
+     "alto_activo_mm": 11.47,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.569,
+     "resolucion_px": "7168x3584",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"7K 2:1\": 7168 x 3584 px = 22.94 x 11.47 mm (diagonal 25.65 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_7k_2_4_1",
+     "nombre": "7K 2.4:1",
+     "ancho_activo_mm": 22.94,
+     "alto_activo_mm": 9.68,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 1.569,
+     "resolucion_px": "7168x3002",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"7K 2.4:1\": 7168 x 3002 px = 22.94 x 9.68 mm (diagonal 24.9 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     },
+     "nota": "El alto de la tabla oficial (9.68 mm) difiere de pixeles x pitch (3002 px -> 9.60 mm); el ancho (que fija el FOV horizontal) es consistente. Se conserva el valor del fabricante."
+    },
+    {
+     "id": "vraptor_s35_7k_16_9",
+     "nombre": "7K 16:9",
+     "ancho_activo_mm": 21.5,
+     "alto_activo_mm": 12.1,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.674,
+     "resolucion_px": "6720x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"7K 16:9\": 6720 x 3780 px = 21.5 x 12.1 mm (diagonal 24.67 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_7k_1_1",
+     "nombre": "7K 1:1",
+     "ancho_activo_mm": 12.1,
+     "alto_activo_mm": 12.1,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.975,
+     "resolucion_px": "3780x3780",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"7K 1:1\": 3780 x 3780 px = 12.1 x 12.1 mm (diagonal 17.11 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_6k_17_9",
+     "nombre": "6K 17:9",
+     "ancho_activo_mm": 19.66,
+     "alto_activo_mm": 10.37,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.831,
+     "resolucion_px": "6144x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"6K 17:9\": 6144 x 3240 px = 19.66 x 10.37 mm (diagonal 22.23 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_6k_2_1",
+     "nombre": "6K 2:1",
+     "ancho_activo_mm": 19.66,
+     "alto_activo_mm": 9.83,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.831,
+     "resolucion_px": "6144x3072",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"6K 2:1\": 6144 x 3072 px = 19.66 x 9.83 mm (diagonal 21.98 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_6k_2_4_1",
+     "nombre": "6K 2.4:1",
+     "ancho_activo_mm": 19.66,
+     "alto_activo_mm": 8.29,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 1.831,
+     "resolucion_px": "6144x2592",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"6K 2.4:1\": 6144 x 2592 px = 19.66 x 8.29 mm (diagonal 21.34 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_6k_16_9",
+     "nombre": "6K 16:9",
+     "ancho_activo_mm": 18.43,
+     "alto_activo_mm": 10.37,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.953,
+     "resolucion_px": "5760x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"6K 16:9\": 5760 x 3240 px = 18.43 x 10.37 mm (diagonal 21.15 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_6k_1_1",
+     "nombre": "6K 1:1",
+     "ancho_activo_mm": 10.37,
+     "alto_activo_mm": 10.37,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 3.472,
+     "resolucion_px": "3240x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"6K 1:1\": 3240 x 3240 px = 10.37 x 10.37 mm (diagonal 14.66 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_5k_17_9",
+     "nombre": "5K 17:9",
+     "ancho_activo_mm": 16.38,
+     "alto_activo_mm": 8.64,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 2.198,
+     "resolucion_px": "5120x2700",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"5K 17:9\": 5120 x 2700 px = 16.38 x 8.64 mm (diagonal 18.52 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_5k_2_1",
+     "nombre": "5K 2:1",
+     "ancho_activo_mm": 16.38,
+     "alto_activo_mm": 8.19,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 2.198,
+     "resolucion_px": "5120x2560",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"5K 2:1\": 5120 x 2560 px = 16.38 x 8.19 mm (diagonal 18.32 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_5k_2_4_1",
+     "nombre": "5K 2.4:1",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "5120x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"5K 2.4:1\": 5120 x 2160 px = 15.36 x 8.64 mm (diagonal 17.62 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     },
+     "nota": "La fila de la tabla oficial dice 15.36 x 8.64 mm pero el ancho es inconsistente con el tamano de pixel del sensor (5120 px x 26.21/8192 mm = 16.38 mm); se deja null. Ver nota de la camara."
+    },
+    {
+     "id": "vraptor_s35_5k_16_9",
+     "nombre": "5K 16:9",
+     "ancho_activo_mm": 15.36,
+     "alto_activo_mm": 8.64,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 2.344,
+     "resolucion_px": "4800x2700",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"5K 16:9\": 4800 x 2700 px = 15.36 x 8.64 mm (diagonal 17.62 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_5k_1_1",
+     "nombre": "5K 1:1",
+     "ancho_activo_mm": 8.64,
+     "alto_activo_mm": 8.64,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 4.167,
+     "resolucion_px": "2700x2700",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"5K 1:1\": 2700 x 2700 px = 8.64 x 8.64 mm (diagonal 12.22 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_4k_17_9",
+     "nombre": "4K 17:9",
+     "ancho_activo_mm": 13.11,
+     "alto_activo_mm": 6.91,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 2.746,
+     "resolucion_px": "4096x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"4K 17:9\": 4096 x 2160 px = 13.11 x 6.91 mm (diagonal 14.82 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_4k_2_1",
+     "nombre": "4K 2:1",
+     "ancho_activo_mm": 13.11,
+     "alto_activo_mm": 6.55,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 2.746,
+     "resolucion_px": "4096x2048",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"4K 2:1\": 4096 x 2048 px = 13.11 x 6.55 mm (diagonal 14.65 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_4k_2_4_1",
+     "nombre": "4K 2.4:1",
+     "ancho_activo_mm": 13.11,
+     "alto_activo_mm": 5.53,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 2.746,
+     "resolucion_px": "4096x1728",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"4K 2.4:1\": 4096 x 1728 px = 13.11 x 5.53 mm (diagonal 14.23 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_4k_16_9",
+     "nombre": "4K 16:9",
+     "ancho_activo_mm": 12.29,
+     "alto_activo_mm": 6.91,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 2.929,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"4K 16:9\": 3840 x 2160 px = 12.29 x 6.91 mm (diagonal 14.1 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    },
+    {
+     "id": "vraptor_s35_4k_1_1",
+     "nombre": "4K 1:1",
+     "ancho_activo_mm": 6.91,
+     "alto_activo_mm": 6.91,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 5.21,
+     "resolucion_px": "2160x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED V-RAPTOR 8K S35 Operation Guide 955-0214 V1.4 Rev B (PDF), Project Settings > Format > All Formats (pp. 67-68); los modos 8K coinciden con las paginas HTML Super 35 (8K) de 955-0215 V1.7 Rev B; fila \"4K 1:1\": 2160 x 2160 px = 6.91 x 6.91 mm (diagonal 9.78 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0214/955-0214_V1.4_Rev-B%20RED%20PS%2C%20V-RAPTOR%208K%20S35%20Operation%20Guide.pdf"
+     }
+    }
+   ],
+   "nota": "Variante 5 de 6 (la version S35 SI existe: \"V-RAPTOR 8K S35\"). Ficha 955-0215 V1.4 Rev B: Sensor Size 26.21 mm x 13.82 mm (Diagonal 29.63 mm), 8192 x 4320 px, URL https://docs.red.com/955-0215/955-0215_V1.4_Rev-B%20RED%20PS,%20V-RAPTOR%208K%20S35%20Operation%20Guide/Content/C_TechSpecs/Specs_V-RAPTOR.htm . Errores internos de RED en la tabla \"All Formats\" de la guia PDF: 5K 2.4:1 dice 15.36 x 8.64 mm pero 5120 x 2160 px con pitch 3.1995 um da 16.38 x 6.91 mm (se dejo null); 7K 2.4:1 dice alto 9.68 mm vs 9.60 por pixeles (se conserva); 3K 16:9 repite el ancho de 3K 17:9 (fila omitida). RED dice 17+ stops en la pagina de especificaciones y 16.5+ stops en la intro de la misma guia (no afecta al FOV). Diagonal 29.64 (tablas) vs 29.63 (ficha)."
+  },
+  {
+   "id": "red_komodo_6k",
+   "marca": "RED",
+   "modelo": "KOMODO 6K (sensor Super 35 global shutter 19.9 MP, 6144 x 3240 px, 27.03 x 14.26 mm)",
+   "tipo": "lente_intercambiable",
+   "montura": "RF con comunicacion electronica; Canon EF con adaptadores RF compatibles (RED 955-0196 V1.6, Technical Specifications)",
+   "modos": [
+    {
+     "id": "komodo_6k_17_9",
+     "nombre": "6K 17:9",
+     "ancho_activo_mm": 27.03,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.332,
+     "resolucion_px": "6144x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 17:9\": 6144 x 3240 px = 27.03 x 14.26 mm (diagonal 30.56 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_6k_2_1",
+     "nombre": "6K 2:1",
+     "ancho_activo_mm": 27.03,
+     "alto_activo_mm": 13.52,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.332,
+     "resolucion_px": "6144x3072",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 2:1\": 6144 x 3072 px = 27.03 x 13.52 mm (diagonal 30.22 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_6k_2_4_1",
+     "nombre": "6K 2.4:1",
+     "ancho_activo_mm": 27.03,
+     "alto_activo_mm": 11.32,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 1.332,
+     "resolucion_px": "6144x2574",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 2.4:1\": 6144 x 2574 px = 27.03 x 11.32 mm (diagonal 29.3 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_6k_16_9",
+     "nombre": "6K 16:9",
+     "ancho_activo_mm": 25.34,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.421,
+     "resolucion_px": "5760x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 16:9\": 5760 x 3240 px = 25.34 x 14.26 mm (diagonal 29.08 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_6k_4_3_2x",
+     "nombre": "6K 4:3 2x (anamorfico 2x)",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "4320x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 4:3 2x\": 4320 x 3240 px = 18.61 x 14.26 mm (diagonal 23.45 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     },
+     "nota": "La fila de la tabla oficial dice 18.61 x 14.26 mm pero el ancho es inconsistente con el tamano de pixel del sensor (4320 px x 27.03/6144 mm = 19.01 mm); se deja null. Ver nota de la camara."
+    },
+    {
+     "id": "komodo_6k_6_5_2x",
+     "nombre": "6K 6:5 2x (anamorfico 2x)",
+     "ancho_activo_mm": 17.11,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "6:5",
+     "factor_crop_vs_ff": 2.104,
+     "resolucion_px": "3888x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 6:5 2x\": 3888 x 3240 px = 17.11 x 14.26 mm (diagonal 22.27 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_6k_3_2_1_8x",
+     "nombre": "6K 3:2 1.8x (anamorfico 1.8x)",
+     "ancho_activo_mm": 21.38,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.684,
+     "resolucion_px": "4860x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 3:2 1.8x\": 4860 x 3240 px = 21.38 x 14.26 mm (diagonal 25.7 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_6k_4_3_1_8x",
+     "nombre": "6K 4:3 1.8x (anamorfico 1.8x)",
+     "ancho_activo_mm": 19.01,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.894,
+     "resolucion_px": "4320x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 4:3 1.8x\": 4320 x 3240 px = 19.01 x 14.26 mm (diagonal 23.76 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_6k_3_2_1_6x",
+     "nombre": "6K 3:2 1.6x (anamorfico 1.6x)",
+     "ancho_activo_mm": 21.38,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.684,
+     "resolucion_px": "4860x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 3:2 1.6x\": 4860 x 3240 px = 21.38 x 14.26 mm (diagonal 25.7 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_6k_16_9_1_5x",
+     "nombre": "6K 16:9 1.5x (anamorfico 1.5x)",
+     "ancho_activo_mm": 25.34,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.421,
+     "resolucion_px": "5760x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 16:9 1.5x\": 5760 x 3240 px = 25.34 x 14.26 mm (diagonal 29.08 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_6k_17_9_1_3x",
+     "nombre": "6K 17:9 1.3x (anamorfico 1.3x)",
+     "ancho_activo_mm": 27.03,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.332,
+     "resolucion_px": "6144x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 17:9 1.3x\": 6144 x 3240 px = 27.03 x 14.26 mm (diagonal 30.56 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_6k_17_9_1_25x",
+     "nombre": "6K 17:9 1.25x (anamorfico 1.25x)",
+     "ancho_activo_mm": 27.03,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.332,
+     "resolucion_px": "6144x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"6K 17:9 1.25x\": 6144 x 3240 px = 27.03 x 14.26 mm (diagonal 30.56 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_5k_17_9",
+     "nombre": "5K 17:9",
+     "ancho_activo_mm": 22.53,
+     "alto_activo_mm": 11.88,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.598,
+     "resolucion_px": "5120x2700",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"5K 17:9\": 5120 x 2700 px = 22.53 x 11.88 mm (diagonal 25.47 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_4k_17_9",
+     "nombre": "4K 17:9",
+     "ancho_activo_mm": 18.02,
+     "alto_activo_mm": 9.5,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.998,
+     "resolucion_px": "4096x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"4K 17:9\": 4096 x 2160 px = 18.02 x 9.5 mm (diagonal 20.37 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_4k_16_9",
+     "nombre": "4K 16:9",
+     "ancho_activo_mm": 16.9,
+     "alto_activo_mm": 9.5,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 2.13,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"4K 16:9\": 3840 x 2160 px = 16.9 x 9.5 mm (diagonal 19.39 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_2k_17_9",
+     "nombre": "2K 17:9",
+     "ancho_activo_mm": 9.01,
+     "alto_activo_mm": 4.75,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 3.996,
+     "resolucion_px": "2048x1080",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO Operation Guide 955-0196 V1.6, Project Settings > Format > All Formats; fila \"2K 17:9\": 2048 x 1080 px = 9.01 x 4.75 mm (diagonal 10.19 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/Format/All_Formats.htm"
+     }
+    }
+   ],
+   "nota": "Ficha: https://docs.red.com/955-0196_v1.6/Content/A_TechSpecs/Specs_KOMODO_6K.htm  (Sensor Size 27.03 mm x 14.26 mm, diagonal 30.56 mm, Effective Pixels 6144 x 3240). DISCREPANCIAS entre guias RED: (1) 6K 2.4:1 = 6144x2574 px / 27.03 x 11.32 mm en la guia KOMODO V1.6, pero 6144x2592 / 11.40 mm en la guia KOMODO V1.3 y en KOMODO-X V2.0. (2) 6K 4:3 2x = 18.61 mm de ancho en KOMODO V1.6, pero 19.01 mm en KOMODO-X V2.0; los pixeles (4320) x pitch 4.399 um dan 19.01, asi que la fila de V1.6 es un error aparente y se dejo null."
+  },
+  {
+   "id": "red_komodo_x",
+   "marca": "RED",
+   "modelo": "KOMODO-X (sensor Super 35 global shutter 19.9 MP, 6144 x 3240 px, 27.03 x 14.26 mm)",
+   "tipo": "lente_intercambiable",
+   "montura": "RF integrada con bloqueo y comunicacion electronica; PL con adaptadores RED RF-PL; Canon EF con adaptador con comunicacion (RED 955-0219 V1.0 Rev A, Technical Specifications)",
+   "modos": [
+    {
+     "id": "komodo_x_6k_17_9",
+     "nombre": "6K 17:9",
+     "ancho_activo_mm": 27.03,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.332,
+     "resolucion_px": "6144x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 17:9\": 6144 x 3240 px = 27.03 x 14.26 mm (diagonal 30.56 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_2_1",
+     "nombre": "6K 2:1",
+     "ancho_activo_mm": 27.03,
+     "alto_activo_mm": 13.52,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.332,
+     "resolucion_px": "6144x3072",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 2:1\": 6144 x 3072 px = 27.03 x 13.52 mm (diagonal 30.22 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_2_4_1",
+     "nombre": "6K 2.4:1",
+     "ancho_activo_mm": 27.03,
+     "alto_activo_mm": 11.4,
+     "relacion_aspecto": "2.4:1",
+     "factor_crop_vs_ff": 1.332,
+     "resolucion_px": "6144x2592",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 2.4:1\": 6144 x 2592 px = 27.03 x 11.4 mm (diagonal 29.34 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_16_9",
+     "nombre": "6K 16:9",
+     "ancho_activo_mm": 25.34,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.421,
+     "resolucion_px": "5760x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 16:9\": 5760 x 3240 px = 25.34 x 14.26 mm (diagonal 29.08 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_1_1",
+     "nombre": "6K 1:1",
+     "ancho_activo_mm": 14.26,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.525,
+     "resolucion_px": "3240x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 1:1\": 3240 x 3240 px = 14.26 x 14.26 mm (diagonal 20.17 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_4_3_2x",
+     "nombre": "6K 4:3 2x (anamorfico 2x)",
+     "ancho_activo_mm": 19.01,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.894,
+     "resolucion_px": "4320x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 4:3 2x\": 4320 x 3240 px = 19.01 x 14.26 mm (diagonal 23.76 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_6_5_2x",
+     "nombre": "6K 6:5 2x (anamorfico 2x)",
+     "ancho_activo_mm": 17.11,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "6:5",
+     "factor_crop_vs_ff": 2.104,
+     "resolucion_px": "3888x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 6:5 2x\": 3888 x 3240 px = 17.11 x 14.26 mm (diagonal 22.27 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_1_1_2x",
+     "nombre": "6K 1:1 2x (anamorfico 2x)",
+     "ancho_activo_mm": 14.26,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.525,
+     "resolucion_px": "3240x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 1:1 2x\": 3240 x 3240 px = 14.26 x 14.26 mm (diagonal 20.17 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_3_2_1_8x",
+     "nombre": "6K 3:2 1.8x (anamorfico 1.8x)",
+     "ancho_activo_mm": 21.38,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.684,
+     "resolucion_px": "4860x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 3:2 1.8x\": 4860 x 3240 px = 21.38 x 14.26 mm (diagonal 25.7 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_4_3_1_8x",
+     "nombre": "6K 4:3 1.8x (anamorfico 1.8x)",
+     "ancho_activo_mm": 19.01,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.894,
+     "resolucion_px": "4320x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 4:3 1.8x\": 4320 x 3240 px = 19.01 x 14.26 mm (diagonal 23.76 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_3_2_1_6x",
+     "nombre": "6K 3:2 1.6x (anamorfico 1.6x)",
+     "ancho_activo_mm": 21.38,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.684,
+     "resolucion_px": "4860x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 3:2 1.6x\": 4860 x 3240 px = 21.38 x 14.26 mm (diagonal 25.7 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_16_9_1_5x",
+     "nombre": "6K 16:9 1.5x (anamorfico 1.5x)",
+     "ancho_activo_mm": 25.34,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.421,
+     "resolucion_px": "5760x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 16:9 1.5x\": 5760 x 3240 px = 25.34 x 14.26 mm (diagonal 29.08 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_17_9_1_3x",
+     "nombre": "6K 17:9 1.3x (anamorfico 1.3x)",
+     "ancho_activo_mm": 27.03,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.332,
+     "resolucion_px": "6144x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 17:9 1.3x\": 6144 x 3240 px = 27.03 x 14.26 mm (diagonal 30.56 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_6k_17_9_1_25x",
+     "nombre": "6K 17:9 1.25x (anamorfico 1.25x)",
+     "ancho_activo_mm": 27.03,
+     "alto_activo_mm": 14.26,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.332,
+     "resolucion_px": "6144x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"6K 17:9 1.25x\": 6144 x 3240 px = 27.03 x 14.26 mm (diagonal 30.56 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_5k_17_9",
+     "nombre": "5K 17:9",
+     "ancho_activo_mm": 22.53,
+     "alto_activo_mm": 11.88,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.598,
+     "resolucion_px": "5120x2700",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"5K 17:9\": 5120 x 2700 px = 22.53 x 11.88 mm (diagonal 25.47 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_5k_16_9",
+     "nombre": "5K 16:9",
+     "ancho_activo_mm": 21.12,
+     "alto_activo_mm": 11.88,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.705,
+     "resolucion_px": "4800x2700",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"5K 16:9\": 4800 x 2700 px = 21.12 x 11.88 mm (diagonal 24.23 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_4k_17_9",
+     "nombre": "4K 17:9",
+     "ancho_activo_mm": 18.02,
+     "alto_activo_mm": 9.5,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.998,
+     "resolucion_px": "4096x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"4K 17:9\": 4096 x 2160 px = 18.02 x 9.5 mm (diagonal 20.37 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_4k_16_9",
+     "nombre": "4K 16:9",
+     "ancho_activo_mm": 16.9,
+     "alto_activo_mm": 9.5,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 2.13,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"4K 16:9\": 3840 x 2160 px = 16.9 x 9.5 mm (diagonal 19.39 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    },
+    {
+     "id": "komodo_x_2k_17_9",
+     "nombre": "2K 17:9",
+     "ancho_activo_mm": 9.01,
+     "alto_activo_mm": 4.75,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 3.996,
+     "resolucion_px": "2048x1080",
+     "derivado": false,
+     "fuente": {
+      "texto": "RED KOMODO-X Operation Guide 955-0219 V2.0 Rev A, Project Settings > Format > All Formats (la V1.0 Rev A trae la misma tabla); fila \"2K 17:9\": 2048 x 1080 px = 9.01 x 4.75 mm (diagonal 10.19 mm). RED indica que las dimensiones son aproximaciones cercanas.",
+      "url": "https://docs.red.com/955-0219/955-0219_V2.0+Rev-A+RED+PS,+KOMODO-X+Operation+Guide/Content/4_Menus/02_ProjSet/Format/All_Formats.htm"
+     }
+    }
+   ],
+   "nota": "Ficha 955-0219 V1.0 Rev A: Sensor Size 27.03 mm x 14.26 mm (Diagonal 30.56 mm), Effective Pixels 6144 x 3240, URL https://docs.red.com/955-0219/955-0219_V1.0%20Rev-A%20RED%20PS,%20KOMODO-X%20Operation%20Guide/Content/A_TechSpecs/Specs_KOMODO-X.htm . La tabla de formatos incluye 6K 1:1 y 5K 16:9, que no estan en la guia KOMODO V1.6. Las guias V1.0 y V2.0 de KOMODO-X traen la misma tabla."
+  },
+  {
+   "id": "sony_burano",
+   "marca": "Sony",
+   "modelo": "BURANO (MPC-2610)",
+   "tipo": "lente_intercambiable",
+   "montura": "PL Mount (desmontable) / E-mount (lever lock) (Sony Pro, Specifications > General > Lens mount)",
+   "modos": [
+    {
+     "id": "burano_ff_8_6k_16_9",
+     "nombre": "Full frame 8.6K 16:9 (Imager Scan Mode \"FF 8.6K 16:9\")",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 20.2,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.003,
+     "resolucion_px": "8632x4856",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Pro, pagina oficial BURANO, tabla \"BURANO Sensor Modes [X-OCN LT]\" (columna W x H (mm)); Specifications > Camera Section > Type: 35 mm full frame (35.9 x 24.0 mm), Exmor RS CMOS; fila \"FF 8.6K 16:9\": 8632x4856 px (X-OCN LT), 35.9 x 20.2 mm",
+      "url": "https://pro.sony/ue_US/products/digital-cinema-cameras/burano"
+     }
+    },
+    {
+     "id": "burano_ff_8_6k_17_9",
+     "nombre": "Full frame 8.6K 17:9 (Imager Scan Mode \"FF 8.6K 17:9\")",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.003,
+     "resolucion_px": "8632x4552",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Pro, pagina oficial BURANO, tabla \"BURANO Sensor Modes [X-OCN LT]\" (columna W x H (mm)); Specifications > Camera Section > Type: 35 mm full frame (35.9 x 24.0 mm), Exmor RS CMOS; fila \"FF 8.6K 17:9\": 8632x4552 px (X-OCN LT), 35.9 x 18.9 mm",
+      "url": "https://pro.sony/ue_US/products/digital-cinema-cameras/burano"
+     }
+    },
+    {
+     "id": "burano_ffc_6k_16_9",
+     "nombre": "Full frame crop 6K 16:9 (Imager Scan Mode \"FFc 6K 16:9\")",
+     "ancho_activo_mm": 33.6,
+     "alto_activo_mm": 18.9,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.071,
+     "resolucion_px": "6052x3404",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Pro, pagina oficial BURANO, tabla \"BURANO Sensor Modes [X-OCN LT]\" (columna W x H (mm)); Specifications > Camera Section > Type: 35 mm full frame (35.9 x 24.0 mm), Exmor RS CMOS; fila \"FFc 6K 16:9\": 6052x3404 px (X-OCN LT), 33.6 x 18.9 mm",
+      "url": "https://pro.sony/ue_US/products/digital-cinema-cameras/burano"
+     }
+    },
+    {
+     "id": "burano_ffc_6k_17_9",
+     "nombre": "Full frame crop 6K 17:9 (Imager Scan Mode \"FFc 6K 17:9\")",
+     "ancho_activo_mm": 33.6,
+     "alto_activo_mm": 17.7,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.071,
+     "resolucion_px": "6052x3192",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Pro, pagina oficial BURANO, tabla \"BURANO Sensor Modes [X-OCN LT]\" (columna W x H (mm)); Specifications > Camera Section > Type: 35 mm full frame (35.9 x 24.0 mm), Exmor RS CMOS; fila \"FFc 6K 17:9\": 6052x3192 px (X-OCN LT), 33.6 x 17.7 mm",
+      "url": "https://pro.sony/ue_US/products/digital-cinema-cameras/burano"
+     }
+    },
+    {
+     "id": "burano_ffc_3_8k_16_9",
+     "nombre": "Full frame crop 3.8K 16:9 (Imager Scan Mode \"FFc 3.8K 16:9\")",
+     "ancho_activo_mm": 32.0,
+     "alto_activo_mm": 18.0,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.125,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Pro, pagina oficial BURANO, tabla \"BURANO Sensor Modes [X-OCN LT]\" (columna W x H (mm)); Specifications > Camera Section > Type: 35 mm full frame (35.9 x 24.0 mm), Exmor RS CMOS; fila \"FFc 3.8K 16:9\": 3840x2160 px (X-OCN LT), 32.0 x 18.0 mm",
+      "url": "https://pro.sony/ue_US/products/digital-cinema-cameras/burano"
+     }
+    },
+    {
+     "id": "burano_s35_5_8k_16_9",
+     "nombre": "Super 35 5.8K 16:9 (Imager Scan Mode \"S35 5.8K 16:9\")",
+     "ancho_activo_mm": 24.0,
+     "alto_activo_mm": 13.5,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "5760x3240",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Pro, pagina oficial BURANO, tabla \"BURANO Sensor Modes [X-OCN LT]\" (columna W x H (mm)); Specifications > Camera Section > Type: 35 mm full frame (35.9 x 24.0 mm), Exmor RS CMOS; fila \"S35 5.8K 16:9\": 5760x3240 px (X-OCN LT), 24.0 x 13.5 mm",
+      "url": "https://pro.sony/ue_US/products/digital-cinema-cameras/burano"
+     }
+    },
+    {
+     "id": "burano_s35_5_8k_17_9",
+     "nombre": "Super 35 5.8K 17:9 (Imager Scan Mode \"S35 5.8K 17:9\")",
+     "ancho_activo_mm": 24.0,
+     "alto_activo_mm": 12.6,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "5760x3036",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Pro, pagina oficial BURANO, tabla \"BURANO Sensor Modes [X-OCN LT]\" (columna W x H (mm)); Specifications > Camera Section > Type: 35 mm full frame (35.9 x 24.0 mm), Exmor RS CMOS; fila \"S35 5.8K 17:9\": 5760x3036 px (X-OCN LT), 24.0 x 12.6 mm",
+      "url": "https://pro.sony/ue_US/products/digital-cinema-cameras/burano"
+     }
+    },
+    {
+     "id": "burano_s35_4_3k_4_3",
+     "nombre": "Super 35 4.3K 4:3 (Imager Scan Mode \"S35 4.3K 4:3\")",
+     "ancho_activo_mm": 23.6,
+     "alto_activo_mm": 17.7,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.525,
+     "resolucion_px": "4256x3192",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Pro, pagina oficial BURANO, tabla \"BURANO Sensor Modes [X-OCN LT]\" (columna W x H (mm)); Specifications > Camera Section > Type: 35 mm full frame (35.9 x 24.0 mm), Exmor RS CMOS; fila \"S35 4.3K 4:3\": 4256x3192 px (X-OCN LT), 23.6 x 17.7 mm",
+      "url": "https://pro.sony/ue_US/products/digital-cinema-cameras/burano"
+     }
+    },
+    {
+     "id": "burano_s35c_4k_17_9",
+     "nombre": "Super 35 crop 4K 17:9 (Imager Scan Mode \"S35c 4K 17:9\")",
+     "ancho_activo_mm": 17.0,
+     "alto_activo_mm": 9.0,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 2.118,
+     "resolucion_px": "4096x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Pro, pagina oficial BURANO, tabla \"BURANO Sensor Modes [X-OCN LT]\" (columna W x H (mm)); Specifications > Camera Section > Type: 35 mm full frame (35.9 x 24.0 mm), Exmor RS CMOS; fila \"S35c 4K 17:9\": 4096x2160 px (X-OCN LT), 17.0 x 9.0 mm",
+      "url": "https://pro.sony/ue_US/products/digital-cinema-cameras/burano"
+     }
+    }
+   ],
+   "nota": "Sony publica los mm por modo directamente en su pagina oficial (no hay derivados). Los modos FFc 6K, FFc 3.8K y S35c son ventanas del sensor; en FFc 6K y FFc 3.8K Sony indica que son lecturas \"down sampled\" (6052 px sobre 33.6 mm, 3840 px sobre 32.0 mm), asi que los px no son el pitch nativo (~4.16 um). La tabla [XAVC] de la misma pagina usa los mismos mm con otros px de salida (p. ej. FF 8.6K 16:9 = 7680x4320, FF 8.6K 17:9 = 8192x4320, S35 1.9K 16:9 = 1920x1080 sobre 24.0 x 13.5 mm). Los modos FFc 3.8K y S35 4.3K 4:3 los trae la pagina actual (firmware V2.01 segun prensa, no verificado en Sony). La ficha de Sony dice \"3.6 x 2.4 cm\" en el texto y \"35.9 x 24.0 mm\" en Specifications. Sony Help Guide de BURANO no se encontro en helpguide.sony.net; el manual oficial en PDF vive en sony.com, que bloquea este entorno."
+  },
+  {
+   "id": "arri_alexa_mini",
+   "marca": "ARRI",
+   "modelo": "ALEXA Mini (S35, sensor ALEV III 3424 x 2202 fotositios, 28.25 x 18.17 mm; NO es la Mini LF)",
+   "tipo": "lente_intercambiable",
+   "montura": "Segun pedido: Titanium PL LDS (LBUS), AMIRA PL LDS, EF o B4 (ARRI ALEXA Mini Quick Guide, \"Delivery\")",
+   "modos": [
+    {
+     "id": "mini_open_gate_3_4k",
+     "nombre": "Open Gate 3.4K (ARRIRAW, sensor completo)",
+     "ancho_activo_mm": 28.25,
+     "alto_activo_mm": 18.17,
+     "relacion_aspecto": "1.55:1",
+     "factor_crop_vs_ff": 1.274,
+     "resolucion_px": "3424x2202",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Mini Recording Areas, Surround Views and Electronic Framelines\" (SUP 4.0), bloque \"Open Gate\": 3424 x 2202 fotositios (1.55:1) = 28.25 x 18.17 mm ; coincide con ARRI.com ALEXA Mini > Technical Data > \"Sensor Active Image Area (dimensions)\"",
+      "url": "https://www.arri.com/resource/blob/178064/d84031615b6bf09446aeb7972066b129/alexa-mini-recording-areas-surround-views-and-framelines-sup-4-0-data.pdf"
+     }
+    },
+    {
+     "id": "mini_hd_arriraw_2_8k_16_9",
+     "nombre": "HD 16:9 / ARRIRAW 2.8K 16:9",
+     "ancho_activo_mm": 23.76,
+     "alto_activo_mm": 13.37,
+     "relacion_aspecto": "1.78:1",
+     "factor_crop_vs_ff": 1.515,
+     "resolucion_px": "2880x1620",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Mini Recording Areas, Surround Views and Electronic Framelines\" (SUP 4.0), bloque \"HD or MXF/ARRIRAW 2.8K\": 2880 x 1620 (1.78:1) = 23.76 x 13.37 mm ; coincide con ARRI.com ALEXA Mini > Technical Data > \"Sensor Active Image Area (dimensions)\"",
+      "url": "https://www.arri.com/resource/blob/178064/d84031615b6bf09446aeb7972066b129/alexa-mini-recording-areas-surround-views-and-framelines-sup-4-0-data.pdf"
+     }
+    },
+    {
+     "id": "mini_2k_16_9",
+     "nombre": "ProRes 2K 16:9",
+     "ancho_activo_mm": 23.66,
+     "alto_activo_mm": 13.3,
+     "relacion_aspecto": "1.78:1",
+     "factor_crop_vs_ff": 1.522,
+     "resolucion_px": "2868x1612",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Mini Recording Areas, Surround Views and Electronic Framelines\" (SUP 4.0), bloque \"2K\": 2868 x 1612 (1.78:1) = 23.66 x 13.30 mm ; coincide con ARRI.com ALEXA Mini > Technical Data > \"Sensor Active Image Area (dimensions)\"",
+      "url": "https://www.arri.com/resource/blob/178064/d84031615b6bf09446aeb7972066b129/alexa-mini-recording-areas-surround-views-and-framelines-sup-4-0-data.pdf"
+     }
+    },
+    {
+     "id": "mini_3_2k_4k_uhd_16_9",
+     "nombre": "ProRes 3.2K / 4K UHD 16:9",
+     "ancho_activo_mm": 26.4,
+     "alto_activo_mm": 14.85,
+     "relacion_aspecto": "1.78:1",
+     "factor_crop_vs_ff": 1.364,
+     "resolucion_px": "3200x1800",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Mini Recording Areas, Surround Views and Electronic Framelines\" (SUP 4.0), bloque \"3.2K or 4K UHD\": 3200 x 1800 (1.78:1) = 26.40 x 14.85 mm ; coincide con ARRI.com ALEXA Mini > Technical Data > \"Sensor Active Image Area (dimensions)\"",
+      "url": "https://www.arri.com/resource/blob/178064/d84031615b6bf09446aeb7972066b129/alexa-mini-recording-areas-surround-views-and-framelines-sup-4-0-data.pdf"
+     }
+    },
+    {
+     "id": "mini_4_3_2_8k",
+     "nombre": "4:3 2.8K (requiere licencia 4:3)",
+     "ancho_activo_mm": 23.76,
+     "alto_activo_mm": 17.82,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.515,
+     "resolucion_px": "2880x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Mini Recording Areas, Surround Views and Electronic Framelines\" (SUP 4.0), bloque \"Anamorphic Modes\": 4:3 2.8K 2880 x 2160 = 23.76 x 17.82 mm ; coincide con ARRI.com ALEXA Mini > Technical Data > \"Sensor Active Image Area (dimensions)\"",
+      "url": "https://www.arri.com/resource/blob/178064/d84031615b6bf09446aeb7972066b129/alexa-mini-recording-areas-surround-views-and-framelines-sup-4-0-data.pdf"
+     }
+    },
+    {
+     "id": "mini_ana_2_39_2k",
+     "nombre": "2.39:1 2K Ana. (anamorfico, requiere licencia 4:3)",
+     "ancho_activo_mm": 21.12,
+     "alto_activo_mm": 17.7,
+     "relacion_aspecto": "2.39:1 (ya desanamorfizada)",
+     "factor_crop_vs_ff": 1.705,
+     "resolucion_px": "2560x2145",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Mini Recording Areas, Surround Views and Electronic Framelines\" (SUP 4.0), bloque \"Anamorphic Modes\": 2.39:1 2K Ana. 2560 x 2145 = 21.12 x 17.70 mm ; coincide con ARRI.com ALEXA Mini > Technical Data > \"Sensor Active Image Area (dimensions)\"",
+      "url": "https://www.arri.com/resource/blob/178064/d84031615b6bf09446aeb7972066b129/alexa-mini-recording-areas-surround-views-and-framelines-sup-4-0-data.pdf"
+     }
+    },
+    {
+     "id": "mini_ana_hd_16_9",
+     "nombre": "16:9 HD Ana. (anamorfico, requiere licencia 4:3)",
+     "ancho_activo_mm": 15.84,
+     "alto_activo_mm": 17.82,
+     "relacion_aspecto": "16:9 (ya desanamorfizada)",
+     "factor_crop_vs_ff": 2.273,
+     "resolucion_px": "1920x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Mini Recording Areas, Surround Views and Electronic Framelines\" (SUP 4.0), bloque \"Anamorphic Modes\": 16:9 HD Ana. 1920 x 2160 = 15.84 x 17.82 mm ; coincide con ARRI.com ALEXA Mini > Technical Data > \"Sensor Active Image Area (dimensions)\"",
+      "url": "https://www.arri.com/resource/blob/178064/d84031615b6bf09446aeb7972066b129/alexa-mini-recording-areas-surround-views-and-framelines-sup-4-0-data.pdf"
+     }
+    },
+    {
+     "id": "mini_s16_hd",
+     "nombre": "S16 HD 16:9",
+     "ancho_activo_mm": 13.2,
+     "alto_activo_mm": 7.43,
+     "relacion_aspecto": "1.78:1",
+     "factor_crop_vs_ff": 2.727,
+     "resolucion_px": "1600x900",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Mini Recording Areas, Surround Views and Electronic Framelines\" (SUP 4.0), bloque \"S16\": S16 HD 1600 x 900 (1.78:1) = 13.20 x 7.43 mm ; coincide con ARRI.com ALEXA Mini > Technical Data > \"Sensor Active Image Area (dimensions)\"",
+      "url": "https://www.arri.com/resource/blob/178064/d84031615b6bf09446aeb7972066b129/alexa-mini-recording-areas-surround-views-and-framelines-sup-4-0-data.pdf"
+     }
+    }
+   ],
+   "nota": "ALEXA Mini original (Super 35). Pitch de fotositio 8.25 um (ARRI.com). Los mm vienen de ARRI sin derivar. Los modos 4:3 y anamorficos requieren la licencia 4:3; Open Gate requiere ademas la licencia ARRIRAW (ARRI.com, \"Leverage the Full Power\"). En los modos anamorficos la relacion indicada es la del resultado desanamorfizado (2x), el area de sensor usada es la mostrada: 2560 x 2 / 2145 = 2.39:1 y 1920 x 2 / 2160 = 16:9 (deduccion de la cuenta, no texto de ARRI). Discrepancias menores en documentos ARRI: el PDF de recording areas tiene un diametro con typo (1.322\" vs 1.624\" para 33.59 mm); el Quick Guide da 2867x1613 para ProRes 2K con surround view y ARRI.com 2868x1612; el contenedor de archivo ProRes 4:3 2.8K es 2944x2160 pero el contenido son 2880x2160."
+  },
+  {
+   "id": "arri_alexa_classic",
+   "marca": "ARRI",
+   "modelo": "ALEXA Classic (familia original: Classic EV / Plus / Plus 4:3 / M / Studio; sensor 3414 x 2198 fotositios, 28.17 x 18.13 mm)",
+   "tipo": "lente_intercambiable",
+   "montura": null,
+   "modos": [
+    {
+     "id": "classic_16_9_hd_arriraw",
+     "nombre": "Sensor mode 16:9: ProRes HD / DNxHD / ARRIRAW 2.8K 16:9",
+     "ancho_activo_mm": 23.76,
+     "alto_activo_mm": 13.37,
+     "relacion_aspecto": "1.78:1",
+     "factor_crop_vs_ff": 1.515,
+     "resolucion_px": "2880x1620",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Classic Recording Areas, Surround Views and Electronic Framelines\" (SUP 11.0, 2 mar 2015), pagina 1, bloque \"Sensor Mode: 16:9\" (ProRes HD, DNxHD, ARRIRAW): 2880 x 1620 (1.78:1) = 23.76 x 13.37 mm",
+      "url": "https://www.arri.com/resource/blob/178012/d6a32bdbaee788486bce45ec1de9e4f1/alexa-classic-and-xt-recording-areas-surround-views-framelines-sup-11-data.pdf"
+     }
+    },
+    {
+     "id": "classic_16_9_prores_2k",
+     "nombre": "Sensor mode 16:9: ProRes 2K",
+     "ancho_activo_mm": 23.66,
+     "alto_activo_mm": 13.3,
+     "relacion_aspecto": "1.78:1",
+     "factor_crop_vs_ff": 1.522,
+     "resolucion_px": "2868x1612",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Classic Recording Areas, Surround Views and Electronic Framelines\" (SUP 11.0, 2 mar 2015), pagina 1, bloque \"Sensor Mode: 16:9 / ProRes 2K\": Frameline ARRI 1.78 2868 x 1612 = 23.66 x 13.30 mm (el bloque lo muestra como frameline 1.78 del modo 2K)",
+      "url": "https://www.arri.com/resource/blob/178012/d6a32bdbaee788486bce45ec1de9e4f1/alexa-classic-and-xt-recording-areas-surround-views-framelines-sup-11-data.pdf"
+     }
+    },
+    {
+     "id": "classic_4_3_full_2_8k",
+     "nombre": "Sensor mode 4:3 Full: ARRIRAW 2.8K 4:3 (solo Plus 4:3, M y Studio)",
+     "ancho_activo_mm": 23.76,
+     "alto_activo_mm": 17.82,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.515,
+     "resolucion_px": "2880x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA Classic Recording Areas, Surround Views and Electronic Framelines\" (SUP 11.0, 2 mar 2015), pagina 1, bloque \"Sensor Mode: 4:3 Full\": ARRIRAW 2880 x 2160 (1.33:1) = 23.76 x 17.82 mm",
+      "url": "https://www.arri.com/resource/blob/178012/d6a32bdbaee788486bce45ec1de9e4f1/alexa-classic-and-xt-recording-areas-surround-views-framelines-sup-11-data.pdf"
+     }
+    }
+   ],
+   "nota": "El usuario escribio solo \"Arri Alexa\"; esto interpreta la ALEXA original (familia Classic, sensor 4:3 de 3414 x 2198 fotositios = 28.17 x 18.13 mm, fuente ARRI recording-areas SUP 11 pagina 1 y ARRI XT Open Gate white paper). Si se refiere a otra (Mini, Mini LF, 35, LF) usar esas entradas. Variantes: Classic EV y Plus (16:9, sin modo 4:3) tienen solo los modos 16:9; Plus 4:3, M y Studio tienen ademas 4:3. DISCREPANCIA entre PDFs de ARRI: el drawing de recording areas (Note 3) dice que el modo 4:3 solo esta en \"ALEXA Plus 4:3 y ALEXA Studio\", pero la tabla de data rates (nota 1) dice \"ALEXA Plus 4:3, ALEXA M y ALEXA Studio\". Modos con mm de ARRI para la Classic: solo los de la pagina 1 del drawing; los modos 3.2K, 4:3 recortado y Open Gate son de la familia XT (ver arri_alexa_xt), no de la Classic. montura = null: los documentos ARRI leidos para esta familia (recording areas, data rates, configuration overview) no nombran la montura de lente. ARRI ya no tiene pagina de producto para la Classic/XT (404 en arri.com legacy), por eso las fuentes son PDFs en arri.com/resource/blob."
+  },
+  {
+   "id": "arri_alexa_xt",
+   "marca": "ARRI",
+   "modelo": "ALEXA XT (familia: XT / XT Plus / XT M / XT Studio; sensor 3414 x 2198 fotositios, 28.17 x 18.13 mm)",
+   "tipo": "lente_intercambiable",
+   "montura": null,
+   "modos": [
+    {
+     "id": "xt_16_9_hd_arriraw",
+     "nombre": "Sensor mode 16:9: ARRIRAW 2.8K / ProRes HD / DNxHD",
+     "ancho_activo_mm": 23.76,
+     "alto_activo_mm": 13.37,
+     "relacion_aspecto": "1.78:1",
+     "factor_crop_vs_ff": 1.515,
+     "resolucion_px": "2880x1620",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA XT, XT Plus, XT M and XT Studio Recording Areas, Surround Views and Electronic Framelines\" (SUP 11.0, 10 mar 2015), paginas 2-3, bloque \"Sensor Mode: 16:9\" (ARRIRAW, ProRes HD or DNxHD): Frameline ARRI 1.78 2880 x 1620 = 23.76 x 13.37 mm (coincide con ARRIRAW 2.8K 2880x1620 de la tabla de data rates)",
+      "url": "https://www.arri.com/resource/blob/178012/d6a32bdbaee788486bce45ec1de9e4f1/alexa-classic-and-xt-recording-areas-surround-views-framelines-sup-11-data.pdf"
+     }
+    },
+    {
+     "id": "xt_16_9_prores_2k",
+     "nombre": "Sensor mode 16:9: ProRes 2K",
+     "ancho_activo_mm": 23.66,
+     "alto_activo_mm": 13.3,
+     "relacion_aspecto": "1.78:1",
+     "factor_crop_vs_ff": 1.522,
+     "resolucion_px": "2868x1612",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA XT, XT Plus, XT M and XT Studio Recording Areas, Surround Views and Electronic Framelines\" (SUP 11.0, 10 mar 2015), paginas 2-3, bloque \"Sensor Mode: 16:9 / ProRes 2K\": Frameline ARRI 1.78 2868 x 1612 = 23.66 x 13.30 mm",
+      "url": "https://www.arri.com/resource/blob/178012/d6a32bdbaee788486bce45ec1de9e4f1/alexa-classic-and-xt-recording-areas-surround-views-framelines-sup-11-data.pdf"
+     }
+    },
+    {
+     "id": "xt_16_9_prores_3_2k",
+     "nombre": "Sensor mode 16:9: ProRes 3.2K",
+     "ancho_activo_mm": 26.1,
+     "alto_activo_mm": 14.67,
+     "relacion_aspecto": "1.78:1",
+     "factor_crop_vs_ff": 1.379,
+     "resolucion_px": "3164x1778",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA XT, XT Plus, XT M and XT Studio Recording Areas, Surround Views and Electronic Framelines\" (SUP 11.0, 10 mar 2015), paginas 2-3, bloque \"Sensor Mode: 16:9 / ProRes 3.2K\": Frameline ARRI 1.78 3164 x 1778 = 26.10 x 14.67 mm (la tabla de data rates da 3164 x 1778 para ProRes 3.2K 16:9)",
+      "url": "https://www.arri.com/resource/blob/178012/d6a32bdbaee788486bce45ec1de9e4f1/alexa-classic-and-xt-recording-areas-surround-views-framelines-sup-11-data.pdf"
+     }
+    },
+    {
+     "id": "xt_4_3_full_2_8k",
+     "nombre": "Sensor mode 4:3 Full: ARRIRAW 2.8K 4:3",
+     "ancho_activo_mm": 23.76,
+     "alto_activo_mm": 17.82,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.515,
+     "resolucion_px": "2880x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA XT, XT Plus, XT M and XT Studio Recording Areas, Surround Views and Electronic Framelines\" (SUP 11.0, 10 mar 2015), paginas 2-3, bloque \"Sensor Mode: 4:3 Full\": ARRIRAW 2880 x 2160 (1.33:1) = 23.76 x 17.82 mm (tambien en ARRI XT Open Gate white paper: \"a 4:3 2880 x 2160 ARRIRAW frame is 23.76 x 17.82 mm\")",
+      "url": "https://www.arri.com/resource/blob/178012/d6a32bdbaee788486bce45ec1de9e4f1/alexa-classic-and-xt-recording-areas-surround-views-framelines-sup-11-data.pdf"
+     }
+    },
+    {
+     "id": "xt_4_3_cropped_2_6k",
+     "nombre": "Sensor mode 4:3 Cropped: ARRIRAW 2.6K",
+     "ancho_activo_mm": 21.27,
+     "alto_activo_mm": 17.82,
+     "relacion_aspecto": "1.195:1",
+     "factor_crop_vs_ff": 1.693,
+     "resolucion_px": "2578x2160",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA XT, XT Plus, XT M and XT Studio Recording Areas, Surround Views and Electronic Framelines\" (SUP 11.0, 10 mar 2015), paginas 2-3, bloque \"Sensor Mode: 4:3 Cropped\": ARRIRAW 2578 x 2160 (1.195:1) = 21.27 x 17.82 mm",
+      "url": "https://www.arri.com/resource/blob/178012/d6a32bdbaee788486bce45ec1de9e4f1/alexa-classic-and-xt-recording-areas-surround-views-framelines-sup-11-data.pdf"
+     }
+    },
+    {
+     "id": "xt_open_gate_3_4k",
+     "nombre": "Open Gate 3.4K (ARRIRAW, sensor completo; no disponible en XT M)",
+     "ancho_activo_mm": 28.17,
+     "alto_activo_mm": 18.13,
+     "relacion_aspecto": "1.55:1",
+     "factor_crop_vs_ff": 1.278,
+     "resolucion_px": "3414x2198",
+     "derivado": false,
+     "fuente": {
+      "texto": "ARRI, \"ALEXA XT, XT Plus, XT M and XT Studio Recording Areas, Surround Views and Electronic Framelines\" (SUP 11.0, 10 mar 2015), paginas 2-3, bloque \"Sensor Mode: Open Gate\": ARRIRAW 3414 x 2198 (1.55:1) = 28.17 x 18.13 mm; ARRI XT Open Gate white paper 4.3: \"The active frame size of this format is 28.17 x 18.13 mm, or 3414 x 2198 pixels\"",
+      "url": "https://www.arri.com/resource/blob/178018/d685e369d764aa36e4a32eab9e227adc/alexa-xt-open-gate-white-paper-data.pdf"
+     }
+    }
+   ],
+   "nota": "Variantes XT / XT Plus / XT M / XT Studio agrupadas en una sola entrada porque los PDFs de ARRI las tratan juntas (mismo drawing de recording areas); Open Gate no esta disponible en XT M (ARRI XT Open Gate white paper 4.2) y solo en XT (no Classic, ni siquiera con XR Module). Interpretacion de \"Arri Alexa\" del usuario: ver nota de arri_alexa_classic. El modo Open Gate almacena 3424 x 2202 fotositios pero ARRI recomienda usar la imagen \"Clean Open Gate\" de 3414 x 2198 (white paper 6.1), que es la que corresponde a los 28.17 x 18.13 mm. Esta camara usa los mm de la familia Classic/XT (28.17 x 18.13 mm) y no los de la Mini (28.25 x 18.17 mm, 3424 x 2202). montura = null: los PDFs ARRI leidos no nombran la montura de lente. En ProRes 4:3 2K el drawing solo muestra el frameline 1.33 (2868 x 2150, 23.66 x 17.74 mm); no se incluyo como modo de sensor."
+  },
+  {
+   "id": "sony_fx6",
+   "marca": "Sony",
+   "modelo": "FX6 (ILME-FX6V) · estimado",
+   "tipo": "lente_intercambiable",
+   "montura": "Sony E (Sony UK, Specifications > General > Lens mount: E-mount)",
+   "modos": [
+    {
+     "id": "video_4k_qfhd_ff",
+     "nombre": "Video 4K QFHD full frame (hasta 60p)",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 20.03,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "3840x2160",
+     "derivado": true,
+     "estimado": true,
+     "calculo_derivado": "ancho 35.6 mm (FX3); alto = 35.6 x 9/16 = 20.03 mm",
+     "fuente": {
+      "texto": "ESTIMADO, no oficial: Sony publica para la FX6 solo «sensor CMOS full-frame de 35 mm», 10.2 MP efectivos (12.9 MP totales) y las resoluciones de grabación, sin mm. Se usa el ancho del sensor de la Sony FX3 (35.6 mm, Help Guide oficial de Sony), que también es full frame de 10.2 MP efectivos. Resoluciones: especificaciones oficiales de Sony ES.",
+      "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx6v/specifications"
+     }
+    },
+    {
+     "id": "video_4k_dci_ff",
+     "nombre": "Video 4K DCI full frame (hasta 60p)",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 18.77,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "4096x2160",
+     "derivado": true,
+     "estimado": true,
+     "calculo_derivado": "ancho 35.6 mm (FX3); alto = 35.6 x 2160/4096 = 18.77 mm",
+     "fuente": {
+      "texto": "ESTIMADO, no oficial: Sony publica para la FX6 solo «sensor CMOS full-frame de 35 mm», 10.2 MP efectivos (12.9 MP totales) y las resoluciones de grabación, sin mm. Se usa el ancho del sensor de la Sony FX3 (35.6 mm, Help Guide oficial de Sony), que también es full frame de 10.2 MP efectivos. Resoluciones: especificaciones oficiales de Sony ES.",
+      "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx6v/specifications"
+     }
+    },
+    {
+     "id": "video_fhd_ff",
+     "nombre": "Video Full HD full frame",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 20.03,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "1920x1080",
+     "derivado": true,
+     "estimado": true,
+     "calculo_derivado": "ancho 35.6 mm (FX3); alto = 35.6 x 9/16 = 20.03 mm",
+     "fuente": {
+      "texto": "ESTIMADO, no oficial: Sony publica para la FX6 solo «sensor CMOS full-frame de 35 mm», 10.2 MP efectivos (12.9 MP totales) y las resoluciones de grabación, sin mm. Se usa el ancho del sensor de la Sony FX3 (35.6 mm, Help Guide oficial de Sony), que también es full frame de 10.2 MP efectivos. Resoluciones: especificaciones oficiales de Sony ES.",
+      "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx6v/specifications"
+     }
+    },
+    {
+     "id": "video_4k_qfhd_120_crop",
+     "nombre": "Video 4K QFHD 100/120p (recorte ~10 %)",
+     "ancho_activo_mm": 32.04,
+     "alto_activo_mm": 18.02,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.12,
+     "resolucion_px": "3840x2160",
+     "derivado": true,
+     "estimado": true,
+     "calculo_derivado": "Sony indica «10 % image crop» (nota al pie del comunicado oficial) sin decir cómo lo mide; se aplica 0.9 al ancho: 35.6 x 0.9 = 32.04 mm; alto = 32.04 x 9/16 = 18.02 mm",
+     "fuente": {
+      "texto": "ESTIMADO, no oficial: Sony publica para la FX6 solo «sensor CMOS full-frame de 35 mm», 10.2 MP efectivos (12.9 MP totales) y las resoluciones de grabación, sin mm. Se usa el ancho del sensor de la Sony FX3 (35.6 mm, Help Guide oficial de Sony), que también es full frame de 10.2 MP efectivos. Resoluciones: especificaciones oficiales de Sony ES.",
+      "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx6v/specifications"
+     }
+    }
+   ],
+   "nota": "Sensor y recorte estimados a partir de la FX3 (ver cada modo). El modo Super 35 (solo FHD) no se incluye: Sony no da su tamaño ni su factor. Cuando haya una guía técnica oficial con mm, reemplazar estos valores."
+  }
+ ],
+ "juegos_de_lentes": [
+  {
+   "id": "primes_esfericos_ejemplo",
+   "nombre": "Primes esféricos (ejemplo editable)",
+   "montura": null,
+   "tipo": "esferico",
+   "squeeze": 1.0,
+   "focales_mm": [
+    14,
+    16,
+    20,
+    24,
+    28,
+    35,
+    50,
+    75,
+    85,
+    100,
+    135
+   ]
+  },
+  {
+   "id": "anamorfico_2x_ejemplo",
+   "nombre": "Anamórfico 2x (ejemplo editable)",
+   "montura": null,
+   "tipo": "anamorfico",
+   "squeeze": 2.0,
+   "focales_mm": [
+    35,
+    40,
+    50,
+    75,
+    100
+   ]
+  },
+  {
+   "id": "anamorfico_1_33x_ejemplo",
+   "nombre": "Anamórfico 1.33x (ejemplo editable)",
+   "montura": null,
+   "tipo": "anamorfico",
+   "squeeze": 1.33,
+   "focales_mm": [
+    35,
+    50,
+    75
+   ]
+  }
+ ],
+ "perfiles_telefono": [
+  {
+   "modelo_build": "SM-S948B",
+   "nombre_comercial": "Samsung Galaxy S26 Ultra",
+   "estado": "parcial",
+   "lentes": [
+    {
+     "camera2_id": "5",
+     "nombre": "principal",
+     "fov_horizontal_medido_grados": 71.8,
+     "fov_horizontal_reportado_grados": 74.0,
+     "fecha_calibracion": "2026-10-21",
+     "fuente": "datos-etapa0/mediciones_fov_manuales.json (2 montajes: 71.6° y 71.9°, stream de preview 4:3)"
+    },
+    {
+     "camera2_id": "2",
+     "nombre": "ultra gran angular",
+     "fov_horizontal_medido_grados": null,
+     "fov_horizontal_reportado_grados": 104.8,
+     "fecha_calibracion": null
+    },
+    {
+     "camera2_id": "6",
+     "nombre": "tele corto",
+     "fov_horizontal_medido_grados": null,
+     "fov_horizontal_reportado_grados": 29.2,
+     "fecha_calibracion": null
+    },
+    {
+     "camera2_id": "7",
+     "nombre": "tele largo",
+     "fov_horizontal_medido_grados": null,
+     "fov_horizontal_reportado_grados": 17.5,
+     "fecha_calibracion": null
+    }
+   ]
+  }
+ ],
+ "formulas": {
+  "fov_horizontal": "2 * atan(ancho_activo_mm / (2 * focal_mm))",
+  "factor_recuadro": "tan(fov_objetivo / 2) / tan(fov_telefono / 2)",
+  "relacion_aspecto_anamorfica": "relacion_aspecto_sensor * squeeze"
+ }
+}

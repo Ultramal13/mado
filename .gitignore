@@ -1,0 +1,25 @@
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+.DS_Store
+.kotlin/
+captures/
+
+# Archivos que no se publican: imágenes pegadas de referencia, capturas y fotos de prueba personales, APK
+/image-*.png
+/image-*.jpg
+/image-*.webp
+*.apk
+datos-etapa0/*.png
+datos-etapa0/*.jpg
+datos-etapa0/captura_*/
+dist/
+
+# fotos retiradas del repo (se conservan en local)
+856834767_1525163826302516_306117103760867477_n.jpg
+855807459_1108056865416170_6598531435043177270_n.jpg
+
+# fotos de LUX-0, no van en este repo
+[0-9]*_n.jpg
