@@ -70,7 +70,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -194,8 +193,9 @@ fun FovScreen(
     val evInfo = remember(lens.id) { camera.exposureInfo(lens) }
     LaunchedEffect(ev, evInfo) { camera.setExposure(evInfo?.first?.let { ev.coerceIn(it.first, it.last) } ?: 0) }
     // El visor usa una proporción parecida a la de la pantalla (la imagen la llena); la calibración queda en 4:3.
-    val cfg = LocalConfiguration.current
-    val screenAspect = maxOf(cfg.screenWidthDp, cfg.screenHeightDp).toDouble() / minOf(cfg.screenWidthDp, cfg.screenHeightDp)
+    // Tamaño real de la ventana (no la configuración de Android, que puede quedar desfasada al girar).
+    val win = androidx.compose.ui.platform.LocalWindowInfo.current.containerSize
+    val screenAspect = maxOf(win.width, win.height).toDouble() / maxOf(1, minOf(win.width, win.height))
     val size = remember(lens, framing != null, screenAspect) { camera.choosePreviewSize(lens, if (framing != null) screenAspect else null) }
     val running = hasPermission && holder != null && reason == null && !guard.hot
 
@@ -227,7 +227,7 @@ fun FovScreen(
     // Un error o calor deja la cámara apagada hasta que el usuario toque iniciar.
     LaunchedEffect(error) { if (error != null) { android.util.Log.w("mado", "error=$error"); reason = Reason.USER } }
 
-    val landscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val landscape = win.width > win.height
     val theory = remember(lens, size) {
         val m = lens.activeSizeMm!!
         val w = Fov.croppedWidthMm(m.first, m.second, size.width.toDouble() / size.height)

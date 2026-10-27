@@ -26,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.mado.diagnostics.CameraDiagnostics
@@ -85,7 +84,10 @@ class MainActivity : ComponentActivity() {
             androidx.activity.compose.BackHandler(enabled = screen != 0) { screen = 0 }
 
             val title = stringResource(when (screen) { 0 -> R.string.screen_viewer; 1 -> R.string.screen_calibration; else -> R.string.mode_diagnostics })
-            val landscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+            // Orientación según el tamaño real de la ventana: la configuración que reporta Android puede quedar desfasada tras girar
+            // (en algunos teléfonos, p. ej. el Xperia, el diseño se quedaba en vertical con el teléfono en horizontal).
+            val win = androidx.compose.ui.platform.LocalWindowInfo.current.containerSize
+            val landscape = win.width > win.height
             val chrome: @Composable () -> Unit = {
                 Header(title, onMenu = { menuOpen = true }, onBack = if (screen != 0) ({ screen = 0 }) else null)
             }
