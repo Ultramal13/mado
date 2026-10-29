@@ -150,6 +150,10 @@ fun FovScreen(
     // Arranca en la lente calibrada de este teléfono; si no hay, en la principal (no en la ultra gran angular).
     var lensIdx by rememberSaveable {
         val profile = framing?.db?.phoneProfiles?.firstOrNull { it.buildModel == Build.MODEL }
+        // En el visor se vuelve a la lente del teléfono usada la última vez (si sigue existiendo).
+        val lastLens = if (framing != null) ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).getString("lens_id", null) else null
+        val savedIdx = lenses.indexOfFirst { it.id == lastLens }
+        if (savedIdx >= 0) mutableIntStateOf(savedIdx) else
         mutableIntStateOf(
             defaultLensIndex(
                 lenses.map { it.equiv35Mm.firstOrNull() ?: 0.0 },
@@ -188,6 +192,7 @@ fun FovScreen(
     }
 
     val lens = lenses[lensIdx.coerceIn(0, lenses.lastIndex)]
+    if (framing != null) LaunchedEffect(lens.id) { ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).edit().putString("lens_id", lens.id).apply() }
     // Exposición (compensación EV): se ajusta desde el panel del visor y vale para el preview y la foto.
     var ev by rememberSaveable { mutableIntStateOf(0) }
     val evInfo = remember(lens.id) { camera.exposureInfo(lens) }
@@ -329,8 +334,10 @@ fun FovScreen(
 
     // Ubicación en las fotos: opcional, la activa el usuario, una lectura al disparar.
     val prefs = remember { ctx.getSharedPreferences("mado", Context.MODE_PRIVATE) }
-    // Las guías de composición elegidas se recuerdan.
+    // La selección (cámara, modo, lentes, focal, kit) y las guías de composición se recuerdan entre usos.
     if (framing != null) {
+        val snap = framing.snapshot()
+        LaunchedEffect(snap) { prefs.edit().putString("framing", snap).apply() }
         LaunchedEffect(Unit) {
             framing.guides = prefs.getString("guides", "").orEmpty().split(',').mapNotNull { n -> Guide.values().firstOrNull { it.name == n } }.toSet()
         }

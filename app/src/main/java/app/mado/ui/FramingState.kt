@@ -42,6 +42,42 @@ class FramingState(val db: CameraDb) {
     var fixedAspectIdx by mutableIntStateOf(0)
     val fixedAspects = listOf(16.0 / 9.0 to "16:9", 4.0 / 3.0 to "4:3", 3.0 / 2.0 to "3:2", 2.39 to "2.39:1", 1.0 to "1:1")
 
+    /**
+     * Foto fija de lo elegido (por id, no por posición: el catálogo puede cambiar de una versión a otra) para recordarlo
+     * entre usos de la app. Las guías de composición se guardan aparte.
+     */
+    fun snapshot(): String = org.json.JSONObject().apply {
+        put("camera", if (isCustom) "custom" else camera?.id)
+        put("mode", camera?.modes?.getOrNull(modeIdx)?.id)
+        put("lensSet", lensSet?.id)
+        put("focal", focal)
+        put("kit", org.json.JSONArray(kit))
+        put("customW", customW); put("customH", customH)
+        put("builtIn", camera?.builtInLenses?.getOrNull(builtInIdx)?.id)
+        put("aspect", fixedAspectIdx)
+    }.toString()
+
+    /** Vuelve a la selección guardada por [snapshot]; lo que ya no exista en el catálogo se ignora y queda el valor por omisión. */
+    fun restore(json: String?) {
+        if (json.isNullOrBlank()) return
+        try {
+            val o = org.json.JSONObject(json)
+            val cam = o.optString("camera")
+            if (cam == "custom") cameraIdx = cameras.size
+            else cameras.indexOfFirst { it.id == cam }.takeIf { it >= 0 }?.let { cameraIdx = it }
+            if (!isCustom) {
+                camera?.modes?.indexOfFirst { it.id == o.optString("mode") }?.takeIf { it >= 0 }?.let { modeIdx = it }
+                camera?.builtInLenses?.indexOfFirst { it.id == o.optString("builtIn") }?.takeIf { it >= 0 }?.let { builtInIdx = it }
+            }
+            db.lensSets.indexOfFirst { it.id == o.optString("lensSet") }.takeIf { it >= 0 }?.let { lensSetIdx = it }
+            o.optString("focal").takeIf { it.toDoubleOrNull() != null }?.let { focal = it }
+            o.optJSONArray("kit")?.let { a -> List(a.length()) { a.optDouble(it) }.filter { it > 0 }.takeIf { it.isNotEmpty() }?.let { kit = it } }
+            o.optString("customW").takeIf { it.toDoubleOrNull() != null }?.let { customW = it }
+            o.optString("customH").takeIf { it.toDoubleOrNull() != null }?.let { customH = it }
+            o.optInt("aspect", -1).takeIf { it in fixedAspects.indices }?.let { fixedAspectIdx = it }
+        } catch (_: Exception) { /* guardado dañado: se parte desde cero */ }
+    }
+
     val isCustom get() = cameraIdx >= cameras.size
     val camera: Camera? get() = cameras.getOrNull(cameraIdx)
     val lensSet get() = db.lensSets.getOrNull(lensSetIdx)

@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
             }
             val results = remember { FovResults(applicationContext) }
             val appVersion = remember { runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull().orEmpty() }
-            val framing = remember { FramingState(CameraRepository.load(applicationContext)) }
+            val framing = remember { FramingState(CameraRepository.load(applicationContext)).also { it.restore(prefs.getString("framing", null)) } }
             androidx.activity.compose.BackHandler(enabled = screen != 0) { screen = 0 }
 
             val title = stringResource(when (screen) { 0 -> R.string.screen_viewer; 1 -> R.string.screen_calibration; else -> R.string.mode_diagnostics })
