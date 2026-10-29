@@ -3352,6 +3352,37 @@
      "fecha_calibracion": null
     }
    ]
+  },
+  {
+   "modelo_build": "SO-51B",
+   "nombre_comercial": "Sony Xperia 1 III (docomo SO-51B)",
+   "estado": "parcial",
+   "lentes": [
+    {
+     "camera2_id": "4",
+     "nombre": "ultra gran angular",
+     "fov_horizontal_medido_grados": 99.3,
+     "fov_horizontal_reportado_grados": 93.2,
+     "fecha_calibracion": "2026-10-28",
+     "fuente": "datos-etapa0/mediciones_fov_xperia_so51b.json (1 medición por el dueño del teléfono, stream 4:3, corrección de distorsión por defecto; pendiente de repetir)"
+    },
+    {
+     "camera2_id": "2",
+     "nombre": "principal",
+     "fov_horizontal_medido_grados": 67.0,
+     "fov_horizontal_reportado_grados": 70.8,
+     "fecha_calibracion": "2026-10-28",
+     "fuente": "datos-etapa0/mediciones_fov_xperia_so51b.json (1 medición por el dueño del teléfono, stream 4:3, corrección de distorsión por defecto; pendiente de repetir)"
+    },
+    {
+     "camera2_id": "3",
+     "nombre": "tele",
+     "fov_horizontal_medido_grados": 25.9,
+     "fov_horizontal_reportado_grados": 27.1,
+     "fecha_calibracion": "2026-10-28",
+     "fuente": "datos-etapa0/mediciones_fov_xperia_so51b.json (1 medición por el dueño del teléfono, stream 4:3, corrección de distorsión por defecto; pendiente de repetir)"
+    }
+   ]
   }
  ],
  "formulas": {

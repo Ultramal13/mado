@@ -1,0 +1,43 @@
+{
+ "_nota": "Mediciones del FOV del Xperia 1 III (SO-51B) hechas por el contacto en Japón con la pantalla de calibración de Mado (cinta métrica en la pared, una sola medición por lente, lectura a ojo ±2 cm). Datos tomados de las capturas que envió el 2026-10-28. Pendiente: repetir y comparar con la cámara nativa.",
+ "modelo_build": "SO-51B",
+ "fecha": "2026-10-28",
+ "mediciones": [
+  {
+   "lente_camera2_id": "2",
+   "nombre": "principal",
+   "distancia_lente_pared_cm": 65,
+   "numero_en_el_borde_cm": 43,
+   "fov_horizontal_medido_grados": 67.0,
+   "fov_horizontal_teorico_grados": 70.8,
+   "error_pct": -5.4,
+   "correccion_distorsion": "por defecto",
+   "orientacion": "horizontal",
+   "stream": "640x480"
+  },
+  {
+   "lente_camera2_id": "3",
+   "nombre": "tele",
+   "distancia_lente_pared_cm": 100,
+   "numero_en_el_borde_cm": 23,
+   "fov_horizontal_medido_grados": 25.9,
+   "fov_horizontal_teorico_grados": 27.1,
+   "error_pct": -4.4,
+   "correccion_distorsion": "por defecto",
+   "orientacion": "horizontal",
+   "stream": "640x480"
+  },
+  {
+   "lente_camera2_id": "4",
+   "nombre": "ultra gran angular",
+   "distancia_lente_pared_cm": 45,
+   "numero_en_el_borde_cm": 53,
+   "fov_horizontal_medido_grados": 99.3,
+   "fov_horizontal_teorico_grados": 93.2,
+   "error_pct": 6.5,
+   "correccion_distorsion": "por defecto",
+   "orientacion": "horizontal",
+   "stream": "640x480"
+  }
+ ]
+}

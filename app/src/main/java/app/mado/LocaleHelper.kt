@@ -28,8 +28,12 @@ object LocaleHelper {
         if (tag == AUTO) return base
         val locale = Locale.forLanguageTag(tag)
         Locale.setDefault(locale)
-        val cfg = Configuration(base.resources.configuration)
-        cfg.setLocales(LocaleList(locale))
+        // Solo el idioma: una configuración de «diferencia». Si se copiara la actual completa, la orientación y el tamaño de la
+        // pantalla quedarían congelados tal como estaban al crear la actividad y no seguirían al girar el teléfono.
+        val cfg = Configuration().apply {
+            fontScale = 0f                          // 0 = «sin definir»: conserva la escala de fuente del sistema
+            setLocales(LocaleList(locale))
+        }
         return base.createConfigurationContext(cfg)
     }
 }

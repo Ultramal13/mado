@@ -9,7 +9,7 @@ Mado calcula el recuadro de cada cámara con el campo de visión (FOV) del telé
 ## Español
 
 ### Qué necesitas
-> **Usa la versión 0.2.12-beta o más nueva.** En las anteriores, al girar el teléfono a horizontal la pantalla de calibración podía verse estirada y sin menú.
+> **Usa la versión 0.2.13-beta o más nueva.** En las anteriores, al girar el teléfono a horizontal la pantalla de calibración podía verse estirada y sin menú, sobre todo después de cambiar el idioma dentro de Mado.
 
 - El **Xperia 1 III** con **Mado** instalado ([última versión](https://github.com/Ultramal13/mado/releases/latest): baja el `.apk` y ábrelo; si Android pregunta por «fuentes desconocidas», permítelo solo para el navegador o el gestor de archivos).
 - Una **cinta métrica** de 1 m (basta) y **cinta adhesiva**.
@@ -74,7 +74,7 @@ Además anota:
 ## English
 
 ### What you need
-> **Use version 0.2.12-beta or newer.** In older versions, turning the phone to landscape could leave the calibration screen stretched and without its menu.
+> **Use version 0.2.13-beta or newer.** In older versions, turning the phone to landscape could leave the calibration screen stretched and without its menu, especially after changing the language inside Mado.
 
 - The **Xperia 1 III** with **Mado** installed ([latest version](https://github.com/Ultramal13/mado/releases/latest): download the `.apk` and open it; if Android asks about "unknown sources", allow it only for the browser or file manager).
 - A **tape measure** (1 m is enough) and **adhesive tape**.
@@ -140,7 +140,7 @@ Also note:
 （※翻訳は未確認です。分からない点はスペイン語・英語の手順も参照してください。）
 
 ### 用意するもの
-> **バージョン 0.2.12-beta 以降を使ってください。** 以前のバージョンでは、端末を横向きにすると校正画面が引き伸ばされ、メニューが消えることがありました。
+> **バージョン 0.2.13-beta 以降を使ってください。** 以前のバージョンでは、端末を横向きにすると校正画面が引き伸ばされ、メニューが消えることがありました（特にMado内で言語を変更した後）。
 
 - **Mado** をインストールした **Xperia 1 III**（[最新版](https://github.com/Ultramal13/mado/releases/latest)から `.apk` をダウンロードして開きます。「提供元不明のアプリ」の確認が出たら、ブラウザまたはファイル管理アプリにだけ許可してください）。
 - **メジャー**（1 mで十分）と**テープ**。
