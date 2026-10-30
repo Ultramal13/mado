@@ -23,3 +23,13 @@ dist/
 
 # fotos de LUX-0, no van en este repo
 [0-9]*_n.jpg
+
+# material de respaldo y proceso (capturas, PDF, audios y videos que envía el equipo de pruebas): nunca se publica
+/*.jpeg
+/*.jpg
+/*.png
+/*.webp
+/*.pdf
+/*.mp4
+/*.ogg
+.playwright-mcp/
