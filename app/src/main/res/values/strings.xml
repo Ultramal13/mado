@@ -77,6 +77,7 @@
     <string name="frm_shot_no">shot number</string>
     <string name="frm_delivery">delivery aspect (line over the frame)</string>
     <string name="frm_delivery_same">same as sensor</string>
+    <string name="frm_shot_word">shot</string>
     <string name="frm_phone_lens">phone lens (fixed, one at a time)</string>
     <string name="frm_camera">camera</string>
     <string name="frm_custom">custom</string>

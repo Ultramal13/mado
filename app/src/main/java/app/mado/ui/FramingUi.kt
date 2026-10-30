@@ -145,7 +145,8 @@ internal fun ViewerChip(framing: FramingState, onClick: () -> Unit, modifier: Mo
             .clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = 7.dp),
     ) {
         Text(framing.cameraName() + "  ▾", style = mono(15, Color.White, true), maxLines = 1, overflow = TextOverflow.Ellipsis)
-        val sceneLbl = framing.scene.trim().takeIf { it.isNotEmpty() }?.let { "$it / ${framing.shotNo}" }
+        val shotWord = stringResource(R.string.frm_shot_word)
+        val sceneLbl = framing.scene.trim().takeIf { it.isNotEmpty() }?.let { "$it · $shotWord ${framing.shotNo}" }
         val sub = listOfNotNull(sceneLbl, framing.modeName(), framing.subLabel(), evLabel).filter { it.isNotEmpty() }.joinToString(" · ")
         Text(sub, style = mono(10, Color.White.copy(alpha = 0.75f)), maxLines = 1, overflow = TextOverflow.Ellipsis)
     }

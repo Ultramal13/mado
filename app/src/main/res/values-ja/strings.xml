@@ -77,6 +77,7 @@
     <string name="frm_shot_no">ショット番号</string>
     <string name="frm_delivery">納品アスペクト（枠内のライン）</string>
     <string name="frm_delivery_same">センサーと同じ</string>
+    <string name="frm_shot_word">ショット</string>
     <string name="frm_phone_lens">スマホのレンズ（固定・一度に1つ）</string>
     <string name="frm_camera">カメラ</string>
     <string name="frm_custom">カスタム</string>

@@ -87,7 +87,7 @@ object PhotoAnnotator {
             drawGuides(c, guides, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, unit / 12f)
             delivery?.let { drawDelivery(c, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, it, deliveryLabel, unit) }
         }
-        info.sceneTag?.let { drawSceneTag(c, it, info.sceneColor, unit) }
+        info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, barUnit, info)
         photo.recycle()
         return encode(out)
@@ -143,7 +143,7 @@ object PhotoAnnotator {
         c.drawBitmap(body, 0f, 0f, null)
         drawGuides(c, guides, 0f, 0f, w.toFloat(), h.toFloat(), unit / 8f)
         delivery?.let { drawDelivery(c, 0f, 0f, w.toFloat(), h.toFloat(), it, deliveryLabel, unit * 1.1f) }
-        info.sceneTag?.let { drawSceneTag(c, it, info.sceneColor, unit * 1.1f) }
+        info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit * 1.1f) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, unit, info)
         body.recycle()
         return encode(out)
@@ -182,13 +182,18 @@ object PhotoAnnotator {
         c.drawText(label, x1 - tw + unit * 0.3f, y1 - th * 0.25f, tp)
     }
 
-    /** Etiqueta de escena y plano en la esquina superior izquierda (rectángulo de color con texto blanco). */
-    private fun drawSceneTag(c: Canvas, text: String, color: Int, unit: Float) {
-        val p = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD); textSize = unit * 1.55f; this.color = Color.WHITE }
-        val pad = unit * 0.55f
-        val tw = p.measureText(text) + 2 * pad; val th = unit * 2.3f
-        c.drawRect(0f, 0f, tw, th, Paint().apply { this.color = color })
-        c.drawText(text, pad, th * 0.74f, p)
+    /**
+     * Escena y plano: una píldora oscura redondeada en la esquina inferior izquierda de la imagen (justo sobre la barra de datos),
+     * con un punto del color de la escena. `bottom` es el borde inferior de la imagen.
+     */
+    private fun drawScenePill(c: Canvas, text: String, color: Int, bottom: Float, unit: Float) {
+        val p = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD); textSize = unit * 1.25f; this.color = Color.WHITE }
+        val m = unit * 0.9f; val padX = unit * 0.7f; val th = unit * 2.1f; val dot = unit * 0.55f
+        val tw = p.measureText(text) + padX * 2 + dot * 2 + unit * 0.55f
+        val top = bottom - m - th
+        c.drawRoundRect(RectF(m, top, m + tw, top + th), th / 2f, th / 2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = Color.argb(185, 12, 12, 12) })
+        c.drawCircle(m + padX + dot, top + th / 2f, dot, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = color })
+        c.drawText(text, m + padX + dot * 2 + unit * 0.55f, top + th * 0.68f, p)
     }
 
     /** Guías de composición dentro del rectángulo (l, t, w, h): línea blanca con un borde oscuro para que se vea sobre cualquier fondo. */

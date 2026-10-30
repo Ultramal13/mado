@@ -376,6 +376,7 @@ fun FovScreen(
     val phoneLensShort = stringResource(R.string.frm_phone_lens_short)
     val verifiedText = stringResource(R.string.bar_verified)
     val unverifiedText = stringResource(R.string.bar_unverified)
+    val shotWordText = stringResource(R.string.frm_shot_word)
     val takeShot: () -> Unit = takeShot@{
         if (framing == null || !running || shot is ShotUi.Working || shot is ShotUi.Exposed) return@takeShot
         shot = ShotUi.Working
@@ -409,7 +410,7 @@ fun FovScreen(
         val aspectText = (deliveryNow ?: target?.aspect)?.let { app.mado.optics.aspectLabel(it) }.orEmpty()
         val deliveryLabel = deliveryNow?.let { app.mado.optics.aspectLabel(it) }.orEmpty()
         val sceneNow = framing.scene.trim(); val shotNow = framing.shotNo
-        val sceneTagText = sceneNow.takeIf { it.isNotEmpty() }?.let { "$it / $shotNow" }
+        val sceneTagText = sceneNow.takeIf { it.isNotEmpty() }?.let { "$it · $shotWordText $shotNow" }
         meta.put("scene", sceneNow); meta.put("shot_no", shotNow); meta.put("delivery_aspect", deliveryLabel)
         val camText = framing.cameraName(); val modeText = listOf(framing.modeName(), aspectText).filter { it.isNotEmpty() }.joinToString("  ·  "); val lensSetText = framing.subLabel(); val bigText = framing.bigLabel()
         val phoneLine = String.format(Locale.ROOT, "%s %s · %.1f° · %s", phoneLensShort, lens.id, phoneDeg, if (profileDeg != null) verifiedText else unverifiedText)
