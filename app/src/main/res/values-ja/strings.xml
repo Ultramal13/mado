@@ -70,6 +70,7 @@
     <string name="frm_shot_taken">✓ 撮影しました · 保存中…</string>
     <string name="frm_shot_saved_short">✓ 保存しました</string>
     <string name="frm_moved">⚠ 撮影中に端末が約%1$d°動きました。写真がずれている可能性があります</string>
+    <string name="frm_scene_dot">シーンの色の点</string>
     <string name="frm_fast_capture">高速撮影（ほぼ即時・電池を多く使用）</string>
     <string name="frm_crop_on">切り抜き表示 · タップで戻る</string>
     <string name="frm_scene_label">シーン／ロケ地</string>

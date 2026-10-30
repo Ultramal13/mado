@@ -189,11 +189,13 @@ object PhotoAnnotator {
     private fun drawScenePill(c: Canvas, text: String, color: Int, bottom: Float, unit: Float) {
         val p = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD); textSize = unit * 1.25f; this.color = Color.WHITE }
         val m = unit * 0.9f; val padX = unit * 0.7f; val th = unit * 2.1f; val dot = unit * 0.55f
-        val tw = p.measureText(text) + padX * 2 + dot * 2 + unit * 0.55f
+        val hasDot = color != 0
+        val lead = if (hasDot) dot * 2 + unit * 0.55f else 0f
+        val tw = p.measureText(text) + padX * 2 + lead
         val top = bottom - m - th
         c.drawRoundRect(RectF(m, top, m + tw, top + th), th / 2f, th / 2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = Color.argb(185, 12, 12, 12) })
-        c.drawCircle(m + padX + dot, top + th / 2f, dot, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = color })
-        c.drawText(text, m + padX + dot * 2 + unit * 0.55f, top + th * 0.68f, p)
+        if (hasDot) c.drawCircle(m + padX + dot, top + th / 2f, dot, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = color })
+        c.drawText(text, m + padX + lead, top + th * 0.68f, p)
     }
 
     /** Guías de composición dentro del rectángulo (l, t, w, h): línea blanca con un borde oscuro para que se vea sobre cualquier fondo. */

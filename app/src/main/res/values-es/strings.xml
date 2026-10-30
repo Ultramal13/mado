@@ -70,6 +70,7 @@
     <string name="frm_shot_taken">✓ foto tomada · guardando…</string>
     <string name="frm_shot_saved_short">✓ guardada</string>
     <string name="frm_moved">⚠ el teléfono se movió unos %1$d° durante la toma: la foto puede salir corrida</string>
+    <string name="frm_scene_dot">punto de color de la escena</string>
     <string name="frm_fast_capture">captura rápida (foto casi instantánea; usa más batería)</string>
     <string name="frm_crop_on">vista recortada · toca para volver</string>
     <string name="frm_scene_label">escena / lugar</string>

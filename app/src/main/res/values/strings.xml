@@ -70,6 +70,7 @@
     <string name="frm_shot_taken">✓ photo taken · saving…</string>
     <string name="frm_shot_saved_short">✓ saved</string>
     <string name="frm_moved">⚠ the phone moved about %1$d° during the shot: the photo may be shifted</string>
+    <string name="frm_scene_dot">scene color dot</string>
     <string name="frm_fast_capture">fast capture (photo almost instant; uses more battery)</string>
     <string name="frm_crop_on">cropped view · tap to go back</string>
     <string name="frm_scene_label">scene / location</string>

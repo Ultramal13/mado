@@ -211,6 +211,7 @@ fun FovScreen(
     // para que el preview salga derecho (si no, queda de lado hasta detener e iniciar).
     val displayRotation = LocalView.current.display?.rotation ?: 0
     // Captura rápida (stream de foto en la sesión del preview): activada por omisión; se puede apagar desde el panel.
+    var sceneDot by remember { mutableStateOf(ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).getBoolean("scene_dot", true)) }
     var fastOn by remember { mutableStateOf(ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).getBoolean("fast_capture", true)) }
     LaunchedEffect(running, lens.id, distortionOff, retry, surfaceGen, displayRotation, fastOn) {
         android.util.Log.i("mado", "effect running=$running perm=$hasPermission holder=${holder != null} reason=$reason err=$error hot=${guard.hot} lens=${lens.id} surfaceGen=$surfaceGen retry=$retry rot=$displayRotation fast=$fastOn dist=$distortionOff")
@@ -442,7 +443,7 @@ fun FovScreen(
                         val loc = try { locJob?.await() } catch (e: Exception) { null }
                         meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms).put("delay_to_exposure_ms", result.exposedMs).put("moved_deg", movedDeg))
                         loc?.let { meta.put("location", JSONObject().put("lat", it.latitude).put("lon", it.longitude).put("accuracy_m", it.accuracy.toDouble())) }
-                        val info = BarInfo(camText, modeText, phoneLine, stamp, headText, attText, loc?.let { LocationHelper.format(it) }, lensSetText, anglesText, bigText, sceneTagText, app.mado.optics.sceneColorArgb(sceneNow))
+                        val info = BarInfo(camText, modeText, phoneLine, stamp, headText, attText, loc?.let { LocationHelper.format(it) }, lensSetText, anglesText, bigText, sceneTagText, if (sceneDot) app.mado.optics.sceneColorArgb(sceneNow) else 0)
                         shot = try {
                             val now = java.util.Date()
                             val saved = withContext(Dispatchers.IO) {
@@ -478,6 +479,7 @@ fun FovScreen(
             onToggle = onToggle, shot = shot, onShot = takeShot,
             orientation = orientationText(tracker.pose), gpsOn = gpsOn, onGps = onGps, gpsDenied = gpsDenied,
             ev = ev, evInfo = evInfo, onEv = { ev = it },
+            sceneDot = sceneDot, onSceneDot = { sceneDot = it; ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).edit().putBoolean("scene_dot", it).apply() },
             fastOn = fastOn, onFast = { fastOn = it; ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).edit().putBoolean("fast_capture", it).apply() },
         ) else Controls(
             report = report, lenses = lenses, lensIdx = lensIdx, onLens = { lensIdx = it },
