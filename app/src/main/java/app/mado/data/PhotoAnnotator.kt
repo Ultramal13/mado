@@ -22,6 +22,8 @@ data class BarInfo(
     val camera: String, val mode: String, val phoneLine: String, val stamp: String,
     val heading: String?, val attitude: String?, val position: String?,
     val lensSet: String, val angles: String, val bigFocal: String,
+    /** Etiqueta «escena / plano» (esquina superior izquierda de la foto) y su color; null = sin etiqueta. */
+    val sceneTag: String? = null, val sceneColor: Int = 0,
 )
 
 /** Un recuadro por focal del kit; `current` = el que se está usando; `detail` = texto de su etiqueta (la actual lleva la medida). */
@@ -41,7 +43,10 @@ object PhotoAnnotator {
     private const val NEUTRAL = 0xFFB8B8B4.toInt()
 
     // ---------- Vista general: foto + todos los recuadros ----------
-    fun overview(jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet()): ByteArray {
+    fun overview(
+        jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet(),
+        delivery: Double? = null, deliveryLabel: String = "",
+    ): ByteArray {
         val photo = decodeRotated(jpeg, rotationDeg, sample = 2)
         val w = photo.width; val h = photo.height
         val unit = w / 38f                                   // marcos y etiquetas
@@ -80,15 +85,20 @@ object PhotoAnnotator {
         frames.firstOrNull { it.current }?.let { cur ->
             val gw = cur.frame.widthFrac.toFloat() * iw; val gh = cur.frame.heightFrac.toFloat() * ih
             drawGuides(c, guides, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, unit / 12f)
+            delivery?.let { drawDelivery(c, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, it, deliveryLabel, unit) }
         }
+        info.sceneTag?.let { drawSceneTag(c, it, info.sceneColor, unit) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, barUnit, info)
         photo.recycle()
         return encode(out)
     }
 
     // ---------- Plano: la foto recortada al encuadre actual ----------
-    fun plano(jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet()): ByteArray {
-        val cur = frames.firstOrNull { it.current }?.frame ?: return overview(jpeg, rotationDeg, frames, info, guides)
+    fun plano(
+        jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet(),
+        delivery: Double? = null, deliveryLabel: String = "",
+    ): ByteArray {
+        val cur = frames.firstOrNull { it.current }?.frame ?: return overview(jpeg, rotationDeg, frames, info, guides, delivery, deliveryLabel)
         val size = BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { BitmapFactory.decodeByteArray(jpeg, 0, jpeg.size, it) }
         val rotated90 = rotationDeg % 180 != 0
         val W = if (rotated90) size.outHeight else size.outWidth      // medidas de la foto ya girada
@@ -132,6 +142,8 @@ object PhotoAnnotator {
         c.drawColor(PAPER)
         c.drawBitmap(body, 0f, 0f, null)
         drawGuides(c, guides, 0f, 0f, w.toFloat(), h.toFloat(), unit / 8f)
+        delivery?.let { drawDelivery(c, 0f, 0f, w.toFloat(), h.toFloat(), it, deliveryLabel, unit * 1.1f) }
+        info.sceneTag?.let { drawSceneTag(c, it, info.sceneColor, unit * 1.1f) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, unit, info)
         body.recycle()
         return encode(out)
@@ -156,6 +168,28 @@ object PhotoAnnotator {
     private fun barHeight(unit: Float) = unit * 5.9f
 
     private const val PHI_INV = 0.6180339887f
+
+    /** Línea roja del aspecto de entrega centrada dentro del rectángulo (l, t, w, h), con su etiqueta («16:9»). */
+    private fun drawDelivery(c: Canvas, l: Float, t: Float, w: Float, h: Float, aspect: Double, label: String, unit: Float) {
+        val (dw, dh) = app.mado.optics.deliveryRect(w.toDouble(), h.toDouble(), aspect)
+        val rl = l + (w - dw.toFloat()) / 2f; val rt = t + (h - dh.toFloat()) / 2f
+        val red = 0xFFE53935.toInt()
+        c.drawRect(rl, rt, rl + dw.toFloat(), rt + dh.toFloat(), Paint(Paint.ANTI_ALIAS_FLAG).apply { color = red; style = Paint.Style.STROKE; strokeWidth = unit / 9f })
+        val tp = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD); textSize = unit * 0.85f; color = Color.WHITE }
+        val tw = tp.measureText(label) + unit * 0.6f; val th = unit * 1.1f
+        val x1 = rl + dw.toFloat(); val y1 = rt + dh.toFloat()
+        c.drawRect(x1 - tw, y1 - th, x1, y1, Paint().apply { color = red })
+        c.drawText(label, x1 - tw + unit * 0.3f, y1 - th * 0.25f, tp)
+    }
+
+    /** Etiqueta de escena y plano en la esquina superior izquierda (rectángulo de color con texto blanco). */
+    private fun drawSceneTag(c: Canvas, text: String, color: Int, unit: Float) {
+        val p = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD); textSize = unit * 1.55f; this.color = Color.WHITE }
+        val pad = unit * 0.55f
+        val tw = p.measureText(text) + 2 * pad; val th = unit * 2.3f
+        c.drawRect(0f, 0f, tw, th, Paint().apply { this.color = color })
+        c.drawText(text, pad, th * 0.74f, p)
+    }
 
     /** Guías de composición dentro del rectángulo (l, t, w, h): línea blanca con un borde oscuro para que se vea sobre cualquier fondo. */
     private fun drawGuides(c: Canvas, guides: Set<Guide>, l: Float, t: Float, w: Float, h: Float, stroke: Float) {

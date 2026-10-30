@@ -59,7 +59,7 @@ internal data class FrameDraw(val label: String, val frame: Framing.Frame, val c
  * y las demás en blanco. Si la focal más ancha supera al teléfono (padding), el preview se achica y ese recuadro llena el visor.
  */
 @Composable
-internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, showTags: Boolean = true, guides: Set<Guide> = emptySet()) {
+internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, showTags: Boolean = true, guides: Set<Guide> = emptySet(), delivery: Double? = null) {
     val p = LocalPalette.current
     val line = if (p.red) p.screenText else Color.White
     val accent = if (p.red) p.screenText else Accent
@@ -99,6 +99,18 @@ internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, showTags: 
             val gw = cur.frame.widthFrac.toFloat() * iw
             val gh = cur.frame.heightFrac.toFloat() * ih
             drawGuides(guides, Offset(c.x - gw / 2, c.y - gh / 2), Size(gw, gh), line.copy(alpha = 0.75f), 1.dp.toPx())
+            // Aspecto de entrega: línea roja centrada en el encuadre, con su etiqueta.
+            delivery?.let { ar ->
+                val (dw, dh) = app.mado.optics.deliveryRect(gw.toDouble(), gh.toDouble(), ar)
+                val tl = Offset(c.x - dw.toFloat() / 2, c.y - dh.toFloat() / 2)
+                val red = Color(0xFFE53935)
+                drawRect(red, tl, Size(dw.toFloat(), dh.toFloat()), style = Stroke(2.dp.toPx()))
+                val l = measurer.measure(app.mado.optics.aspectLabel(ar), TextStyle(fontSize = 11.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = Color.White))
+                val pad = 4.dp.toPx()
+                val br = Offset(tl.x + dw.toFloat(), tl.y + dh.toFloat())
+                drawRect(red, Offset(br.x - l.size.width - 2 * pad, br.y - l.size.height - pad), Size(l.size.width + 2 * pad, l.size.height + pad))
+                drawText(l, topLeft = Offset(br.x - l.size.width - pad, br.y - l.size.height - pad / 2))
+            }
         }
     }
 }
@@ -133,14 +145,15 @@ internal fun ViewerChip(framing: FramingState, onClick: () -> Unit, modifier: Mo
             .clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = 7.dp),
     ) {
         Text(framing.cameraName() + "  ▾", style = mono(15, Color.White, true), maxLines = 1, overflow = TextOverflow.Ellipsis)
-        val sub = listOfNotNull(framing.modeName(), framing.subLabel(), evLabel).filter { it.isNotEmpty() }.joinToString(" · ")
+        val sceneLbl = framing.scene.trim().takeIf { it.isNotEmpty() }?.let { "$it / ${framing.shotNo}" }
+        val sub = listOfNotNull(sceneLbl, framing.modeName(), framing.subLabel(), evLabel).filter { it.isNotEmpty() }.joinToString(" · ")
         Text(sub, style = mono(10, Color.White.copy(alpha = 0.75f)), maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }
 
 /** Datos sobre la vista recortada: cámara, modo, focal y campo de visión horizontal y vertical. */
 @Composable
-internal fun CropInfo(framing: FramingState, hDeg: Double?, vDeg: Double?, modifier: Modifier = Modifier) {
+internal fun CropInfo(framing: FramingState, hDeg: Double?, vDeg: Double?, modifier: Modifier = Modifier, dDeg: Double? = null) {
     Column(
         modifier.padding(8.dp).clip(androidx.compose.foundation.shape.RoundedCornerShape(10.dp)).background(Color.Black.copy(alpha = 0.65f))
             .padding(horizontal = 10.dp, vertical = 6.dp),
@@ -148,7 +161,7 @@ internal fun CropInfo(framing: FramingState, hDeg: Double?, vDeg: Double?, modif
         Text(framing.cameraName(), style = mono(14, Color.White, true), maxLines = 1, overflow = TextOverflow.Ellipsis)
         val mode = framing.modeName()
         if (mode.isNotEmpty()) Text(mode, style = mono(10, Color.White.copy(alpha = 0.8f)), maxLines = 1, overflow = TextOverflow.Ellipsis)
-        val fov = if (hDeg != null && vDeg != null) "  ·  FOV H " + fmt(hDeg, 1) + "°  V " + fmt(vDeg, 1) + "°" else ""
+        val fov = if (hDeg != null && vDeg != null) "  ·  FOV H " + fmt(hDeg, 1) + "°  V " + fmt(vDeg, 1) + "°" + (dDeg?.let { "  D " + fmt(it, 1) + "°" } ?: "") else ""
         Text(framing.currentLabel() + fov, style = mono(12, Accent, true), maxLines = 1)
     }
 }
@@ -269,6 +282,16 @@ internal fun FramingControls(
 ) {
     val p = LocalPalette.current
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        // Escena y número de plano: van en una etiqueta de color sobre cada foto (como en una Location List).
+        Label(stringResource(R.string.frm_scene_label))
+        TextInput(framing.scene, stringResource(R.string.frm_scene_hint)) { framing.scene = it; framing.shotNo = 1 }
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(stringResource(R.string.frm_shot_no), style = mono(11, p.text), modifier = Modifier.weight(1f))
+            StepKey("−", framing.shotNo > 1) { framing.shotNo = framing.shotNo - 1 }
+            Text("${framing.shotNo}", style = mono(15, p.text, true), modifier = Modifier.widthIn(min = 40.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+            StepKey("+", framing.shotNo < 999) { framing.shotNo = framing.shotNo + 1 }
+        }
+
         Label(stringResource(R.string.frm_camera))
         val visible = framing.visibleCameras
         val others = framing.otherCameras
@@ -322,6 +345,9 @@ internal fun FramingControls(
                 )
             }
         }
+
+        Label(stringResource(R.string.frm_delivery))
+        Seg(listOf(stringResource(R.string.frm_delivery_same)) + framing.deliveryAspects.map { it.second }, framing.deliveryIdx + 1) { framing.deliveryIdx = it - 1 }
 
         if (!framing.isFixedLens) {
             Label(stringResource(R.string.frm_lens_set))
@@ -426,6 +452,19 @@ private fun fmt(v: Double, digits: Int) = String.format(Locale.ROOT, "%.${digits
 /** Compensación de exposición para mostrar: «EV +0.7» (0 = automática). */
 internal fun evText(index: Int, step: Double): String =
     if (index == 0) "EV 0" else String.format(Locale.ROOT, "EV %+.1f", index * step)
+
+/** Campo de texto de una línea (acepta cualquier idioma) con una sugerencia cuando está vacío. */
+@Composable
+internal fun TextInput(value: String, hint: String, onChange: (String) -> Unit) {
+    val p = LocalPalette.current
+    Box(Modifier.fillMaxWidth().clip(androidx.compose.foundation.shape.RoundedCornerShape(7.dp)).background(p.keyBg).padding(10.dp)) {
+        if (value.isEmpty()) Text(hint, style = mono(14, p.keyText.copy(alpha = 0.4f)))
+        androidx.compose.foundation.text.BasicTextField(
+            value, { onChange(it.take(40)) }, textStyle = mono(15, p.keyText, true),
+            cursorBrush = androidx.compose.ui.graphics.SolidColor(p.accent), singleLine = true, modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
 
 /** Tecla chica para sumar o restar un paso. */
 @Composable

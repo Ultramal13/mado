@@ -72,6 +72,11 @@
     <string name="frm_moved">⚠ 撮影中に端末が約%1$d°動きました。写真がずれている可能性があります</string>
     <string name="frm_fast_capture">高速撮影（ほぼ即時・電池を多く使用）</string>
     <string name="frm_crop_on">切り抜き表示 · タップで戻る</string>
+    <string name="frm_scene_label">シーン／ロケ地</string>
+    <string name="frm_scene_hint">例：暖炉</string>
+    <string name="frm_shot_no">ショット番号</string>
+    <string name="frm_delivery">納品アスペクト（枠内のライン）</string>
+    <string name="frm_delivery_same">センサーと同じ</string>
     <string name="frm_phone_lens">スマホのレンズ（固定・一度に1つ）</string>
     <string name="frm_camera">カメラ</string>
     <string name="frm_custom">カスタム</string>

@@ -38,6 +38,13 @@ class FramingState(val db: CameraDb) {
     var kit by mutableStateOf(listOf(24.0, 35.0, 50.0, 85.0))
     /** Guías de composición activas (se recuerdan entre usos). */
     var guides by mutableStateOf(setOf<Guide>())
+    /** Aspecto de entrega (línea sobre el encuadre, p. ej. 16:9 sobre un sensor 3:2); -1 = igual al sensor, sin línea. */
+    val deliveryAspects = listOf(16.0 / 9.0 to "16:9", 2.39 to "2.39:1", 1.85 to "1.85:1", 4.0 / 3.0 to "4:3", 1.0 to "1:1", 9.0 / 16.0 to "9:16", 4.0 / 5.0 to "4:5")
+    var deliveryIdx by mutableIntStateOf(-1)
+    val delivery: Double? get() = deliveryAspects.getOrNull(deliveryIdx)?.first
+    /** Escena o lugar de las próximas fotos («暖炉», «cocina») y número de plano dentro de esa escena; se recuerdan. */
+    var scene by mutableStateOf("")
+    var shotNo by mutableIntStateOf(1)
     /** Aspecto elegido cuando una cámara de lente fija no trae modos con medidas. */
     var fixedAspectIdx by mutableIntStateOf(0)
     val fixedAspects = listOf(16.0 / 9.0 to "16:9", 4.0 / 3.0 to "4:3", 3.0 / 2.0 to "3:2", 2.39 to "2.39:1", 1.0 to "1:1")
@@ -55,6 +62,8 @@ class FramingState(val db: CameraDb) {
         put("customW", customW); put("customH", customH)
         put("builtIn", camera?.builtInLenses?.getOrNull(builtInIdx)?.id)
         put("aspect", fixedAspectIdx)
+        put("delivery", deliveryIdx)
+        put("scene", scene); put("shotNo", shotNo)
     }.toString()
 
     /** Vuelve a la selección guardada por [snapshot]; lo que ya no exista en el catálogo se ignora y queda el valor por omisión. */
@@ -75,6 +84,9 @@ class FramingState(val db: CameraDb) {
             o.optString("customW").takeIf { it.toDoubleOrNull() != null }?.let { customW = it }
             o.optString("customH").takeIf { it.toDoubleOrNull() != null }?.let { customH = it }
             o.optInt("aspect", -1).takeIf { it in fixedAspects.indices }?.let { fixedAspectIdx = it }
+            deliveryIdx = o.optInt("delivery", -1).takeIf { it in deliveryAspects.indices } ?: -1
+            scene = o.optString("scene", "").take(40)
+            shotNo = o.optInt("shotNo", 1).coerceIn(1, 999)
         } catch (_: Exception) { /* guardado dañado: se parte desde cero */ }
     }
 

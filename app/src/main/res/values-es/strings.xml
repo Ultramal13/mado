@@ -72,6 +72,11 @@
     <string name="frm_moved">⚠ el teléfono se movió unos %1$d° durante la toma: la foto puede salir corrida</string>
     <string name="frm_fast_capture">captura rápida (foto casi instantánea; usa más batería)</string>
     <string name="frm_crop_on">vista recortada · toca para volver</string>
+    <string name="frm_scene_label">escena / lugar</string>
+    <string name="frm_scene_hint">p. ej. chimenea</string>
+    <string name="frm_shot_no">número de plano</string>
+    <string name="frm_delivery">aspecto de entrega (línea sobre el encuadre)</string>
+    <string name="frm_delivery_same">igual al sensor</string>
     <string name="frm_phone_lens">lente del teléfono (fija, una a la vez)</string>
     <string name="frm_camera">cámara</string>
     <string name="frm_custom">personalizada</string>

@@ -44,4 +44,12 @@ class FramingStatePersistTest {
         assertEquals(0, s.cameraIdx)          // sigue en la primera principal
         assertEquals("50", s.focal)
     }
+
+    @Test
+    fun sceneShotAndDeliveryAspectAreRemembered() {
+        val a = FramingState(db)
+        a.scene = "暖炉"; a.shotNo = 3; a.deliveryIdx = 0
+        val b = FramingState(db); b.restore(a.snapshot())
+        assertEquals("暖炉", b.scene); assertEquals(3, b.shotNo); assertEquals(16.0 / 9.0, b.delivery!!, 1e-9)
+    }
 }

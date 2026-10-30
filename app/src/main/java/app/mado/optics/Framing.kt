@@ -48,6 +48,10 @@ object Framing {
     fun imageScale(current: Frame?): Float =
         if (current == null) 1f else (1.0 / maxOf(1.0, current.widthFrac, current.heightFrac)).toFloat()
 
+    /** Campo de visión diagonal (rad) a partir del horizontal y la relación de aspecto (ancho/alto) de la imagen. */
+    fun diagonalFovRad(hFovRad: Double, aspect: Double): Double =
+        2.0 * atan(tan(hFovRad / 2.0) * kotlin.math.sqrt(1.0 + 1.0 / (aspect * aspect)))
+
     /** Recorte del FOV horizontal del teléfono por un perfil calibrado: factor sobre tan(FOV/2) (1.0 = sin calibrar). */
     fun calibratedHFovRad(reportedHFovRad: Double, tanHalfFactor: Double): Double =
         2.0 * atan(tan(reportedHFovRad / 2.0) * tanHalfFactor)

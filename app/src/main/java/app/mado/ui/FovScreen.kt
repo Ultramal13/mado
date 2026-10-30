@@ -303,11 +303,11 @@ fun FovScreen(
             corner = if (framing != null) 0.dp else 14.dp,
             overlay = {
                 if (framing != null) Box(Modifier.fillMaxSize()) {
-                    FrameOverlay(cropDraws, if (cropOn) 1f else imageScale, showTags = !cropOn, guides = framing.guides)
+                    FrameOverlay(cropDraws, if (cropOn) 1f else imageScale, showTags = !cropOn, guides = framing.guides, delivery = framing.delivery)
                     if (cropOn) {
                         val hDeg = target?.let { Math.toDegrees(it.hFovRad) }
                         val vDeg = target?.let { Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(it.hFovRad / 2.0) / it.aspect)) }
-                        CropInfo(framing, hDeg, vDeg, Modifier.align(Alignment.BottomStart))
+                        CropInfo(framing, hDeg, vDeg, Modifier.align(Alignment.BottomStart), dDeg = target?.let { Math.toDegrees(Framing.diagonalFovRad(it.hFovRad, it.aspect)) })
                     }
                 }
                 else Overlay(theory, distCm.toDoubleOrNull(), landscape)
@@ -401,9 +401,17 @@ fun FovScreen(
         val annotFrames = frameDraws.map { app.mado.data.AnnotFrame(it.label, it.frame, it.current, it.detail) }
         val anglesText = target?.let {
             val v = Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(it.hFovRad / 2.0) / it.aspect))
-            String.format(Locale.ROOT, "FOV H %.1f°  V %.1f°", Math.toDegrees(it.hFovRad), v)
+            val d = Math.toDegrees(Framing.diagonalFovRad(it.hFovRad, it.aspect))
+            String.format(Locale.ROOT, "FOV H %.1f°  V %.1f°  D %.1f°", Math.toDegrees(it.hFovRad), v, d)
         }.orEmpty()
-        val camText = framing.cameraName(); val modeText = framing.modeName(); val lensSetText = framing.subLabel(); val bigText = framing.bigLabel()
+        // Aspecto de la imagen resultante: el de entrega si se eligió uno, si no el del sensor/modo (como «… | 4.6K 3:2 Open Gate | 3:2»).
+        val deliveryNow = framing.delivery
+        val aspectText = (deliveryNow ?: target?.aspect)?.let { app.mado.optics.aspectLabel(it) }.orEmpty()
+        val deliveryLabel = deliveryNow?.let { app.mado.optics.aspectLabel(it) }.orEmpty()
+        val sceneNow = framing.scene.trim(); val shotNow = framing.shotNo
+        val sceneTagText = sceneNow.takeIf { it.isNotEmpty() }?.let { "$it / $shotNow" }
+        meta.put("scene", sceneNow); meta.put("shot_no", shotNow); meta.put("delivery_aspect", deliveryLabel)
+        val camText = framing.cameraName(); val modeText = listOf(framing.modeName(), aspectText).filter { it.isNotEmpty() }.joinToString("  ·  "); val lensSetText = framing.subLabel(); val bigText = framing.bigLabel()
         val phoneLine = String.format(Locale.ROOT, "%s %s · %.1f° · %s", phoneLensShort, lens.id, phoneDeg, if (profileDeg != null) verifiedText else unverifiedText)
         val stamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT).format(java.util.Date())
         var poseExp: OrientationMath.Pose? = null                   // orientación en el instante real de la toma
@@ -433,18 +441,19 @@ fun FovScreen(
                         val loc = try { locJob?.await() } catch (e: Exception) { null }
                         meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms).put("delay_to_exposure_ms", result.exposedMs).put("moved_deg", movedDeg))
                         loc?.let { meta.put("location", JSONObject().put("lat", it.latitude).put("lon", it.longitude).put("accuracy_m", it.accuracy.toDouble())) }
-                        val info = BarInfo(camText, modeText, phoneLine, stamp, headText, attText, loc?.let { LocationHelper.format(it) }, lensSetText, anglesText, bigText)
+                        val info = BarInfo(camText, modeText, phoneLine, stamp, headText, attText, loc?.let { LocationHelper.format(it) }, lensSetText, anglesText, bigText, sceneTagText, app.mado.optics.sceneColorArgb(sceneNow))
                         shot = try {
                             val now = java.util.Date()
                             val saved = withContext(Dispatchers.IO) {
                                 // Dos archivos con la barra de datos: la foto con los recuadros del kit y el plano recortado al encuadre.
                                 // (No se guarda la foto sin gráficos: es la misma imagen que la primera.)
-                                val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow)
+                                val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel)
                                 val marco = PhotoSaver.save(ctx, overview, 0, meta, now, suffix = "_marco", location = loc, headingDeg = posePhoto?.headingDeg)
-                                val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow)
+                                val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel)
                                 PhotoSaver.save(ctx, plano, 0, meta, now, suffix = "_plano", location = loc, headingDeg = posePhoto?.headingDeg)
                                 marco
                             }
+                            if (sceneNow.isNotEmpty()) framing.shotNo = (shotNow + 1).coerceAtMost(999)   // siguiente plano de la escena
                             ShotUi.Saved(saved.name, if (movedDeg >= 3) movedDeg else 0)
                         } catch (e: Exception) { ShotUi.Error(e.message ?: "save failed") }
                     }
