@@ -341,8 +341,8 @@ class FovCamera(
 
     private val STILL_MAX_PIXELS = 12_700_000L
     // Tope de espera a que converjan exposición y foco: se dispara apenas están estables (mínimo STILL_MIN_FRAMES cuadros).
-    private val STILL_SETTLE_MS = 1400L
-    private val STILL_MIN_FRAMES = 4
+    private val STILL_SETTLE_MS = 1000L
+    private val STILL_MIN_FRAMES = 3
     private val STILL_TIMEOUT_MS = 8000L
 
     /** `onExposed` se llama en el instante en que el sensor empieza a exponer la foto (desde ahí se puede mover el teléfono). */
@@ -416,10 +416,11 @@ class FovCamera(
                         session = s
                         val tConfigured = SystemClock.elapsedRealtime()
                         var fired = false
-                        val fire = {
+                        var lastAe = -1; var lastAf = -1; var nFrames = 0
+                        val fire = { why: String ->
                             if (!fired && !done) {
                                 fired = true
-                                Log.i("mado", "still: configurada en ${tConfigured - t0} ms, disparo a los ${SystemClock.elapsedRealtime() - t0} ms")
+                                Log.i("mado", "still: configurada en ${tConfigured - t0} ms, disparo a los ${SystemClock.elapsedRealtime() - t0} ms ($why; cuadros=$nFrames ae=$lastAe af=$lastAf)")
                                 shoot(s, d, a, r, gen, finish) { exposedAt = SystemClock.elapsedRealtime(); onExposed() }
                             }
                         }
@@ -428,18 +429,19 @@ class FovCamera(
                             var frames = 0
                             override fun onCaptureCompleted(sess: CameraCaptureSession, req: CaptureRequest, res: TotalCaptureResult) {
                                 if (fired) return
-                                frames++
+                                frames++; nFrames = frames
                                 val ae = res.get(CaptureResult.CONTROL_AE_STATE)
                                 val af = res.get(CaptureResult.CONTROL_AF_STATE)
+                                lastAe = ae ?: -1; lastAf = af ?: -1
                                 val aeOk = ae == null || ae == CaptureResult.CONTROL_AE_STATE_CONVERGED || ae == CaptureResult.CONTROL_AE_STATE_LOCKED ||
                                     ae == CaptureResult.CONTROL_AE_STATE_FLASH_REQUIRED
                                 val afOk = af == null || (af != CaptureResult.CONTROL_AF_STATE_PASSIVE_SCAN && af != CaptureResult.CONTROL_AF_STATE_ACTIVE_SCAN)
-                                if (frames >= STILL_MIN_FRAMES && aeOk && afOk) fire()
+                                if (frames >= STILL_MIN_FRAMES && aeOk && afOk) fire("estable")
                             }
                         }
                         try {
                             s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff, lowFps = false), ready, handler)
-                            handler.postDelayed({ fire() }, timeout, STILL_SETTLE_MS)       // tope si nunca converge
+                            handler.postDelayed({ fire("tope") }, timeout, STILL_SETTLE_MS)       // tope si nunca converge
                         } catch (e: Exception) { finish(Shot.Fail(e.message ?: "repeating failed")) }
                     }
                     override fun onConfigureFailed(s: CameraCaptureSession) = finish(Shot.Fail("configure failed"))
