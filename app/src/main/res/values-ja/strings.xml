@@ -66,6 +66,10 @@
     <string name="guide_cross">中央十字</string>
     <string name="guide_grid">グリッド</string>
     <string name="guide_safe">セーフエリア</string>
+    <string name="frm_hold_still">動かさないで…</string>
+    <string name="frm_shot_taken">✓ 撮影しました · 保存中…</string>
+    <string name="frm_shot_saved_short">✓ 保存しました</string>
+    <string name="frm_moved">⚠ 撮影中に端末が約%1$d°動きました。写真がずれている可能性があります</string>
     <string name="frm_phone_lens">スマホのレンズ（固定・一度に1つ）</string>
     <string name="frm_camera">カメラ</string>
     <string name="frm_custom">カスタム</string>

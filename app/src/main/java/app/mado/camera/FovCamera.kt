@@ -12,6 +12,7 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CaptureRequest
+import android.hardware.camera2.CaptureResult
 import android.hardware.camera2.params.OutputConfiguration
 import android.hardware.camera2.params.SessionConfiguration
 import android.os.Handler
@@ -56,7 +57,7 @@ class FovCamera(
 
     /** Resultado de una toma: JPEG ya codificado y la rotación que hay que aplicar al verlo derecho. */
     sealed interface Shot {
-        class Ok(val jpeg: ByteArray, val width: Int, val height: Int, val rotationDeg: Int, val ms: Long) : Shot
+        class Ok(val jpeg: ByteArray, val width: Int, val height: Int, val rotationDeg: Int, val ms: Long, val exposedMs: Long = 0) : Shot
         class Fail(val message: String) : Shot
     }
 
@@ -287,16 +288,16 @@ class FovCamera(
         b.set(CaptureRequest.CONTROL_AE_EXPOSURE_COMPENSATION, exposureIndex.coerceIn(r.lower, r.upper))
     }
 
-    private fun request(d: CameraDevice, surface: Surface, lens: CameraInfo, distortionOff: Boolean): CaptureRequest =
-        requestBuilder(d, surface, lens, distortionOff).build()
+    private fun request(d: CameraDevice, surface: Surface, lens: CameraInfo, distortionOff: Boolean, lowFps: Boolean = true): CaptureRequest =
+        requestBuilder(d, surface, lens, distortionOff, lowFps).build()
 
-    private fun requestBuilder(d: CameraDevice, surface: Surface, lens: CameraInfo, distortionOff: Boolean): CaptureRequest.Builder {
+    private fun requestBuilder(d: CameraDevice, surface: Surface, lens: CameraInfo, distortionOff: Boolean, lowFps: Boolean = true): CaptureRequest.Builder {
         val b = d.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
         b.addTarget(surface)
         applyExposure(b, d)
         // Cuadros por segundo bajos: menos trabajo y menos calor (mismo criterio que LUX-0).
         val c = manager.getCameraCharacteristics(d.id)
-        c.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES)
+        if (lowFps) c.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES)
             ?.filter { it.upper >= 10 }
             ?.minWithOrNull(compareBy<Range<Int>> { it.upper }.thenBy { it.lower })
             ?.let { b.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, it) }
@@ -339,13 +340,16 @@ class FovCamera(
     // a la sesión liviana. Así la cámara nunca queda en un modo pesado entre fotos.
 
     private val STILL_MAX_PIXELS = 12_700_000L
-    private val STILL_SETTLE_MS = 900L
+    // Tope de espera a que converjan exposición y foco: se dispara apenas están estables (mínimo STILL_MIN_FRAMES cuadros).
+    private val STILL_SETTLE_MS = 1400L
+    private val STILL_MIN_FRAMES = 4
     private val STILL_TIMEOUT_MS = 8000L
 
-    fun capture(displayRotationDeg: Int, onResult: (Shot) -> Unit) {
+    /** `onExposed` se llama en el instante en que el sensor empieza a exponer la foto (desde ahí se puede mover el teléfono). */
+    fun capture(displayRotationDeg: Int, onExposed: () -> Unit = {}, onResult: (Shot) -> Unit) {
         if (released) { onResult(Shot.Fail("released")); return }
         val gen = generation
-        handler.post { captureInternal(displayRotationDeg, gen, onResult) }
+        handler.post { captureInternal(displayRotationDeg, gen, onExposed, onResult) }
     }
 
     private fun chooseStillSize(c: CameraCharacteristics): Size? {
@@ -357,7 +361,7 @@ class FovCamera(
             ?: ok.maxByOrNull { it.width.toLong() * it.height }
     }
 
-    private fun captureInternal(displayRotationDeg: Int, gen: Int, cb: (Shot) -> Unit) {
+    private fun captureInternal(displayRotationDeg: Int, gen: Int, onExposed: () -> Unit, cb: (Shot) -> Unit) {
         val a = active; val d = device
         if (a == null || d == null || session == null || gen != generation) return cb(Shot.Fail("camera not ready"))
         if (capturing) return cb(Shot.Fail("busy"))
@@ -365,6 +369,7 @@ class FovCamera(
         val t0 = SystemClock.elapsedRealtime()
         var reader: ImageReader? = null
         var done = false
+        var exposedAt = 0L
         val timeout = Runnable { }
         lateinit var finish: (Shot) -> Unit
         finish = { result ->
@@ -391,7 +396,7 @@ class FovCamera(
                 val img = try { ir.acquireLatestImage() } catch (e: Exception) { null } ?: return@setOnImageAvailableListener
                 try {
                     val jpeg = yuvToJpeg(img, 95)
-                    finish(Shot.Ok(jpeg, img.width, img.height, rotation, SystemClock.elapsedRealtime() - t0))
+                    finish(Shot.Ok(jpeg, img.width, img.height, rotation, SystemClock.elapsedRealtime() - t0, if (exposedAt > 0) exposedAt - t0 else 0))
                 } catch (e: Exception) {
                     Log.w("mado", "yuvToJpeg", e)
                     finish(Shot.Fail(e.message ?: "encode failed"))
@@ -409,9 +414,32 @@ class FovCamera(
                     override fun onConfigured(s: CameraCaptureSession) {
                         if (done || gen != generation) { s.close(); finish(Shot.Fail("stopped")); return }
                         session = s
+                        val tConfigured = SystemClock.elapsedRealtime()
+                        var fired = false
+                        val fire = {
+                            if (!fired && !done) {
+                                fired = true
+                                Log.i("mado", "still: configurada en ${tConfigured - t0} ms, disparo a los ${SystemClock.elapsedRealtime() - t0} ms")
+                                shoot(s, d, a, r, gen, finish) { exposedAt = SystemClock.elapsedRealtime(); onExposed() }
+                            }
+                        }
+                        // Se dispara en cuanto la exposición y el foco automáticos están estables, en vez de esperar un tiempo fijo.
+                        val ready = object : CameraCaptureSession.CaptureCallback() {
+                            var frames = 0
+                            override fun onCaptureCompleted(sess: CameraCaptureSession, req: CaptureRequest, res: TotalCaptureResult) {
+                                if (fired) return
+                                frames++
+                                val ae = res.get(CaptureResult.CONTROL_AE_STATE)
+                                val af = res.get(CaptureResult.CONTROL_AF_STATE)
+                                val aeOk = ae == null || ae == CaptureResult.CONTROL_AE_STATE_CONVERGED || ae == CaptureResult.CONTROL_AE_STATE_LOCKED ||
+                                    ae == CaptureResult.CONTROL_AE_STATE_FLASH_REQUIRED
+                                val afOk = af == null || (af != CaptureResult.CONTROL_AF_STATE_PASSIVE_SCAN && af != CaptureResult.CONTROL_AF_STATE_ACTIVE_SCAN)
+                                if (frames >= STILL_MIN_FRAMES && aeOk && afOk) fire()
+                            }
+                        }
                         try {
-                            s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff), null, handler)
-                            handler.postDelayed({ shoot(s, d, a, r, gen, finish) }, STILL_SETTLE_MS)
+                            s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff, lowFps = false), ready, handler)
+                            handler.postDelayed({ fire() }, timeout, STILL_SETTLE_MS)       // tope si nunca converge
                         } catch (e: Exception) { finish(Shot.Fail(e.message ?: "repeating failed")) }
                     }
                     override fun onConfigureFailed(s: CameraCaptureSession) = finish(Shot.Fail("configure failed"))
@@ -423,7 +451,7 @@ class FovCamera(
         }
     }
 
-    private fun shoot(s: CameraCaptureSession, d: CameraDevice, a: Active, r: ImageReader, gen: Int, finish: (Shot) -> Unit) {
+    private fun shoot(s: CameraCaptureSession, d: CameraDevice, a: Active, r: ImageReader, gen: Int, finish: (Shot) -> Unit, onStarted: () -> Unit = {}) {
         if (gen != generation || session !== s) return finish(Shot.Fail("stopped"))
         try {
             val b = d.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
@@ -435,6 +463,7 @@ class FovCamera(
                 if (CaptureRequest.DISTORTION_CORRECTION_MODE_OFF in modes) b.set(CaptureRequest.DISTORTION_CORRECTION_MODE, CaptureRequest.DISTORTION_CORRECTION_MODE_OFF)
             }
             s.capture(b.build(), object : CameraCaptureSession.CaptureCallback() {
+                override fun onCaptureStarted(sess: CameraCaptureSession, req: CaptureRequest, timestamp: Long, frameNumber: Long) = onStarted()
                 override fun onCaptureFailed(sess: CameraCaptureSession, req: CaptureRequest, f: CaptureFailure) = finish(Shot.Fail("capture failed (${f.reason})"))
             }, handler)
         } catch (e: Exception) { finish(Shot.Fail(e.message ?: "shoot failed")) }

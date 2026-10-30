@@ -116,8 +116,11 @@ internal enum class Reason { USER, IDLE, MAX_RUN }
 /** Estado de la última foto, para el botón y el aviso. */
 internal sealed interface ShotUi {
     data object Idle : ShotUi
+    /** Entre el toque del obturador y el instante en que el sensor expone la foto: hay que mantener quieto el teléfono. */
     data object Working : ShotUi
-    data class Saved(val name: String) : ShotUi
+    /** La foto ya se tomó (se puede mover el teléfono); falta procesarla y guardarla. */
+    data object Exposed : ShotUi
+    data class Saved(val name: String, val movedDeg: Int = 0) : ShotUi
     data class Error(val message: String) : ShotUi
 }
 
@@ -313,6 +316,18 @@ fun FovScreen(
     val scope = rememberCoroutineScope()
     val view = LocalView.current
     var shot by remember { mutableStateOf<ShotUi>(ShotUi.Idle) }
+    // Pista de una sola vez: el doble toque (vista recortada) no se descubre solo, así que se avisa la primera vez que corre el visor.
+    var showHint by remember { mutableStateOf(false) }
+    if (framing != null) LaunchedEffect(running) {
+        val pr = ctx.getSharedPreferences("mado", Context.MODE_PRIVATE)
+        if (running && !pr.getBoolean("hint_dtap", false)) {
+            showHint = true
+            kotlinx.coroutines.delay(6000L)
+            showHint = false
+            pr.edit().putBoolean("hint_dtap", true).apply()
+        }
+    }
+    var flashTick by remember { mutableIntStateOf(0) }           // sube en el instante de la toma: destello blanco
 
     // Orientación de la cámara (rumbo, elevación, nivel): el sensor solo escucha mientras el visor corre en modo marco.
     val tracker = remember { OrientationTracker(ctx) }
@@ -359,8 +374,9 @@ fun FovScreen(
     val verifiedText = stringResource(R.string.bar_verified)
     val unverifiedText = stringResource(R.string.bar_unverified)
     val takeShot: () -> Unit = takeShot@{
-        if (framing == null || !running || shot is ShotUi.Working) return@takeShot
+        if (framing == null || !running || shot is ShotUi.Working || shot is ShotUi.Exposed) return@takeShot
         shot = ShotUi.Working
+        view.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)       // «clic» al tocar el obturador
         val rotation = (view.display?.rotation ?: 0) * 90
         val pose = tracker.latest                                       // lectura al disparar
         val locJob = if (gpsOn) scope.async { LocationHelper.current(ctx) } else null
@@ -387,14 +403,32 @@ fun FovScreen(
         val camText = framing.cameraName(); val modeText = framing.modeName(); val lensSetText = framing.subLabel(); val bigText = framing.bigLabel()
         val phoneLine = String.format(Locale.ROOT, "%s %s · %.1f° · %s", phoneLensShort, lens.id, phoneDeg, if (profileDeg != null) verifiedText else unverifiedText)
         val stamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT).format(java.util.Date())
-        val headText = headingText(pose); val attText = attitudeText(pose)
-        camera.capture(rotation) { result ->
+        var poseExp: OrientationMath.Pose? = null                   // orientación en el instante real de la toma
+        var movedDeg = 0
+        camera.capture(rotation, onExposed = {
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                // La foto ya se tomó: destello y clic, y desde aquí se puede mover el teléfono.
+                shot = ShotUi.Exposed
+                flashTick++
+                view.performHapticFeedback(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) android.view.HapticFeedbackConstants.CONFIRM else android.view.HapticFeedbackConstants.LONG_PRESS)
+                poseExp = tracker.latest
+                val p0 = pose; val p1 = poseExp
+                if (p0 != null && p1 != null) {
+                    val dh = ((p1.headingDeg - p0.headingDeg + 540.0) % 360.0) - 180.0
+                    val de = p1.elevationDeg - p0.elevationDeg
+                    val dl = p1.levelDeg - p0.levelDeg
+                    movedDeg = kotlin.math.sqrt(dh * dh + de * de + dl * dl).roundToInt()
+                }
+            }
+        }) { result ->
             android.os.Handler(android.os.Looper.getMainLooper()).post {
                 when (result) {
                     is FovCamera.Shot.Fail -> shot = ShotUi.Error(result.message)
                     is FovCamera.Shot.Ok -> scope.launch {
+                        val posePhoto = poseExp ?: pose                  // la del instante de la toma; si no hubo, la del toque
+                        val headText = headingText(posePhoto); val attText = attitudeText(posePhoto)
                         val loc = try { locJob?.await() } catch (e: Exception) { null }
-                        meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms))
+                        meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms).put("delay_to_exposure_ms", result.exposedMs).put("moved_deg", movedDeg))
                         loc?.let { meta.put("location", JSONObject().put("lat", it.latitude).put("lon", it.longitude).put("accuracy_m", it.accuracy.toDouble())) }
                         val info = BarInfo(camText, modeText, phoneLine, stamp, headText, attText, loc?.let { LocationHelper.format(it) }, lensSetText, anglesText, bigText)
                         shot = try {
@@ -403,12 +437,12 @@ fun FovScreen(
                                 // Dos archivos con la barra de datos: la foto con los recuadros del kit y el plano recortado al encuadre.
                                 // (No se guarda la foto sin gráficos: es la misma imagen que la primera.)
                                 val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow)
-                                val marco = PhotoSaver.save(ctx, overview, 0, meta, now, suffix = "_marco", location = loc, headingDeg = pose?.headingDeg)
+                                val marco = PhotoSaver.save(ctx, overview, 0, meta, now, suffix = "_marco", location = loc, headingDeg = posePhoto?.headingDeg)
                                 val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow)
-                                PhotoSaver.save(ctx, plano, 0, meta, now, suffix = "_plano", location = loc, headingDeg = pose?.headingDeg)
+                                PhotoSaver.save(ctx, plano, 0, meta, now, suffix = "_plano", location = loc, headingDeg = posePhoto?.headingDeg)
                                 marco
                             }
-                            ShotUi.Saved(saved.name)
+                            ShotUi.Saved(saved.name, if (movedDeg >= 3) movedDeg else 0)
                         } catch (e: Exception) { ShotUi.Error(e.message ?: "save failed") }
                     }
                 }
@@ -452,8 +486,8 @@ fun FovScreen(
         if (framing != null) {
             ViewerLayout(
                 framing = framing, landscape = landscape, preview = preview, controls = controls,
-                running = running, working = shot is ShotUi.Working, hasPermission = hasPermission,
-                onToggle = onToggle, onShot = takeShot, onMenu = onMenu, onDoubleTap = { cropView = !cropView },
+                running = running, working = shot is ShotUi.Working || shot is ShotUi.Exposed, hasPermission = hasPermission,
+                onToggle = onToggle, onShot = takeShot, onMenu = onMenu, onDoubleTap = { cropView = !cropView }, shot = shot, flashTick = flashTick, hint = showHint,
                 evLabel = evInfo?.takeIf { ev != 0 }?.let { evText(ev, it.second) }, onFocus = onFocus,
             )
         } else if (landscape) {
@@ -484,6 +518,7 @@ private fun ViewerLayout(
     preview: @Composable (Modifier) -> Unit, controls: @Composable () -> Unit,
     running: Boolean, working: Boolean, hasPermission: Boolean,
     onToggle: () -> Unit, onShot: () -> Unit, onMenu: () -> Unit, onDoubleTap: () -> Unit, evLabel: String? = null, onFocus: (Float, Float) -> Unit = { _, _ -> },
+    shot: ShotUi = ShotUi.Idle, flashTick: Int = 0, hint: Boolean = false,
 ) {
     val p = LocalPalette.current
     var optionsOpen by rememberSaveable { mutableStateOf(false) }
@@ -530,6 +565,47 @@ private fun ViewerLayout(
             evLabel = evLabel,
             modifier = Modifier.align(Alignment.TopStart).windowInsetsPadding(safe.only(WindowInsetsSides.Top + WindowInsetsSides.Start)).padding(8.dp),
         )
+
+        // Destello blanco en el instante en que se toma la foto (avisa que ya se puede mover el teléfono).
+        val flash = remember { androidx.compose.animation.core.Animatable(0f) }
+        LaunchedEffect(flashTick) {
+            if (flashTick > 0) { flash.snapTo(0.75f); flash.animateTo(0f, androidx.compose.animation.core.tween(260)) }
+        }
+        if (flash.value > 0.01f) Box(Modifier.fillMaxSize().background(Color.White.copy(alpha = flash.value)))
+
+        // Aviso del estado de la toma: mantener quieto → tomada → guardada (o error / «se movió»).
+        var bannerOn by remember { mutableStateOf(false) }
+        LaunchedEffect(shot) {
+            bannerOn = shot !is ShotUi.Idle
+            if (shot is ShotUi.Saved || shot is ShotUi.Error) {
+                kotlinx.coroutines.delay(if (shot is ShotUi.Saved && shot.movedDeg > 0) 5000L else 2200L)
+                bannerOn = false
+            }
+        }
+        if (bannerOn) {
+            val moved = (shot as? ShotUi.Saved)?.movedDeg ?: 0
+            val text = when (shot) {
+                is ShotUi.Working -> stringResource(R.string.frm_hold_still)
+                is ShotUi.Exposed -> stringResource(R.string.frm_shot_taken)
+                is ShotUi.Saved -> if (moved > 0) stringResource(R.string.frm_moved, moved) else stringResource(R.string.frm_shot_saved_short)
+                is ShotUi.Error -> stringResource(R.string.frm_capture_error, shot.message)
+                else -> ""
+            }
+            val warn = shot is ShotUi.Working || shot is ShotUi.Error || moved > 0
+            Box(
+                Modifier.align(Alignment.BottomCenter).windowInsetsPadding(safe.only(WindowInsetsSides.Bottom))
+                    .padding(bottom = if (landscape) 16.dp else 96.dp, start = 16.dp, end = if (landscape) 96.dp else 16.dp)
+                    .clip(RoundedCornerShape(12.dp)).background(if (warn) Accent else Color.Black.copy(alpha = 0.72f))
+                    .padding(horizontal = 14.dp, vertical = 9.dp),
+            ) { Text(text, style = mono(13, Color.White, true)) }
+        }
+
+        // Pista de una sola vez (primer uso): doble toque = vista recortada.
+        if (hint && !bannerOn) Box(
+            Modifier.align(Alignment.BottomCenter).windowInsetsPadding(safe.only(WindowInsetsSides.Bottom))
+                .padding(bottom = if (landscape) 16.dp else 96.dp, start = 16.dp, end = if (landscape) 96.dp else 16.dp)
+                .clip(RoundedCornerShape(12.dp)).background(Color.Black.copy(alpha = 0.72f)).padding(horizontal = 14.dp, vertical = 9.dp),
+        ) { Text(stringResource(R.string.frm_double_tap), style = mono(12, Color.White)) }
 
         // Cámara apagada: un solo botón grande en el centro (no se confunde con las flechas de focal).
         if (!running) Box(Modifier.align(Alignment.Center).padding(horizontal = 24.dp)) {

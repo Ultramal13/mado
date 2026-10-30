@@ -66,6 +66,10 @@
     <string name="guide_cross">center cross</string>
     <string name="guide_grid">grid</string>
     <string name="guide_safe">safe areas</string>
+    <string name="frm_hold_still">hold still…</string>
+    <string name="frm_shot_taken">✓ photo taken · saving…</string>
+    <string name="frm_shot_saved_short">✓ saved</string>
+    <string name="frm_moved">⚠ the phone moved about %1$d° during the shot: the photo may be shifted</string>
     <string name="frm_phone_lens">phone lens (fixed, one at a time)</string>
     <string name="frm_camera">camera</string>
     <string name="frm_custom">custom</string>

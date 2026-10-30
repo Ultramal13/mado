@@ -66,6 +66,10 @@
     <string name="guide_cross">cruz central</string>
     <string name="guide_grid">cuadrícula</string>
     <string name="guide_safe">zonas seguras</string>
+    <string name="frm_hold_still">mantén quieto…</string>
+    <string name="frm_shot_taken">✓ foto tomada · guardando…</string>
+    <string name="frm_shot_saved_short">✓ guardada</string>
+    <string name="frm_moved">⚠ el teléfono se movió unos %1$d° durante la toma: la foto puede salir corrida</string>
     <string name="frm_phone_lens">lente del teléfono (fija, una a la vez)</string>
     <string name="frm_camera">cámara</string>
     <string name="frm_custom">personalizada</string>
