@@ -210,11 +210,14 @@ fun FovScreen(
     // Al girar el teléfono con la cámara andando, Android no vuelve a orientar el flujo ya abierto: hay que reabrir la sesión
     // para que el preview salga derecho (si no, queda de lado hasta detener e iniciar).
     val displayRotation = LocalView.current.display?.rotation ?: 0
-    LaunchedEffect(running, lens.id, distortionOff, retry, surfaceGen, displayRotation) {
-        android.util.Log.i("mado", "effect running=$running perm=$hasPermission holder=${holder != null} reason=$reason err=$error hot=${guard.hot} lens=${lens.id}")
+    // Captura rápida (stream de foto en la sesión del preview): activada por omisión; se puede apagar desde el panel.
+    var fastOn by remember { mutableStateOf(ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).getBoolean("fast_capture", true)) }
+    LaunchedEffect(running, lens.id, distortionOff, retry, surfaceGen, displayRotation, fastOn) {
+        android.util.Log.i("mado", "effect running=$running perm=$hasPermission holder=${holder != null} reason=$reason err=$error hot=${guard.hot} lens=${lens.id} surfaceGen=$surfaceGen retry=$retry rot=$displayRotation fast=$fastOn dist=$distortionOff")
         if (running) {
             error = null
             holder!!.setFixedSize(size.width, size.height)
+            camera.fastCapture = fastOn
             camera.start(holder!!, lens, size, distortionOff)
         } else {
             camera.stop()
@@ -465,6 +468,7 @@ fun FovScreen(
             onToggle = onToggle, shot = shot, onShot = takeShot,
             orientation = orientationText(tracker.pose), gpsOn = gpsOn, onGps = onGps, gpsDenied = gpsDenied,
             ev = ev, evInfo = evInfo, onEv = { ev = it },
+            fastOn = fastOn, onFast = { fastOn = it; ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).edit().putBoolean("fast_capture", it).apply() },
         ) else Controls(
             report = report, lenses = lenses, lensIdx = lensIdx, onLens = { lensIdx = it },
             distortionOff = distortionOff, onDistortion = { distortionOff = it },
@@ -487,7 +491,7 @@ fun FovScreen(
             ViewerLayout(
                 framing = framing, landscape = landscape, preview = preview, controls = controls,
                 running = running, working = shot is ShotUi.Working || shot is ShotUi.Exposed, hasPermission = hasPermission,
-                onToggle = onToggle, onShot = takeShot, onMenu = onMenu, onDoubleTap = { cropView = !cropView }, shot = shot, flashTick = flashTick, hint = showHint,
+                onToggle = onToggle, onShot = takeShot, onMenu = onMenu, onDoubleTap = { cropView = !cropView }, shot = shot, flashTick = flashTick, hint = showHint, cropped = cropOn,
                 evLabel = evInfo?.takeIf { ev != 0 }?.let { evText(ev, it.second) }, onFocus = onFocus,
             )
         } else if (landscape) {
@@ -518,7 +522,7 @@ private fun ViewerLayout(
     preview: @Composable (Modifier) -> Unit, controls: @Composable () -> Unit,
     running: Boolean, working: Boolean, hasPermission: Boolean,
     onToggle: () -> Unit, onShot: () -> Unit, onMenu: () -> Unit, onDoubleTap: () -> Unit, evLabel: String? = null, onFocus: (Float, Float) -> Unit = { _, _ -> },
-    shot: ShotUi = ShotUi.Idle, flashTick: Int = 0, hint: Boolean = false,
+    shot: ShotUi = ShotUi.Idle, flashTick: Int = 0, hint: Boolean = false, cropped: Boolean = false,
 ) {
     val p = LocalPalette.current
     var optionsOpen by rememberSaveable { mutableStateOf(false) }
@@ -599,6 +603,13 @@ private fun ViewerLayout(
                     .padding(horizontal = 14.dp, vertical = 9.dp),
             ) { Text(text, style = mono(13, Color.White, true)) }
         }
+
+        // Mientras está la vista recortada, un aviso fijo (y tocable) explica por qué la imagen se ve así y cómo volver.
+        if (cropped) Box(
+            Modifier.align(Alignment.TopCenter).windowInsetsPadding(safe.only(WindowInsetsSides.Top)).padding(top = 68.dp)
+                .clip(RoundedCornerShape(12.dp)).background(Accent.copy(alpha = 0.92f)).clickable { onDoubleTap() }
+                .padding(horizontal = 14.dp, vertical = 8.dp),
+        ) { Text(stringResource(R.string.frm_crop_on), style = mono(11, Color.White, true)) }
 
         // Pista de una sola vez (primer uso): doble toque = vista recortada.
         if (hint && !bannerOn) Box(

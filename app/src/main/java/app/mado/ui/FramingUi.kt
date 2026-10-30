@@ -264,6 +264,8 @@ internal fun FramingControls(
     ev: Int = 0,
     evInfo: Pair<IntRange, Double>? = null,
     onEv: (Int) -> Unit = {},
+    fastOn: Boolean = true,
+    onFast: (Boolean) -> Unit = {},
 ) {
     val p = LocalPalette.current
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -349,6 +351,9 @@ internal fun FramingControls(
             val g = Guide.values()[i]
             framing.guides = if (g in framing.guides) framing.guides - g else framing.guides + g
         }
+
+        Label(stringResource(R.string.frm_fast_capture))
+        Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (fastOn) 1 else 0) { onFast(it == 1) }
 
         Label(stringResource(R.string.gps_label))
         Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (gpsOn) 1 else 0) { onGps(it == 1) }

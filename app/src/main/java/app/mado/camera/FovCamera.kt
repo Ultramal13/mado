@@ -53,7 +53,27 @@ class FovCamera(
     private var active: Active? = null
     private var capturing = false
 
-    private class Active(val surface: Surface, val lens: CameraInfo, val direct: Boolean, val distortionOff: Boolean)
+    private class Active(val surface: Surface, val lens: CameraInfo, val direct: Boolean, val distortionOff: Boolean, val fast: Boolean = false)
+
+    /**
+     * Captura rápida: la sesión del preview lleva desde el inicio un segundo stream YUV de resolución de foto (~9 MP) que NO
+     * recibe cuadros hasta que se pide una foto, así que tocar el obturador no obliga a reconfigurar la cámara y la exposición
+     * y el foco ya están estables. El calor original venía de capturar RAW a resolución completa cada segundo; esto no lo hace
+     * (sigue prohibido capturar de forma periódica). Si el teléfono no acepta la configuración, se cae al modo de sesión
+     * temporal. Hay que fijarlo antes de `start`.
+     */
+    @Volatile var fastCapture = true
+    private var stillReader: ImageReader? = null
+    @Volatile private var lastAe = -1
+    @Volatile private var lastAf = -1
+
+    /** Anota el estado de exposición y foco automáticos del preview (para disparar la foto cuando están estables). */
+    private val previewState = object : CameraCaptureSession.CaptureCallback() {
+        override fun onCaptureCompleted(sess: CameraCaptureSession, req: CaptureRequest, res: TotalCaptureResult) {
+            lastAe = res.get(CaptureResult.CONTROL_AE_STATE) ?: -1
+            lastAf = res.get(CaptureResult.CONTROL_AF_STATE) ?: -1
+        }
+    }
 
     /** Resultado de una toma: JPEG ya codificado y la rotación que hay que aplicar al verlo derecho. */
     sealed interface Shot {
@@ -178,25 +198,46 @@ class FovCamera(
         }
     }
 
-    private fun createSession(d: CameraDevice, surface: Surface, lens: CameraInfo, direct: Boolean, distortionOff: Boolean, gen: Int) {
+    private fun createSession(d: CameraDevice, surface: Surface, lens: CameraInfo, direct: Boolean, distortionOff: Boolean, gen: Int, withStill: Boolean = fastCapture) {
         try {
             val out = OutputConfiguration(surface)
             if (!direct) out.setPhysicalCameraId(lens.id)
+            val outs = mutableListOf(out)
+            var reader: ImageReader? = null
+            if (withStill) {
+                try {
+                    val sz = chooseStillSize(manager.getCameraCharacteristics(lens.id))
+                    if (sz != null) {
+                        reader = ImageReader.newInstance(sz.width, sz.height, ImageFormat.YUV_420_888, 1)
+                        outs.add(OutputConfiguration(reader.surface).also { if (!direct) it.setPhysicalCameraId(lens.id) })
+                    }
+                } catch (e: Exception) { Log.w("mado", "still stream", e); reader?.close(); reader = null; outs.retainAll { it === out } }
+            }
             d.createCaptureSession(SessionConfiguration(
-                SessionConfiguration.SESSION_REGULAR, listOf(out), exec,
+                SessionConfiguration.SESSION_REGULAR, outs, exec,
                 object : CameraCaptureSession.StateCallback() {
                     override fun onConfigured(s: CameraCaptureSession) {
-                        if (gen != generation) { s.close(); return }
+                        if (gen != generation) { s.close(); reader?.close(); return }
                         session = s
-                        active = Active(surface, lens, direct, distortionOff)
+                        try { stillReader?.close() } catch (_: Exception) {}
+                        stillReader = reader
+                        lastAe = -1; lastAf = -1
+                        active = Active(surface, lens, direct, distortionOff, fast = reader != null)
+                        Log.i("mado", "sesión lista, captura rápida=${reader != null}")
                         try {
-                            s.setRepeatingRequest(request(d, surface, lens, distortionOff), null, handler)
+                            s.setRepeatingRequest(request(d, surface, lens, distortionOff), previewState, handler)
                         } catch (e: Exception) {
                             Log.w("mado", "repeating", e)
                             fail(gen, e.message ?: "repeating failed")
                         }
                     }
-                    override fun onConfigureFailed(s: CameraCaptureSession) = fail(gen, "configure failed")
+                    override fun onConfigureFailed(s: CameraCaptureSession) {
+                        reader?.close()
+                        if (withStill) {                      // el teléfono no acepta el stream extra: sesión solo de preview
+                            Log.w("mado", "configuración con stream de foto rechazada; modo de sesión temporal")
+                            if (gen == generation && device === d) createSession(d, surface, lens, direct, distortionOff, gen, withStill = false)
+                        } else fail(gen, "configure failed")
+                    }
                 },
             ))
         } catch (e: Exception) {
@@ -228,7 +269,7 @@ class FovCamera(
         handler.post {
             val s = session; val d = device; val a = active
             if (s != null && d != null && a != null && !capturing) {
-                try { s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff), null, handler) } catch (e: Exception) { Log.w("mado", "reissue", e) }
+                try { s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff), previewState, handler) } catch (e: Exception) { Log.w("mado", "reissue", e) }
             }
         }
     }
@@ -260,7 +301,7 @@ class FovCamera(
                 val trig = requestBuilder(d, a.surface, a.lens, a.distortionOff)
                 trig.set(CaptureRequest.CONTROL_AF_TRIGGER, CaptureRequest.CONTROL_AF_TRIGGER_START)
                 s.capture(trig.build(), null, handler)
-                s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff), null, handler)
+                s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff), previewState, handler)
             } catch (e: Exception) { Log.w("mado", "focusAt", e) }
         }
     }
@@ -328,6 +369,8 @@ class FovCamera(
         Log.i("mado", "closeAll device=${device != null} session=${session != null}")
         try { session?.close() } catch (_: Exception) {}
         session = null
+        try { stillReader?.close() } catch (_: Exception) {}
+        stillReader = null
         try { device?.close() } catch (_: Exception) {}
         device = null
         active = null
@@ -367,6 +410,8 @@ class FovCamera(
         if (capturing) return cb(Shot.Fail("busy"))
         capturing = true
         val t0 = SystemClock.elapsedRealtime()
+        val fastReader = stillReader
+        if (a.fast && fastReader != null) return captureFast(a, d, fastReader, displayRotationDeg, gen, t0, onExposed, cb)
         var reader: ImageReader? = null
         var done = false
         var exposedAt = 0L
@@ -449,6 +494,54 @@ class FovCamera(
             ))
         } catch (e: Exception) {
             Log.w("mado", "capture", e)
+            finish(Shot.Fail(e.message ?: "capture failed"))
+        }
+    }
+
+    /** Foto sin reconfigurar: la sesión del preview ya lleva el stream de foto y exposición y foco ya están estables. */
+    private fun captureFast(a: Active, d: CameraDevice, r: ImageReader, displayRotationDeg: Int, gen: Int, t0: Long, onExposed: () -> Unit, cb: (Shot) -> Unit) {
+        val s = session
+        if (s == null) { capturing = false; return cb(Shot.Fail("camera not ready")) }
+        var done = false
+        var exposedAt = 0L
+        val token = Any()
+        val finish: (Shot) -> Unit = { result ->
+            if (!done) {
+                done = true
+                handler.removeCallbacksAndMessages(token)
+                try { r.setOnImageAvailableListener(null, null) } catch (_: Exception) {}
+                capturing = false
+                cb(result)
+            }
+        }
+        try {
+            val c = manager.getCameraCharacteristics(a.lens.id)
+            val rotation = ((c.get(CameraCharacteristics.SENSOR_ORIENTATION) ?: 90) - displayRotationDeg + 360) % 360
+            r.setOnImageAvailableListener({ ir ->
+                val img = try { ir.acquireLatestImage() } catch (e: Exception) { null } ?: return@setOnImageAvailableListener
+                try {
+                    val jpeg = yuvToJpeg(img, 95)
+                    finish(Shot.Ok(jpeg, img.width, img.height, rotation, SystemClock.elapsedRealtime() - t0, if (exposedAt > 0) exposedAt - t0 else 0))
+                } catch (e: Exception) {
+                    Log.w("mado", "yuvToJpeg", e)
+                    finish(Shot.Fail(e.message ?: "encode failed"))
+                } finally { img.close() }
+            }, handler)
+            handler.postDelayed({ finish(Shot.Fail("timeout")) }, token, STILL_TIMEOUT_MS)
+            // Si el autofoco está buscando justo ahora, se espera un momento (máx. 400 ms) a que se asiente.
+            val deadline = SystemClock.elapsedRealtime() + 400
+            fun go() {
+                if (done) return
+                // Se espera (máx. 400 ms) si el autofoco busca o la exposición aún se está ajustando (p. ej. recién iniciada la cámara).
+                val searching = lastAf == CaptureResult.CONTROL_AF_STATE_PASSIVE_SCAN || lastAf == CaptureResult.CONTROL_AF_STATE_ACTIVE_SCAN ||
+                    lastAe == CaptureResult.CONTROL_AE_STATE_SEARCHING || lastAe == CaptureResult.CONTROL_AE_STATE_PRECAPTURE || lastAe == CaptureResult.CONTROL_AE_STATE_INACTIVE
+                if (searching && SystemClock.elapsedRealtime() < deadline) { handler.postDelayed({ go() }, token, 40); return }
+                Log.i("mado", "still rápida: disparo a los ${SystemClock.elapsedRealtime() - t0} ms (ae=$lastAe af=$lastAf)")
+                shoot(s, d, a, r, gen, finish) { exposedAt = SystemClock.elapsedRealtime(); onExposed() }
+            }
+            go()
+        } catch (e: Exception) {
+            Log.w("mado", "captureFast", e)
             finish(Shot.Fail(e.message ?: "capture failed"))
         }
     }
