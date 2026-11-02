@@ -1026,6 +1026,48 @@
      "calculo_derivado": "36.0/1.6 = 22.50 mm; 24.0/1.6 = 15.00 mm (Canon: 'Approx. 1.6 times'); alternativa por pixeles: 36.0 x 5088/8192 = 22.36 mm"
     },
     {
+     "id": "foto_4_3",
+     "nombre": "Foto 4:3 (L, 39.8 MP)",
+     "ancho_activo_mm": 31.99,
+     "alto_activo_mm": 24.0,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "7280x5464",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon Espana, especificaciones EOS R5 (pagina oficial; texto pegado por el usuario el 2026-11-02): tamano de imagen JPEG/HEIF 4:3 (L) 7280x5464. Area derivada: 36 mm x px/8192 (el 3:2 de 8192x5464 usa 36x24 mm).",
+      "url": "https://www.canon.es/cameras/eos-r5/specifications/"
+     }
+    },
+    {
+     "id": "foto_16_9",
+     "nombre": "Foto 16:9 (L, 37.7 MP)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 20.25,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "8192x4608",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon Espana, especificaciones EOS R5 (pagina oficial; texto pegado por el usuario el 2026-11-02): tamano de imagen JPEG/HEIF 16:9 (L) 8192x4608. Area derivada: 36 mm x px/8192.",
+      "url": "https://www.canon.es/cameras/eos-r5/specifications/"
+     }
+    },
+    {
+     "id": "foto_1_1",
+     "nombre": "Foto 1:1 (L, 29.8 MP)",
+     "ancho_activo_mm": 23.98,
+     "alto_activo_mm": 23.98,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "5456x5456",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon Espana, especificaciones EOS R5 (pagina oficial; texto pegado por el usuario el 2026-11-02): tamano de imagen JPEG/HEIF 1:1 (L) 5456x5456. Area derivada: 36 mm x px/8192.",
+      "url": "https://www.canon.es/cameras/eos-r5/specifications/"
+     }
+    },
+    {
      "id": "video_8k_dci",
      "nombre": "Video 8K DCI 17:9 (RAW/ALL-I/IPB; sin crop)",
      "ancho_activo_mm": 36.0,
@@ -1148,7 +1190,105 @@
      "calculo_derivado": "igual que video_4k_uhd_crop"
     }
    ],
-   "notas": "Sensor 'Approx. 36.0x24.0 mm', ~45.0 MP. Canon no publica mm por modo de video; 8K y 4K sin crop usan el ancho completo segun la figura 'Image Area' del manual (figura leida: las areas 8K/4K comparten el mismo recuadro), por lo que los mm son derivados. Con RF-S/EF-S el recorte es el mismo que 'Movie cropping'. 4K 60p con crop: tiempo limitado a ~25 min por temperatura (Canon). 4K Alta tasa de cuadros (119.9/100 fps) y 4K HQ: la pagina 'Image Area' no los lista aparte, no se encontro dato de recorte adicional (no incluido).",
+   "firmware_historial": [
+    {
+     "version": "2.2.1",
+     "fecha": null,
+     "cambios": "Corrige el formateo de ciertas tarjetas CFexpress y la actualizacion por internet; sin formatos nuevos (segun resumen de busqueda de Canon Asia).",
+     "fuente": {
+      "texto": "Canon Asia, EOS R5 Firmware Update Version 2.2.1",
+      "url": "https://asia.canon/en/support/0401103802"
+     }
+    },
+    {
+     "version": "2.2.0",
+     "fecha": "2025-07",
+     "cambios": "Seguridad (contrasena inicial, registro de cambios), tarjetas de hasta 8 TB, EDSDK/CCAPI, actualizacion por internet; sin formatos nuevos (segun resumen de busqueda de Canon Australia).",
+     "fuente": {
+      "texto": "Canon Australia, EOS R5 Firmware Update Version 2.2.0 (pagina no accesible al verificar)",
+      "url": "https://www.canon.com.au/support/support-news/firmware-updates/eos-r5-firmware-version-2-2-0"
+     }
+    },
+    {
+     "version": "2.0.0",
+     "fecha": null,
+     "cambios": "Tarjetas CFexpress de mas de 2 TB (segun resumen de busqueda; fuente de Canon no abierta, por confirmar).",
+     "fuente": null
+    },
+    {
+     "version": "1.8.1",
+     "fecha": null,
+     "cambios": "Toma de alta resolucion con IBIS (fotos de 24576x16384 JPEG), segun las notas 2 y 10 de la ficha de Canon Espana ('version de firmware 1.81 o posterior').",
+     "fuente": {
+      "texto": "Canon Espana, especificaciones EOS R5 (pagina oficial; texto pegado por el usuario el 2026-11-02)",
+      "url": "https://www.canon.es/cameras/eos-r5/specifications/"
+     }
+    },
+    {
+     "version": "1.5.0",
+     "fecha": null,
+     "cambios": "Compatibilidad con el objetivo RF 5.2mm F2.8L Dual Fisheye (segun resumen de busqueda; fuente de Canon no abierta, por confirmar).",
+     "fuente": null
+    },
+    {
+     "version": "1.3.0",
+     "fecha": null,
+     "cambios": "Canon Log 3 y, segun las notas 16, 18, 20 y 22 de la ficha de Canon Espana, otras mejoras de video (Full HD, video de alta velocidad, tabla de velocidades de bits) 'con version de firmware 1.30 o posterior'. Canon Europe habla de la 1.3.1: version exacta por confirmar.",
+     "fuente": {
+      "texto": "Canon Espana, especificaciones EOS R5 (pagina oficial; texto pegado por el usuario el 2026-11-02)",
+      "url": "https://www.canon.es/cameras/eos-r5/specifications/"
+     }
+    },
+    {
+     "version": "1.2.0",
+     "fecha": null,
+     "cambios": "Mejora de compatibilidad HEIF/MIAF; no se puede volver a versiones anteriores (1.0.0 a 1.1.1). Sin formatos nuevos.",
+     "fuente": {
+      "texto": "Canon USA, aviso de firmware EOS R5 1.2.0",
+      "url": "https://www.usa.canon.com/support/canon-product-advisories/firmware-notice-eos-r5-firmware-version-1-2-0"
+     }
+    },
+    {
+     "version": "1.0.0",
+     "fecha": null,
+     "cambios": "Lanzamiento. Los modos originales del catalogo salen del manual de Canon.",
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-09_Reference_0100.html"
+     }
+    }
+   ],
+   "perfiles_color": [
+    {
+     "id": "c_log",
+     "nombre": "Canon Log",
+     "tipo": "log",
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Canon Log settings (firmware 2.2.0 o posterior): opciones On (C.LOG) y On (C.LOG3); Canon Log 2 no es compatible; ficha Canon Espana: 'Canon Log 1 y Canon Log 3'",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-03_Shooting-2_0080.html"
+     }
+    },
+    {
+     "id": "c_log3",
+     "nombre": "Canon Log 3",
+     "tipo": "log",
+     "desde_firmware": "1.3.0",
+     "fuente": {
+      "texto": "Canon Espana, especificaciones EOS R5 (pagina oficial; texto pegado por el usuario el 2026-11-02): 'Canon Log: Si, Canon Log 1 y Canon Log 3' con la nota 'version de firmware 1.30 o posterior'. Canon EOS R5 Product Manual > Canon Log settings (firmware 2.2.0 o posterior): opciones On (C.LOG) y On (C.LOG3); Canon Log 2 no es compatible",
+      "url": "https://www.canon.es/cameras/eos-r5/specifications/"
+     }
+    },
+    {
+     "id": "hdr_pq",
+     "nombre": "HDR PQ",
+     "tipo": "hdr",
+     "fuente": {
+      "texto": "Canon EOS R5 Product Manual > Specifications: tablas 'Canon Log: On or HDR PQ: On'; 'HDR PQ' no admite ISO ampliado en video",
+      "url": "https://cam.start.canon/en/C003/manual/html/UG-09_Reference_0100.html"
+     }
+    }
+   ],
+   "notas": "Datos revisados el 2026-11-02 contra la pagina oficial actual de Canon Espana y el manual (firmware 2.2.0 o posterior): el area de video no cambio, se agregaron fotos 4:3, 16:9 y 1:1, el historial de firmware y los perfiles Canon Log, Canon Log 3 (desde 1.30) y HDR PQ. Sensor 'Approx. 36.0x24.0 mm', ~45.0 MP. Canon no publica mm por modo de video; 8K y 4K sin crop usan el ancho completo segun la figura 'Image Area' del manual (figura leida: las areas 8K/4K comparten el mismo recuadro), por lo que los mm son derivados. Con RF-S/EF-S el recorte es el mismo que 'Movie cropping'. 4K 60p con crop: tiempo limitado a ~25 min por temperatura (Canon). 4K Alta tasa de cuadros (119.9/100 fps) y 4K HQ: la pagina 'Image Area' no los lista aparte, no se encontro dato de recorte adicional (no incluido).",
    "principal_orden": 1
   },
   {

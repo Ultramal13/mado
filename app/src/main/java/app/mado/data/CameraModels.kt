@@ -27,7 +27,7 @@ data class RecordingMode(
 data class FirmwareEntry(val version: String, val date: String?, val notes: String, val source: Source?)
 
 /** Perfil de color o curva de grabación (log, estándar, HDR) que ofrece la cámara. */
-data class ColorProfile(val id: String, val name: String, val kind: String, val source: Source?)
+data class ColorProfile(val id: String, val name: String, val kind: String, val source: Source?, val sinceFirmware: String? = null)
 
 /** Compara versiones de firmware por segmentos numéricos: 7.02 > 7.00, 1.1.22 > 1.1.8. */
 object FirmwareVersion {
@@ -65,6 +65,11 @@ data class Camera(
 
     /** Versión de firmware más nueva que conocemos, o null si no hay historial. */
     val latestFirmware: String? get() = firmwareHistory.map { it.version }.maxWithOrNull { a, b -> FirmwareVersion.compare(a, b) }
+
+    /** Perfiles de color que existen en el firmware [firmware] (null = el más nuevo). */
+    fun colorProfilesFor(firmware: String?): List<ColorProfile> =
+        if (firmware == null) colorProfiles
+        else colorProfiles.filter { it.sinceFirmware == null || FirmwareVersion.compare(it.sinceFirmware, firmware) <= 0 }
 
     /** Modos que existen en el firmware [firmware] (null = el más nuevo). */
     fun modesFor(firmware: String?): List<RecordingMode> =

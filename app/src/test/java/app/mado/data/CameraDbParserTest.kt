@@ -137,4 +137,16 @@ class FirmwareModesTest {
         assertEquals("I-Log 10 bit", luna.colorProfiles.first { it.kind == "log" }.name)
         luna.modes.forEach { org.junit.Assert.assertNotNull("${it.id} sin fuente", it.source) }
     }
+
+    @Test
+    fun canonR5HasLogByFirmwareAndExtraPhotoAspects() {
+        val r5 = cam("canon_eos_r5")
+        assertEquals("2.2.1", r5.latestFirmware)
+        assertEquals(listOf("Canon Log", "Canon Log 3", "HDR PQ"), r5.colorProfilesFor(null).map { it.name })
+        // Canon Log 3 llegó con el firmware 1.30: no existe en el 1.2.0.
+        assertEquals(listOf("Canon Log", "HDR PQ"), r5.colorProfilesFor("1.2.0").map { it.name })
+        val four3 = r5.modes.first { it.id == "foto_4_3" }
+        assertEquals(4.0 / 3.0, four3.aspect, 0.01)
+        assertEquals(31.99, four3.widthMm!!, 1e-9)
+    }
 }

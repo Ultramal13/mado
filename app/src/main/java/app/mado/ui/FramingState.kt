@@ -116,7 +116,10 @@ class FramingState(val db: CameraDb) {
     }
 
     /** Perfil de color (log, estándar…) elegido para la cámara actual, o null. */
-    val colorProfile: app.mado.data.ColorProfile? get() = camera?.let { cam -> cam.colorProfiles.firstOrNull { it.id == colorByCamera[cam.id] } }
+    val colorProfile: app.mado.data.ColorProfile? get() = camera?.let { cam -> colorProfiles.firstOrNull { it.id == colorByCamera[cam.id] } }
+
+    /** Perfiles de color de la cámara actual que existen en el firmware elegido. */
+    val colorProfiles: List<app.mado.data.ColorProfile> get() = camera?.colorProfilesFor(firmware).orEmpty()
 
     fun selectColor(id: String?) {
         val cam = camera ?: return

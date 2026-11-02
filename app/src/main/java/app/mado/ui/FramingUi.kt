@@ -274,12 +274,12 @@ private fun FirmwareChooser(framing: FramingState) {
 /** Perfil de color o log que se grabará (p. ej. S-Log3, I-Log); aparece en la barra de la foto. */
 @Composable
 private fun ColorChooser(framing: FramingState) {
-    val cam = framing.camera ?: return
-    if (cam.colorProfiles.isEmpty()) return
+    val profiles = framing.colorProfiles
+    if (profiles.isEmpty()) return
     Label(stringResource(R.string.frm_color_profile))
-    val names = listOf(stringResource(R.string.frm_color_none)) + cam.colorProfiles.map { it.name }
-    val sel = cam.colorProfiles.indexOfFirst { it.id == framing.colorProfile?.id }.let { if (it < 0) 0 else it + 1 }
-    Seg(names, sel) { framing.selectColor(if (it == 0) null else cam.colorProfiles[it - 1].id) }
+    val names = listOf(stringResource(R.string.frm_color_none)) + profiles.map { it.name }
+    val sel = profiles.indexOfFirst { it.id == framing.colorProfile?.id }.let { if (it < 0) 0 else it + 1 }
+    Seg(names, sel) { framing.selectColor(if (it == 0) null else profiles[it - 1].id) }
 }
 
 @Composable

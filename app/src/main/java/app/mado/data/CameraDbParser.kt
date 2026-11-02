@@ -42,7 +42,7 @@ object CameraDbParser {
 
     private fun colorProfile(o: JSONObject): ColorProfile? {
         val id = o.optStringOrNull("id") ?: return null
-        return ColorProfile(id, o.optString("nombre", id), o.optString("tipo", "estandar"), source(o.optJSONObject("fuente")))
+        return ColorProfile(id, o.optString("nombre", id), o.optString("tipo", "estandar"), source(o.optJSONObject("fuente")), o.optStringOrNull("desde_firmware"))
     }
 
     /** "9:16" o "2.35:1" → 0.5625 / 2.35. */
