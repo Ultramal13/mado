@@ -52,4 +52,30 @@ class FramingStatePersistTest {
         val b = FramingState(db); b.restore(a.snapshot())
         assertEquals("暖炉", b.scene); assertEquals(3, b.shotNo); assertEquals(16.0 / 9.0, b.delivery!!, 1e-9)
     }
+
+    @Test
+    fun firmwareAndColorProfileAreRemembered() {
+        val a = FramingState(db)
+        a.cameraIdx = a.cameras.indexOfFirst { it.id == "sony_fx3" }
+        a.selectFirmware("1.00")
+        a.selectColor("s_log3")
+        assertEquals("1.00", a.firmware)
+        assertTrue(a.modes.none { it.id == "video_dci_4k" })
+        assertTrue(a.modeName().endsWith("S-Log3"))
+        val b = FramingState(db); b.restore(a.snapshot())
+        assertEquals("1.00", b.firmware)
+        assertEquals("s_log3", b.colorProfile?.id)
+        // Elegir el firmware más nuevo borra la preferencia.
+        b.selectFirmware("7.02")
+        assertEquals(null, b.firmware)
+    }
+
+    @Test
+    fun lunaVerticalFormatSetsPortraitAspect() {
+        val a = FramingState(db)
+        a.cameraIdx = a.cameras.indexOfFirst { it.id == "insta360_luna_ultra" }
+        a.modeIdx = a.modes.indexOfFirst { it.id == "video_4k_9_16" }
+        val t = a.target()!!
+        assertEquals(9.0 / 16.0, t.aspect, 1e-9)
+    }
 }

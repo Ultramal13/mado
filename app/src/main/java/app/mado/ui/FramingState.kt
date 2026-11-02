@@ -29,6 +29,9 @@ class FramingState(val db: CameraDb) {
 
     var cameraIdx by mutableIntStateOf(if (principalCount > 0) 0 else cameras.size)      // arranca en la primera principal
     var modeIdx by mutableIntStateOf(0)
+    /** Firmware instalado por cámara (id → versión) y perfil de color elegido por cámara (id → id del perfil). Sin entrada = el más nuevo / ninguno. */
+    var firmwareByCamera by mutableStateOf(mapOf<String, String>())
+    var colorByCamera by mutableStateOf(mapOf<String, String>())
     var lensSetIdx by mutableIntStateOf(0)
     var focal by mutableStateOf("50")
     var customW by mutableStateOf("36")
@@ -55,7 +58,9 @@ class FramingState(val db: CameraDb) {
      */
     fun snapshot(): String = org.json.JSONObject().apply {
         put("camera", if (isCustom) "custom" else camera?.id)
-        put("mode", camera?.modes?.getOrNull(modeIdx)?.id)
+        put("mode", modes.getOrNull(modeIdx)?.id)
+        put("firmware", org.json.JSONObject(firmwareByCamera))
+        put("color", org.json.JSONObject(colorByCamera))
         put("lensSet", lensSet?.id)
         put("focal", focal)
         put("kit", org.json.JSONArray(kit))
@@ -74,8 +79,10 @@ class FramingState(val db: CameraDb) {
             val cam = o.optString("camera")
             if (cam == "custom") cameraIdx = cameras.size
             else cameras.indexOfFirst { it.id == cam }.takeIf { it >= 0 }?.let { cameraIdx = it }
+            o.optJSONObject("firmware")?.let { f -> firmwareByCamera = f.keys().asSequence().associateWith { f.optString(it) }.filterValues { it.isNotBlank() } }
+            o.optJSONObject("color")?.let { c -> colorByCamera = c.keys().asSequence().associateWith { c.optString(it) }.filterValues { it.isNotBlank() } }
             if (!isCustom) {
-                camera?.modes?.indexOfFirst { it.id == o.optString("mode") }?.takeIf { it >= 0 }?.let { modeIdx = it }
+                modes.indexOfFirst { it.id == o.optString("mode") }.takeIf { it >= 0 }?.let { modeIdx = it }
                 camera?.builtInLenses?.indexOfFirst { it.id == o.optString("builtIn") }?.takeIf { it >= 0 }?.let { builtInIdx = it }
             }
             db.lensSets.indexOfFirst { it.id == o.optString("lensSet") }.takeIf { it >= 0 }?.let { lensSetIdx = it }
@@ -94,6 +101,28 @@ class FramingState(val db: CameraDb) {
     val camera: Camera? get() = cameras.getOrNull(cameraIdx)
     val lensSet get() = db.lensSets.getOrNull(lensSetIdx)
     val squeeze get() = lensSet?.squeeze ?: 1.0
+    /** Versión de firmware elegida para la cámara actual; null = la más nueva que conocemos (o sin historial). */
+    val firmware: String? get() = camera?.let { cam -> firmwareByCamera[cam.id]?.takeIf { it != cam.latestFirmware && cam.firmwareHistory.any { e -> e.version == it } } }
+
+    /** Modos de la cámara actual que existen en ese firmware. */
+    val modes: List<app.mado.data.RecordingMode> get() = camera?.modesFor(firmware).orEmpty()
+
+    /** Cambia el firmware de la cámara actual sin perder el modo elegido, si existe en esa versión. */
+    fun selectFirmware(version: String) {
+        val cam = camera ?: return
+        val keep = modes.getOrNull(modeIdx)?.id
+        firmwareByCamera = if (version == cam.latestFirmware) firmwareByCamera - cam.id else firmwareByCamera + (cam.id to version)
+        modeIdx = modes.indexOfFirst { it.id == keep }.coerceAtLeast(0)
+    }
+
+    /** Perfil de color (log, estándar…) elegido para la cámara actual, o null. */
+    val colorProfile: app.mado.data.ColorProfile? get() = camera?.let { cam -> cam.colorProfiles.firstOrNull { it.id == colorByCamera[cam.id] } }
+
+    fun selectColor(id: String?) {
+        val cam = camera ?: return
+        colorByCamera = if (id == null) colorByCamera - cam.id else colorByCamera + (cam.id to id)
+    }
+
     val isFixedLens get() = camera?.builtInLenses?.isNotEmpty() == true && (camera?.type == "lente_fija" || camera?.modes?.isEmpty() == true)
 
     /** Una focal (o lente integrada) del juego, ya resuelta; `current` = la que se está usando. */
@@ -110,8 +139,8 @@ class FramingState(val db: CameraDb) {
     fun modeName(): String = when {
         isCustom -> if (squeeze != 1.0) "${squeeze}x" else ""
         isFixedLens && camera!!.modes.isEmpty() -> fixedAspects[fixedAspectIdx].second
-        else -> camera!!.modes.getOrNull(modeIdx)?.name.orEmpty().substringBefore(" (").loc()
-    }
+        else -> modes.getOrNull(modeIdx)?.name.orEmpty().substringBefore(" (").loc()
+    } + colorProfile?.let { " · ${it.name}" }.orEmpty()
 
     /** Etiqueta corta de lo que se está simulando. */
     fun label(): String = cameraName() + modeName().let { if (it.isEmpty()) "" else " · $it" }
@@ -133,7 +162,7 @@ class FramingState(val db: CameraDb) {
 
     private fun fixedTarget(i: Int): Framing.Target? {
         val eq = camera?.builtInLenses?.getOrNull(i)?.equivalentFocalMm ?: return null
-        val mode = camera!!.modes.getOrNull(modeIdx)
+        val mode = modes.getOrNull(modeIdx)
         // Lente fija: focal equivalente full frame → FOV horizontal de un sensor de 36 mm de ancho.
         return Framing.Target(Fov.fovRad(Fov.FULL_FRAME_WIDTH_MM, eq), mode?.aspect ?: fixedAspects[fixedAspectIdx].first)
     }
@@ -146,7 +175,7 @@ class FramingState(val db: CameraDb) {
             if (w == null || h == null || w <= 0 || h <= 0) null else Framing.target(w, h, f, squeeze)
         }
         isFixedLens -> null
-        else -> camera!!.modes.getOrNull(modeIdx)?.let { Framing.target(it.widthMm, it.heightMm, f, squeeze) }
+        else -> modes.getOrNull(modeIdx)?.takeIf { it.hasArea }?.let { Framing.target(it.widthMm!!, it.heightMm!!, f, squeeze) }
     }
 
     /** Objetivo actual, o null si faltan datos. */

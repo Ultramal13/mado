@@ -233,9 +233,115 @@
       "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
      },
      "calculo_derivado": "ancho = 35.6/1.5 = 23.73 mm; alto = ancho x 9/16 = 13.35 mm"
+    },
+    {
+     "id": "video_dci_4k",
+     "nombre": "Video DCI 4K 17:9 (XAVC S-I DCI: 23.98/24/25/29.97/50/59.94p)",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 18.77,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "4096x2160",
+     "derivado": true,
+     "desde_firmware": "3.00",
+     "fuente": {
+      "texto": "Sony ES, especificaciones ILME-FX3 (pagina oficial; texto pegado por el usuario el 2026-11-02): XAVC S-I DCI 4K, curva gamma S-Log3/S-Cinetone/HLG/ITU709, salida RAW HDMI 4264x2408. Los 4096x2160 son el estandar DCI (la pagina no da los pixeles); Sony no publica el area activa: se supone ancho completo 35.6 mm, alto = 35.6 x 2160/4096. Version 3.00 segun resumenes de B&H/Sony Pro, por confirmar en las notas oficiales.",
+      "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx3/specifications"
+     }
+    },
+    {
+     "id": "video_raw_hdmi",
+     "nombre": "Salida RAW HDMI 4264x2408 (16:9, 16 bits)",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 20.1,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "4264x2408",
+     "derivado": true,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Sony ES, especificaciones ILME-FX3 (pagina oficial; texto pegado por el usuario el 2026-11-02): XAVC S-I DCI 4K, curva gamma S-Log3/S-Cinetone/HLG/ITU709, salida RAW HDMI 4264x2408. Area activa supuesta: ancho completo 35.6 mm, alto = 35.6 x 2408/4264. Version de introduccion no verificada (Ver. 7.00 amplio la salida RAW a Blackmagic RAW externo).",
+      "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx3/specifications"
+     }
     }
    ],
-   "notas": "Guia usada: ILME-FX3 (helpguide ilc/2035), no FX3A ni FX30. La Help Guide solo lista 4K como 3840x2160 (UHD); no se encontro 4096x2160 en esta fuente. Sony no publica mm por modo de video; todo derivado. Modos de video con estabilizacion (Active/Dynamic) o 'Cinematic' pueden recortar mas: no cuantificado en la fuente.",
+   "firmware_historial": [
+    {
+     "version": "7.02",
+     "fecha": "2026-03-17",
+     "cambios": "Mejoras de rendimiento y estabilidad; sin formatos nuevos.",
+     "fuente": {
+      "texto": "Newsshooter 'Sony FX3 Firmware Update Ver. 7.02' y pagina de descargas ILME-FX3 de Sony (fecha 17/03/2026)",
+      "url": "https://www.newsshooter.com/2026/03/18/sony-fx3-firmware-update-ver-7-02/"
+     }
+    },
+    {
+     "version": "7.00",
+     "fecha": "2025-08",
+     "cambios": "Pantalla BIG6, modo de cuadros fijo/variable, de-squeeze 1.5x y 1.6x en pantalla, salida RAW por HDMI para Blackmagic RAW externo, encuadre manual.",
+     "fuente": {
+      "texto": "Newsshooter 'Sony FX3 Ver. 7.00 Firmware Update' (2025-08-26) e Imaging Resource",
+      "url": "https://www.newsshooter.com/2025/08/26/sony-fx3-ver-7-00-firmware-update/"
+     }
+    },
+    {
+     "version": "3.00",
+     "fecha": "2023-04",
+     "cambios": "DCI 4K (XAVC S-I DCI) y de-squeeze 1.3x/2.0x. Version y fecha segun resumenes de busqueda de B&H y Sony Pro (paginas no accesibles al verificar): por confirmar en las notas oficiales. Las versiones 4.x a 6.x no se han revisado.",
+     "fuente": {
+      "texto": "B&H Explora 'Sony Unlocks DCI 4K and More with Massive FX3 & FX30 Firmware Updates'",
+      "url": "https://www.bhphotovideo.com/explora/video/news/sony-fx3-fx30-firmware-updates"
+     }
+    },
+    {
+     "version": "1.00",
+     "fecha": null,
+     "cambios": "Lanzamiento. Los modos originales del catalogo salen de la Guia de ayuda v1 de Sony.",
+     "fuente": {
+      "texto": "Sony Help Guide ILME-FX3 v1",
+      "url": "https://helpguide.sony.net/ilc/2035/v1/en/print.pdf"
+     }
+    }
+   ],
+   "perfiles_color": [
+    {
+     "id": "s_log3",
+     "nombre": "S-Log3",
+     "tipo": "log",
+     "fuente": {
+      "texto": "Sony ES, especificaciones ILME-FX3 (pagina oficial; texto pegado por el usuario el 2026-11-02): XAVC S-I DCI 4K, curva gamma S-Log3/S-Cinetone/HLG/ITU709, salida RAW HDMI 4264x2408",
+      "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx3/specifications"
+     }
+    },
+    {
+     "id": "s_cinetone",
+     "nombre": "S-Cinetone",
+     "tipo": "estandar",
+     "fuente": {
+      "texto": "Sony ES, especificaciones ILME-FX3 (pagina oficial; texto pegado por el usuario el 2026-11-02): XAVC S-I DCI 4K, curva gamma S-Log3/S-Cinetone/HLG/ITU709, salida RAW HDMI 4264x2408",
+      "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx3/specifications"
+     }
+    },
+    {
+     "id": "hlg",
+     "nombre": "HLG",
+     "tipo": "hdr",
+     "fuente": {
+      "texto": "Sony ES, especificaciones ILME-FX3 (pagina oficial; texto pegado por el usuario el 2026-11-02): XAVC S-I DCI 4K, curva gamma S-Log3/S-Cinetone/HLG/ITU709, salida RAW HDMI 4264x2408",
+      "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx3/specifications"
+     }
+    },
+    {
+     "id": "itu709",
+     "nombre": "ITU709",
+     "tipo": "estandar",
+     "fuente": {
+      "texto": "Sony ES, especificaciones ILME-FX3 (pagina oficial; texto pegado por el usuario el 2026-11-02): XAVC S-I DCI 4K, curva gamma S-Log3/S-Cinetone/HLG/ITU709, salida RAW HDMI 4264x2408",
+      "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx3/specifications"
+     }
+    }
+   ],
+   "notas": "Guia usada: ILME-FX3 (helpguide ilc/2035), no FX3A ni FX30. La Help Guide v1 solo listaba 4K como 3840x2160 (UHD); la pagina oficial actual de Sony agrega XAVC S-I DCI 4K (4096x2160), añadido por firmware: ver firmware_historial. Sony no publica mm por modo de video; todo derivado. Modos de video con estabilizacion (Active/Dynamic) o 'Cinematic' pueden recortar mas: no cuantificado en la fuente.",
    "principal_orden": 3
   },
   {
@@ -1053,34 +1159,379 @@
    "montura": null,
    "modos": [
     {
-     "id": "lente_principal",
-     "nombre": "Lente principal (1\" , 20 mm eq.)",
+     "id": "video_8k_16_9",
+     "nombre": "Video 8K 16:9 · 30/25/24p",
      "ancho_activo_mm": null,
      "alto_activo_mm": null,
-     "relacion_aspecto": null,
+     "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
-     "resolucion_px": null,
+     "resolucion_px": "7680x4320",
      "derivado": false,
+     "desde_firmware": null,
      "fuente": {
-      "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
       "url": "https://www.insta360.com/specs/luna-ultra"
-     },
-     "motivo_null": "La ficha oficial da el formato opcional '1\"' (designacion comercial) y la focal equivalente 35 mm, pero no ancho/alto activo en mm ni el recorte por modo de video/foto."
+     }
     },
     {
-     "id": "lente_tele",
-     "nombre": "Lente teleobjetivo (1/1.3\", 60 mm eq.)",
+     "id": "video_8k_2_35_1",
+     "nombre": "Video 8K 2.35:1 · 30/25/24p",
      "ancho_activo_mm": null,
      "alto_activo_mm": null,
-     "relacion_aspecto": null,
+     "relacion_aspecto": "2.35:1",
      "factor_crop_vs_ff": null,
-     "resolucion_px": null,
+     "resolucion_px": "7680x3264",
      "derivado": false,
+     "desde_firmware": null,
      "fuente": {
-      "texto": "Insta360 pagina oficial de specs Luna Ultra: Sensor 1\" F1.8 20mm (35mm equivalent) / Sensor 1/1.3\" F2.0 60mm; zoom 1-15x",
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
       "url": "https://www.insta360.com/specs/luna-ultra"
-     },
-     "motivo_null": "Igual que la lente principal: solo designacion '1/1.3\"' y focal equivalente."
+     }
+    },
+    {
+     "id": "video_4k_16_9",
+     "nombre": "Video 4K 16:9 · 120/100/60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "video_4k_9_16",
+     "nombre": "Video 4K 9:16 · 30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "9:16",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "2160x3840",
+     "derivado": false,
+     "desde_firmware": "1.1.8",
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "video_4k_2_35_1",
+     "nombre": "Video 4K 2.35:1 · 120/100/60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "2.35:1",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "3840x1632",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "video_3k_1_1",
+     "nombre": "Video 3K 1:1 · 60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "3072x3072",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "video_3k_9_16",
+     "nombre": "Video 3K 9:16 · 60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "9:16",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "1728x3072",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "video_2_7k_16_9",
+     "nombre": "Video 2.7K 16:9 · 120/100/60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "2688x1520",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "video_2_7k_9_16",
+     "nombre": "Video 2.7K 9:16 · 60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "9:16",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "1520x2688",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "video_1080p_16_9",
+     "nombre": "Video 1080p 16:9 · 240/200/120/100/60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "1920x1080",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "video_1080p_9_16",
+     "nombre": "Video 1080p 9:16 · 60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "9:16",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "1080x1920",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "purevideo_4k_16_9",
+     "nombre": "PureVideo 4K 16:9 · 60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "purevideo_3k_9_16",
+     "nombre": "PureVideo 3K 9:16 · 60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "9:16",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "1728x3072",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "purevideo_2_7k_16_9",
+     "nombre": "PureVideo 2.7K 16:9 · 60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "2688x1520",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "purevideo_2_7k_9_16",
+     "nombre": "PureVideo 2.7K 9:16 · 60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "9:16",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "1520x2688",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "purevideo_1080p_16_9",
+     "nombre": "PureVideo 1080p 16:9 · 60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "1920x1080",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "purevideo_1080p_9_16",
+     "nombre": "PureVideo 1080p 9:16 · 60/50/48/30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "9:16",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "1080x1920",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "escenario_4k_16_9",
+     "nombre": "Modo escenario 4K 16:9 · 30/25/24p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "lenta_4k_16_9",
+     "nombre": "Cámara lenta 4K 16:9 · 120/100p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "lenta_4k_2_35_1",
+     "nombre": "Cámara lenta 4K 2.35:1 · 120/100p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "2.35:1",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "3840x1632",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "lenta_2_7k_16_9",
+     "nombre": "Cámara lenta 2.7K 16:9 · 120/100p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "2688x1520",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "lenta_1080p_16_9",
+     "nombre": "Cámara lenta 1080p 16:9 · 240/200/120/100p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "1920x1080",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "timelapse_4k_16_9",
+     "nombre": "Lapso de tiempo 4K 16:9 · 30p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "3840x2160",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "timelapse_2_7k_16_9",
+     "nombre": "Lapso de tiempo 2.7K 16:9 · 30p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "2688x1520",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "timelapse_1080p_16_9",
+     "nombre": "Lapso de tiempo 1080p 16:9 · 30p",
+     "ancho_activo_mm": null,
+     "alto_activo_mm": null,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": null,
+     "resolucion_px": "1920x1080",
+     "derivado": false,
+     "desde_firmware": null,
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Resolución de vídeo); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
     }
    ],
    "lentes_integradas": [
@@ -1131,7 +1582,56 @@
     },
     "nota": "La fuente no indica a cual lente corresponde; 8192x6144 es 4:3."
    },
-   "notas": "Montura: lente fija (null). Ninguna ficha oficial da mm de sensor; '1\"' y '1/1.3\"' son designaciones de formato optico, no dimensiones, por eso quedan null. La ficha oficial no aclara si la focal equivalente es por diagonal u horizontal ni para que aspecto de imagen aplica (se asume la del sensor completo; no verificado). El modo 4K/8K, 2.35:1 y 1:1 pueden usar recortes del sensor no documentados.",
+   "firmware_historial": [
+    {
+     "version": "1.1.22",
+     "fecha": null,
+     "cambios": "Version instalada en la camara del usuario (2026-11-02); sin notas oficiales encontradas. La ficha oficial actual lista 4K 9:16 a 30/25/24p.",
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (estado actual de la ficha); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "version": "1.1.8",
+     "fecha": "2026-09-20",
+     "cambios": "4K vertical (9:16) a 30 fps, zoom 15x, Modo escenario, obturador lento en video. Otras fuentes ubican estos cambios en 1.1.12 o 1.1.15: version por confirmar. Antes de esta actualizacion solo grababa 3K vertical (dato del usuario).",
+     "fuente": {
+      "texto": "Newsshooter 'Insta360 Luna Ultra Firmware Update 1.1.8' y NoFilmSchool",
+      "url": "https://www.newsshooter.com/2026/09/21/insta360-luna-ultra-firmware-update-1-1-8/"
+     }
+    }
+   ],
+   "perfiles_color": [
+    {
+     "id": "estandar",
+     "nombre": "Estándar",
+     "tipo": "estandar",
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Perfiles de color); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "dolby_vision",
+     "nombre": "Dolby Vision",
+     "tipo": "hdr",
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Perfiles de color); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    },
+    {
+     "id": "i_log",
+     "nombre": "I-Log 10 bit",
+     "tipo": "log",
+     "fuente": {
+      "texto": "Insta360, especificaciones oficiales Luna Ultra (Foto y Vídeo > Perfiles de color); texto pegado por el usuario el 2026-11-02, camara con firmware 1.1.22",
+      "url": "https://www.insta360.com/specs/luna-ultra"
+     }
+    }
+   ],
+   "notas": "Montura: lente fija (null). Ninguna ficha oficial da mm de sensor; '1\"' y '1/1.3\"' son designaciones de formato optico, no dimensiones, por eso quedan null. La ficha oficial no aclara si la focal equivalente es por diagonal u horizontal ni para que aspecto de imagen aplica (se asume la del sensor completo; no verificado). Los modos de video (ficha oficial actual) fijan resolucion, aspecto y cuadros por segundo; el FOV sigue saliendo de la focal equivalente de la lente. Los modos 4K/8K, 2.35:1, 1:1 y 9:16 pueden usar recortes del sensor no documentados.",
    "principal_orden": 2,
    "descripcion": "camara gimbal de lente fija doble (1\" + 1/1.3\")"
   },

@@ -234,6 +234,54 @@ internal fun BarKey(text: String, onClick: () -> Unit, accent: Boolean = false, 
 }
 
 /** Selector de varias opciones a la vez (el kit de focales). */
+/** Modos de grabación de la cámara según el firmware elegido; con más de 8 se abre una lista. */
+@Composable
+private fun ModeChooser(framing: FramingState) {
+    Label(stringResource(R.string.frm_mode))
+    val modeNames = framing.modes.map { it.name.substringBefore(" (").loc() }
+    if (modeNames.size <= 8) Seg(modeNames, framing.modeIdx) { framing.modeIdx = it }
+    else {
+        var open by remember { mutableStateOf(false) }
+        Seg(listOf(modeNames.getOrElse(framing.modeIdx) { "" } + "  ▾"), 0) { open = true }
+        if (open) PickerDialog(
+            title = stringResource(R.string.frm_mode), items = modeNames, selected = framing.modeIdx,
+            onPick = { framing.modeIdx = it }, onDismiss = { open = false },
+        )
+    }
+}
+
+/** Versión de firmware instalada (solo si el catálogo documenta su historial): filtra los modos que esa versión ya tenía. */
+@Composable
+private fun FirmwareChooser(framing: FramingState) {
+    val cam = framing.camera ?: return
+    if (cam.firmwareHistory.size < 2) return
+    val p = LocalPalette.current
+    val versions = cam.firmwareHistory.map { it.version }.sortedWith { a, b -> app.mado.data.FirmwareVersion.compare(b, a) }
+    val current = framing.firmware ?: cam.latestFirmware
+    Label(stringResource(R.string.frm_firmware))
+    if (versions.size <= 5) Seg(versions, versions.indexOf(current).coerceAtLeast(0)) { framing.selectFirmware(versions[it]) }
+    else {
+        var open by remember { mutableStateOf(false) }
+        Seg(listOf("$current  ▾"), 0) { open = true }
+        if (open) PickerDialog(
+            title = stringResource(R.string.frm_firmware), items = versions, selected = versions.indexOf(current).coerceAtLeast(0),
+            onPick = { framing.selectFirmware(versions[it]) }, onDismiss = { open = false },
+        )
+    }
+    if (framing.firmware != null) Text(stringResource(R.string.frm_firmware_old), style = mono(10, p.accent))
+}
+
+/** Perfil de color o log que se grabará (p. ej. S-Log3, I-Log); aparece en la barra de la foto. */
+@Composable
+private fun ColorChooser(framing: FramingState) {
+    val cam = framing.camera ?: return
+    if (cam.colorProfiles.isEmpty()) return
+    Label(stringResource(R.string.frm_color_profile))
+    val names = listOf(stringResource(R.string.frm_color_none)) + cam.colorProfiles.map { it.name }
+    val sel = cam.colorProfiles.indexOfFirst { it.id == framing.colorProfile?.id }.let { if (it < 0) 0 else it + 1 }
+    Seg(names, sel) { framing.selectColor(if (it == 0) null else cam.colorProfiles[it - 1].id) }
+}
+
 @Composable
 internal fun MultiSeg(options: List<String>, on: List<Boolean>, onToggle: (Int) -> Unit) {
     val p = LocalPalette.current
@@ -331,22 +379,16 @@ internal fun FramingControls(
         } else if (framing.isFixedLens) {
             Label(stringResource(R.string.frm_lenses))
             Seg(cam!!.builtInLenses.map { "${it.name.substringBefore(" (").loc()} · ${fmt(it.equivalentFocalMm, 0)}mm" }, framing.builtInIdx) { framing.builtInIdx = it }
+            FirmwareChooser(framing)
             if (cam.modes.isEmpty()) {
                 Label(stringResource(R.string.frm_aspect))
                 Seg(framing.fixedAspects.map { it.second }, framing.fixedAspectIdx) { framing.fixedAspectIdx = it }
-            }
+            } else ModeChooser(framing)
+            ColorChooser(framing)
         } else if (cam != null) {
-            Label(stringResource(R.string.frm_mode))
-            val modeNames = cam.modes.map { it.name.substringBefore(" (").loc() }
-            if (modeNames.size <= 8) Seg(modeNames, framing.modeIdx) { framing.modeIdx = it }
-            else {
-                var open by remember { mutableStateOf(false) }
-                Seg(listOf(modeNames.getOrElse(framing.modeIdx) { "" } + "  ▾"), 0) { open = true }
-                if (open) PickerDialog(
-                    title = stringResource(R.string.frm_mode), items = modeNames, selected = framing.modeIdx,
-                    onPick = { framing.modeIdx = it }, onDismiss = { open = false },
-                )
-            }
+            FirmwareChooser(framing)
+            ModeChooser(framing)
+            ColorChooser(framing)
         }
 
         Label(stringResource(R.string.frm_delivery))
@@ -432,7 +474,7 @@ internal fun FramingControls(
                 else -> {}
             }
             orientation?.let { Text(it, style = mono(10, p.screenText), modifier = Modifier.padding(top = 4.dp)) }
-            val derived = !framing.isCustom && (framing.isFixedLens || framing.camera?.modes?.getOrNull(framing.modeIdx)?.derived == true)
+            val derived = !framing.isCustom && (framing.isFixedLens || framing.modes.getOrNull(framing.modeIdx)?.derived == true)
             if (derived) Text(stringResource(R.string.frm_derived), style = mono(9, p.accent), modifier = Modifier.padding(top = 4.dp))
             val note = when {
                 error != null -> stringResource(R.string.fov_error_cam, error)

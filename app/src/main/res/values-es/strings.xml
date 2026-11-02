@@ -71,6 +71,10 @@
     <string name="frm_shot_saved_short">✓ guardada</string>
     <string name="frm_moved">⚠ el teléfono se movió unos %1$d° durante la toma: la foto puede salir corrida</string>
     <string name="frm_scene_dot">punto de color de la escena</string>
+    <string name="frm_firmware">firmware de la cámara</string>
+    <string name="frm_color_profile">perfil de color / log</string>
+    <string name="frm_color_none">ninguno</string>
+    <string name="frm_firmware_old">firmware anterior: solo los formatos que ya tenía</string>
     <string name="frm_fast_capture">captura rápida (foto casi instantánea; usa más batería)</string>
     <string name="frm_crop_on">vista recortada · toca para volver</string>
     <string name="frm_scene_label">escena / lugar</string>

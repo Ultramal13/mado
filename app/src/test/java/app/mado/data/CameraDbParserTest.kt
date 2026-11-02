@@ -71,8 +71,10 @@ class BundledCamerasTest {
         // Todo modo debe traer fuente y medidas plausibles (sensores de 5 a 60 mm de ancho).
         db.cameras.flatMap { it.modes }.forEach {
             org.junit.Assert.assertNotNull("${it.id} sin fuente", it.source)
-            org.junit.Assert.assertTrue("${it.id} ancho ${it.widthMm}", it.widthMm in 5.0..60.0)
-            org.junit.Assert.assertTrue("${it.id} alto ${it.heightMm}", it.heightMm in 3.0..40.0)
+            if (it.hasArea) {
+                org.junit.Assert.assertTrue("${it.id} ancho ${it.widthMm}", it.widthMm!! in 5.0..60.0)
+                org.junit.Assert.assertTrue("${it.id} alto ${it.heightMm}", it.heightMm!! in 3.0..40.0)
+            } else org.junit.Assert.assertTrue("${it.id} sin área ni aspecto", it.aspectRatio != null)
         }
         // Las tres principales del usuario están marcadas y en este orden.
         assertEquals(listOf("canon_eos_r5", "insta360_luna_ultra", "sony_fx3"), db.cameras.filter { it.priority != null }.sortedBy { it.priority }.map { it.id })
@@ -97,5 +99,42 @@ class GpsRationalTest {
     fun santiagoLatitudeAsRational() {
         // 33.43720° = 33° 26' 14.0"
         assertEquals("33/1,26/1,13920/1000", PhotoSaver.gpsRational(-33.4372))
+    }
+}
+
+
+class FirmwareModesTest {
+    private val db = CameraDbParser.parse(java.io.File("src/main/assets/camaras.json").readText())
+    private fun cam(id: String) = db.cameras.first { it.id == id }
+
+    @Test
+    fun versionsCompareBySegments() {
+        org.junit.Assert.assertTrue(FirmwareVersion.compare("7.02", "7.00") > 0)
+        org.junit.Assert.assertTrue(FirmwareVersion.compare("1.1.22", "1.1.8") > 0)
+        org.junit.Assert.assertTrue(FirmwareVersion.compare("2.04", "7.00") < 0)
+        assertEquals(0, FirmwareVersion.compare("3.0", "3.00"))
+    }
+
+    @Test
+    fun fx3DciFourKAppearsOnlyFromItsFirmware() {
+        val fx3 = cam("sony_fx3")
+        assertEquals("7.02", fx3.latestFirmware)
+        assertEquals(true, fx3.modesFor(null).any { it.id == "video_dci_4k" })
+        assertEquals(true, fx3.modesFor("7.00").any { it.id == "video_dci_4k" })
+        assertEquals(false, fx3.modesFor("1.00").any { it.id == "video_dci_4k" })
+        // El modo original sigue en el firmware de lanzamiento.
+        assertEquals(true, fx3.modesFor("1.00").any { it.id == "video_4k_ff" })
+        assertEquals("S-Log3", fx3.colorProfiles.first { it.kind == "log" }.name)
+    }
+
+    @Test
+    fun lunaUltraHasVerticalFourKAndILog() {
+        val luna = cam("insta360_luna_ultra")
+        val v = luna.modes.first { it.id == "video_4k_9_16" }
+        assertEquals(false, v.hasArea)
+        assertEquals(9.0 / 16.0, v.aspect, 1e-9)
+        assertEquals("2160x3840", v.resolution)
+        assertEquals("I-Log 10 bit", luna.colorProfiles.first { it.kind == "log" }.name)
+        luna.modes.forEach { org.junit.Assert.assertNotNull("${it.id} sin fuente", it.source) }
     }
 }

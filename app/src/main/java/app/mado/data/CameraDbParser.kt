@@ -18,7 +18,8 @@ object CameraDbParser {
 
     private fun camera(o: JSONObject): Camera {
         val all = o.optJSONArray("modos").objects()
-        val modes = all.mapNotNull(::mode)
+        val fixedLens = o.optString("tipo") == "lente_fija"
+        val modes = all.mapNotNull { mode(it, fixedLens) }
         return Camera(
             id = o.getString("id"),
             brand = o.optString("marca"),
@@ -29,14 +30,48 @@ object CameraDbParser {
             builtInLenses = o.optJSONArray("lentes_integradas").objects().mapNotNull(::builtIn),
             incompleteModes = all.size - modes.size,
             priority = if (o.has("principal_orden") && !o.isNull("principal_orden")) o.optInt("principal_orden") else null,
+            firmwareHistory = o.optJSONArray("firmware_historial").objects().mapNotNull(::firmware),
+            colorProfiles = o.optJSONArray("perfiles_color").objects().mapNotNull(::colorProfile),
         )
     }
 
-    private fun mode(o: JSONObject): RecordingMode? {
-        val w = o.optDoubleOrNull("ancho_activo_mm") ?: return null
-        val h = o.optDoubleOrNull("alto_activo_mm") ?: return null
-        if (w <= 0 || h <= 0) return null
-        return RecordingMode(o.getString("id"), o.optString("nombre", o.getString("id")), w, h, source(o.optJSONObject("fuente")), o.optBoolean("derivado", false))
+    private fun firmware(o: JSONObject): FirmwareEntry? {
+        val v = o.optStringOrNull("version") ?: return null
+        return FirmwareEntry(v, o.optStringOrNull("fecha"), o.optString("cambios"), source(o.optJSONObject("fuente")))
+    }
+
+    private fun colorProfile(o: JSONObject): ColorProfile? {
+        val id = o.optStringOrNull("id") ?: return null
+        return ColorProfile(id, o.optString("nombre", id), o.optString("tipo", "estandar"), source(o.optJSONObject("fuente")))
+    }
+
+    /** "9:16" o "2.35:1" → 0.5625 / 2.35. */
+    private fun parseAspect(s: String?): Double? {
+        val p = s?.split(':') ?: return null
+        if (p.size != 2) return null
+        val a = p[0].trim().toDoubleOrNull() ?: return null
+        val b = p[1].trim().toDoubleOrNull() ?: return null
+        return if (a > 0 && b > 0) a / b else null
+    }
+
+    /**
+     * Un modo vale si trae área del sensor (ancho y alto en mm) o, solo en cámaras de lente fija, si publica su aspecto:
+     * ahí el FOV sale de la focal equivalente y el modo solo fija la proporción. Lo demás se descarta, sin inventar medidas.
+     */
+    private fun mode(o: JSONObject, fixedLens: Boolean): RecordingMode? {
+        val w = o.optDoubleOrNull("ancho_activo_mm")?.takeIf { it > 0 }
+        val h = o.optDoubleOrNull("alto_activo_mm")?.takeIf { it > 0 }
+        val aspect = parseAspect(o.optStringOrNull("relacion_aspecto"))
+        if ((w == null || h == null) && !(fixedLens && aspect != null)) return null
+        val area = w != null && h != null
+        return RecordingMode(
+            o.getString("id"), o.optString("nombre", o.getString("id")),
+            if (area) w else null, if (area) h else null,
+            source(o.optJSONObject("fuente")), o.optBoolean("derivado", false),
+            sinceFirmware = o.optStringOrNull("desde_firmware"),
+            resolution = o.optStringOrNull("resolucion_px"),
+            aspectRatio = if (area) null else aspect,
+        )
     }
 
     private fun builtIn(o: JSONObject): BuiltInLens? {

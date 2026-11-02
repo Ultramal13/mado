@@ -10,10 +10,12 @@ object NameLocalizer {
     private val en = listOf(
         "Primes esféricos" to "Spherical primes", "Anamórfico" to "Anamorphic", "con Movie cropping = Enable" to "with Movie cropping = Enable",
         "Lente teleobjetivo" to "Telephoto lens", "Lente principal" to "Main lens", "Foto" to "Photo",
+        "Salida RAW HDMI" to "RAW HDMI output", "Modo escenario" to "Stage mode", "Cámara lenta" to "Slow motion", "Lapso de tiempo" to "Timelapse",
     )
     private val ja = listOf(
         "Primes esféricos" to "球面プライム", "Anamórfico" to "アナモルフィック", "con Movie cropping = Enable" to "Movie cropping 有効",
         "Lente teleobjetivo" to "望遠レンズ", "Lente principal" to "メインレンズ", "Foto" to "写真", "Video" to "動画",
+        "Salida RAW HDMI" to "HDMI RAW出力", "Modo escenario" to "ステージモード", "Cámara lenta" to "スローモーション", "Lapso de tiempo" to "タイムラプス",
     )
     private val exactEn = mapOf("principal" to "main", "tele" to "tele")
     private val exactJa = mapOf("principal" to "メイン", "tele" to "望遠")

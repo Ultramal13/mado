@@ -1,0 +1,54 @@
+{
+ "dispositivo": "Samsung Galaxy S26 Ultra (SM-S948B)",
+ "fecha": "2026-11-02",
+ "metodo": "adb shell dumpsys media.camera (solo lectura, no abre la cámara): android.lens.intrinsicCalibration y android.sensor.info.activeArraySize de cada cámara física.",
+ "formula": "FOV horizontal = 2 * atan(ancho_activo_px / (2 * fx))",
+ "lentes": [
+  {
+   "camera2_id": "2",
+   "focal_mm": 2.2,
+   "activo_px": [
+    4080,
+    3060
+   ],
+   "fx": 1627.8,
+   "fov_h_intrinseco_deg": 102.8,
+   "fov_h_reportado_deg": 104.8
+  },
+  {
+   "camera2_id": "5",
+   "focal_mm": 6.5,
+   "activo_px": [
+    4080,
+    3060
+   ],
+   "fx": 2796.5,
+   "fov_h_intrinseco_deg": 72.2,
+   "fov_h_reportado_deg": 74.0,
+   "fov_h_medido_cinta_deg": 71.8
+  },
+  {
+   "camera2_id": "6",
+   "focal_mm": 7.0,
+   "activo_px": [
+    3648,
+    2736
+   ],
+   "fx": 7065.5,
+   "fov_h_intrinseco_deg": 29.0,
+   "fov_h_reportado_deg": 29.2
+  },
+  {
+   "camera2_id": "7",
+   "focal_mm": 18.6,
+   "activo_px": [
+    4080,
+    3060
+   ],
+   "fx": 13689.7,
+   "fov_h_intrinseco_deg": 17.0,
+   "fov_h_reportado_deg": 17.5
+  }
+ ],
+ "nota": "Solo la lente 5 tiene medición con cinta (71.8°): el valor intrínseco (72.2°) difiere 0.4°. Las demás lentes están sin verificar con cinta. Falta confirmar la correspondencia entre ids HAL y ids de Camera2 y si el valor aplica con la corrección de distorsión del preview."
+}
