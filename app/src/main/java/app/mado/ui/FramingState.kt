@@ -29,8 +29,7 @@ class FramingState(val db: CameraDb) {
 
     var cameraIdx by mutableIntStateOf(if (principalCount > 0) 0 else cameras.size)      // arranca en la primera principal
     var modeIdx by mutableIntStateOf(0)
-    /** Firmware instalado por cámara (id → versión) y perfil de color elegido por cámara (id → id del perfil). Sin entrada = el más nuevo / ninguno. */
-    var firmwareByCamera by mutableStateOf(mapOf<String, String>())
+    /** Perfil de color elegido por cámara (id de cámara → id del perfil). Sin entrada = ninguno. */
     var colorByCamera by mutableStateOf(mapOf<String, String>())
     var lensSetIdx by mutableIntStateOf(0)
     var focal by mutableStateOf("50")
@@ -59,7 +58,6 @@ class FramingState(val db: CameraDb) {
     fun snapshot(): String = org.json.JSONObject().apply {
         put("camera", if (isCustom) "custom" else camera?.id)
         put("mode", modes.getOrNull(modeIdx)?.id)
-        put("firmware", org.json.JSONObject(firmwareByCamera))
         put("color", org.json.JSONObject(colorByCamera))
         put("lensSet", lensSet?.id)
         put("focal", focal)
@@ -79,7 +77,6 @@ class FramingState(val db: CameraDb) {
             val cam = o.optString("camera")
             if (cam == "custom") cameraIdx = cameras.size
             else cameras.indexOfFirst { it.id == cam }.takeIf { it >= 0 }?.let { cameraIdx = it }
-            o.optJSONObject("firmware")?.let { f -> firmwareByCamera = f.keys().asSequence().associateWith { f.optString(it) }.filterValues { it.isNotBlank() } }
             o.optJSONObject("color")?.let { c -> colorByCamera = c.keys().asSequence().associateWith { c.optString(it) }.filterValues { it.isNotBlank() } }
             if (!isCustom) {
                 modes.indexOfFirst { it.id == o.optString("mode") }.takeIf { it >= 0 }?.let { modeIdx = it }
@@ -101,25 +98,14 @@ class FramingState(val db: CameraDb) {
     val camera: Camera? get() = cameras.getOrNull(cameraIdx)
     val lensSet get() = db.lensSets.getOrNull(lensSetIdx)
     val squeeze get() = lensSet?.squeeze ?: 1.0
-    /** Versión de firmware elegida para la cámara actual; null = la más nueva que conocemos (o sin historial). */
-    val firmware: String? get() = camera?.let { cam -> firmwareByCamera[cam.id]?.takeIf { it != cam.latestFirmware && cam.firmwareHistory.any { e -> e.version == it } } }
-
-    /** Modos de la cámara actual que existen en ese firmware. */
-    val modes: List<app.mado.data.RecordingMode> get() = camera?.modesFor(firmware).orEmpty()
-
-    /** Cambia el firmware de la cámara actual sin perder el modo elegido, si existe en esa versión. */
-    fun selectFirmware(version: String) {
-        val cam = camera ?: return
-        val keep = modes.getOrNull(modeIdx)?.id
-        firmwareByCamera = if (version == cam.latestFirmware) firmwareByCamera - cam.id else firmwareByCamera + (cam.id to version)
-        modeIdx = modes.indexOfFirst { it.id == keep }.coerceAtLeast(0)
-    }
+    /** Modos de la cámara actual. El catálogo siempre refleja el firmware más nuevo que conocemos (`Camera.latestFirmware`). */
+    val modes: List<app.mado.data.RecordingMode> get() = camera?.modes.orEmpty()
 
     /** Perfil de color (log, estándar…) elegido para la cámara actual, o null. */
     val colorProfile: app.mado.data.ColorProfile? get() = camera?.let { cam -> colorProfiles.firstOrNull { it.id == colorByCamera[cam.id] } }
 
-    /** Perfiles de color de la cámara actual que existen en el firmware elegido. */
-    val colorProfiles: List<app.mado.data.ColorProfile> get() = camera?.colorProfilesFor(firmware).orEmpty()
+    /** Perfiles de color (log, estándar, HDR) de la cámara actual. */
+    val colorProfiles: List<app.mado.data.ColorProfile> get() = camera?.colorProfiles.orEmpty()
 
     fun selectColor(id: String?) {
         val cam = camera ?: return

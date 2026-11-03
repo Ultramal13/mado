@@ -40,6 +40,7 @@ import app.mado.ui.Header
 import app.mado.ui.LocalPalette
 import app.mado.ui.NocheRoja
 import app.mado.ui.Oscuro
+import app.mado.ui.ProjectsScreen
 
 private val THEMES = listOf("auto", "light", "dark", "red")
 
@@ -80,10 +81,13 @@ class MainActivity : ComponentActivity() {
             }
             val results = remember { FovResults(applicationContext) }
             val appVersion = remember { runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull().orEmpty() }
+            val store = remember { app.mado.data.ProjectStore(filesDir.resolve("projects.json")) }
+            var book by remember { mutableStateOf(store.load()) }
+            val onBook: (app.mado.data.ProjectBook) -> Unit = { book = it; store.save(it) }
             val framing = remember { FramingState(CameraRepository.load(applicationContext)).also { it.restore(prefs.getString("framing", null)) } }
             androidx.activity.compose.BackHandler(enabled = screen != 0) { screen = 0 }
 
-            val title = stringResource(when (screen) { 0 -> R.string.screen_viewer; 1 -> R.string.screen_calibration; else -> R.string.mode_diagnostics })
+            val title = stringResource(when (screen) { 0 -> R.string.screen_viewer; 1 -> R.string.screen_calibration; 3 -> R.string.screen_projects; else -> R.string.mode_diagnostics })
             // Orientación según el tamaño real de la ventana: la configuración que reporta Android puede quedar desfasada tras girar
             // (en algunos teléfonos, p. ej. el Xperia, el diseño se quedaba en vertical con el teléfono en horizontal).
             val win = androidx.compose.ui.platform.LocalWindowInfo.current.containerSize
@@ -105,6 +109,7 @@ class MainActivity : ComponentActivity() {
                     if (menuOpen) {
                         val items = buildList<Pair<String, () -> Unit>> {
                             if (screen != 0) add(stringResource(R.string.screen_viewer) to { screen = 0 })
+                            if (screen != 3) add(stringResource(R.string.menu_projects) to { screen = 3 })
                             if (screen != 1) add(stringResource(R.string.menu_calibration) to { screen = 1 })
                             if (screen != 2) add(stringResource(R.string.menu_diagnostics) to { screen = 2 })
                             add(stringResource(R.string.lang_title) to { langDialog = true })
@@ -129,7 +134,8 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     when (screen) {
-                        0 -> FovScreen(report, results, onShare = ::share, framing = framing, onMenu = { menuOpen = true })
+                        0 -> FovScreen(report, results, onShare = ::share, framing = framing, onMenu = { menuOpen = true }, book = book, onBook = onBook, onProjects = { screen = 3 })
+                        3 -> ProjectsScreen(book, remember(screen) { app.mado.data.ShotLog.read(applicationContext) }, onBook)
                         1 -> FovScreen(report, results, onShare = ::share, header = if (chromeInPanel) chrome else null)
                         else -> DiagnosticsScreen(report, onCopy = { copy(report.toJson()) }, onShare = { shareDiagnostics(report.toJson()) }, onSave = { saveDiagnostics(report.toJson()) })
                     }

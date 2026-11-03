@@ -250,25 +250,19 @@ private fun ModeChooser(framing: FramingState) {
     }
 }
 
-/** Versión de firmware instalada (solo si el catálogo documenta su historial): filtra los modos que esa versión ya tenía. */
+/**
+ * Con qué firmware está al día la información de la cámara (si el catálogo documenta su historial) y, si el modo o el perfil
+ * elegido llegó con una actualización, qué versión mínima exige. No hay selector: el catálogo siempre sigue al firmware más nuevo.
+ */
 @Composable
-private fun FirmwareChooser(framing: FramingState) {
+private fun FirmwareNote(framing: FramingState) {
     val cam = framing.camera ?: return
-    if (cam.firmwareHistory.size < 2) return
+    val latest = cam.latestFirmware ?: return
     val p = LocalPalette.current
-    val versions = cam.firmwareHistory.map { it.version }.sortedWith { a, b -> app.mado.data.FirmwareVersion.compare(b, a) }
-    val current = framing.firmware ?: cam.latestFirmware
-    Label(stringResource(R.string.frm_firmware))
-    if (versions.size <= 5) Seg(versions, versions.indexOf(current).coerceAtLeast(0)) { framing.selectFirmware(versions[it]) }
-    else {
-        var open by remember { mutableStateOf(false) }
-        Seg(listOf("$current  ▾"), 0) { open = true }
-        if (open) PickerDialog(
-            title = stringResource(R.string.frm_firmware), items = versions, selected = versions.indexOf(current).coerceAtLeast(0),
-            onPick = { framing.selectFirmware(versions[it]) }, onDismiss = { open = false },
-        )
-    }
-    if (framing.firmware != null) Text(stringResource(R.string.frm_firmware_old), style = mono(10, p.accent))
+    Text(stringResource(R.string.frm_firmware_current, latest), style = mono(10, p.text.copy(alpha = 0.7f)))
+    val needs = listOfNotNull(framing.modes.getOrNull(framing.modeIdx)?.sinceFirmware, framing.colorProfile?.sinceFirmware)
+        .maxWithOrNull { x, y -> app.mado.data.FirmwareVersion.compare(x, y) }
+    if (needs != null) Text(stringResource(R.string.frm_requires_firmware, needs), style = mono(10, p.accent))
 }
 
 /** Perfil de color o log que se grabará (p. ej. S-Log3, I-Log); aparece en la barra de la foto. */
@@ -330,10 +324,15 @@ internal fun FramingControls(
     onFast: (Boolean) -> Unit = {},
     sceneDot: Boolean = true,
     onSceneDot: (Boolean) -> Unit = {},
+    book: app.mado.data.ProjectBook = app.mado.data.ProjectBook(),
+    shots: List<app.mado.data.ShotEntry> = emptyList(),
+    onBook: (app.mado.data.ProjectBook) -> Unit = {},
+    onManage: () -> Unit = {},
 ) {
     val p = LocalPalette.current
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        // Escena y número de plano: van en una etiqueta de color sobre cada foto (como en una Location List).
+        ProjectPicker(book, shots, framing, onBook, onManage)
+        // Escena y número de plano: van en una etiqueta sobre cada foto (como en una Location List).
         Label(stringResource(R.string.frm_scene_label))
         TextInput(framing.scene, stringResource(R.string.frm_scene_hint)) { framing.scene = it; framing.shotNo = 1 }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -379,16 +378,16 @@ internal fun FramingControls(
         } else if (framing.isFixedLens) {
             Label(stringResource(R.string.frm_lenses))
             Seg(cam!!.builtInLenses.map { "${it.name.substringBefore(" (").loc()} · ${fmt(it.equivalentFocalMm, 0)}mm" }, framing.builtInIdx) { framing.builtInIdx = it }
-            FirmwareChooser(framing)
             if (cam.modes.isEmpty()) {
                 Label(stringResource(R.string.frm_aspect))
                 Seg(framing.fixedAspects.map { it.second }, framing.fixedAspectIdx) { framing.fixedAspectIdx = it }
             } else ModeChooser(framing)
             ColorChooser(framing)
+            FirmwareNote(framing)
         } else if (cam != null) {
-            FirmwareChooser(framing)
             ModeChooser(framing)
             ColorChooser(framing)
+            FirmwareNote(framing)
         }
 
         Label(stringResource(R.string.frm_delivery))
@@ -503,13 +502,13 @@ internal fun evText(index: Int, step: Double): String =
 
 /** Campo de texto de una línea (acepta cualquier idioma) con una sugerencia cuando está vacío. */
 @Composable
-internal fun TextInput(value: String, hint: String, onChange: (String) -> Unit) {
+internal fun TextInput(value: String, hint: String, maxLen: Int = 40, singleLine: Boolean = true, onChange: (String) -> Unit) {
     val p = LocalPalette.current
     Box(Modifier.fillMaxWidth().clip(androidx.compose.foundation.shape.RoundedCornerShape(7.dp)).background(p.keyBg).padding(10.dp)) {
         if (value.isEmpty()) Text(hint, style = mono(14, p.keyText.copy(alpha = 0.4f)))
         androidx.compose.foundation.text.BasicTextField(
-            value, { onChange(it.take(40)) }, textStyle = mono(15, p.keyText, true),
-            cursorBrush = androidx.compose.ui.graphics.SolidColor(p.accent), singleLine = true, modifier = Modifier.fillMaxWidth(),
+            value, { onChange(it.take(maxLen)) }, textStyle = mono(15, p.keyText, true),
+            cursorBrush = androidx.compose.ui.graphics.SolidColor(p.accent), singleLine = singleLine, modifier = Modifier.fillMaxWidth(),
         )
     }
 }

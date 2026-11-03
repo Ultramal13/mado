@@ -140,8 +140,12 @@ fun FovScreen(
     framing: FramingState? = null,
     /** Abre el menú ☰ (solo el visor: ahí el encabezado no existe, la imagen ocupa toda la pantalla). */
     onMenu: () -> Unit = {},
+    book: app.mado.data.ProjectBook = app.mado.data.ProjectBook(),
+    onBook: (app.mado.data.ProjectBook) -> Unit = {},
+    onProjects: () -> Unit = {},
 ) {
     val ctx = LocalContext.current
+    var shots by remember { mutableStateOf(app.mado.data.ShotLog.read(ctx)) }
     val owner = LocalLifecycleOwner.current
     val p = LocalPalette.current
     val lenses = remember(report) { backLenses(report) }
@@ -398,6 +402,8 @@ fun FovScreen(
                 .put("padding", frame?.padding))
             pose?.let { put("orientation", JSONObject().put("heading_deg_magnetic", it.headingDeg).put("elevation_deg", it.elevationDeg).put("level_deg", it.levelDeg)) }
         }
+        book.project?.let { meta.put("project", JSONObject().put("id", it.id).put("name", it.name)) }
+        book.place?.let { meta.put("place", JSONObject().put("id", it.id).put("name", it.name).put("address", it.address).put("notes", it.notes)) }
         val guidesNow = framing.guides                              // las guías elegidas van también en las fotos
         meta.put("guides", org.json.JSONArray(guidesNow.map { it.name }))
         val annotFrames = frameDraws.map { app.mado.data.AnnotFrame(it.label, it.frame, it.current, it.detail) }
@@ -456,6 +462,7 @@ fun FovScreen(
                                 marco
                             }
                             if (sceneNow.isNotEmpty()) framing.shotNo = (shotNow + 1).coerceAtMost(999)   // siguiente plano de la escena
+                            shots = app.mado.data.ShotLog.read(ctx)
                             ShotUi.Saved(saved.name, if (movedDeg >= 3) movedDeg else 0)
                         } catch (e: Exception) { ShotUi.Error(e.message ?: "save failed") }
                     }
@@ -479,6 +486,7 @@ fun FovScreen(
             onToggle = onToggle, shot = shot, onShot = takeShot,
             orientation = orientationText(tracker.pose), gpsOn = gpsOn, onGps = onGps, gpsDenied = gpsDenied,
             ev = ev, evInfo = evInfo, onEv = { ev = it },
+            book = book, shots = shots, onBook = onBook, onManage = onProjects,
             sceneDot = sceneDot, onSceneDot = { sceneDot = it; ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).edit().putBoolean("scene_dot", it).apply() },
             fastOn = fastOn, onFast = { fastOn = it; ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).edit().putBoolean("fast_capture", it).apply() },
         ) else Controls(
