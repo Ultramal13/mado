@@ -296,8 +296,16 @@ private fun OperatorFields(framing: FramingState) {
             TextInput(framing.opWb, "5600", maxLen = 8) { framing.opWb = it.filter { ch -> ch.isDigit() } }
         }
     }
+    val profiles = framing.camera?.pictureProfiles.orEmpty()
+    if (profiles.isNotEmpty()) {
+        Label(stringResource(R.string.frm_pp))
+        val names = listOf(stringResource(R.string.frm_color_none)) + profiles
+        Seg(names, profiles.indexOf(framing.opPP).let { if (it < 0) 0 else it + 1 }) { framing.opPP = if (it == 0) "" else profiles[it - 1] }
+    }
     Label(stringResource(R.string.frm_op_note))
     TextInput(framing.opNote, stringResource(R.string.frm_op_note_hint), maxLen = 60) { framing.opNote = it }
+    Label(stringResource(R.string.frm_op_external))
+    TextInput(framing.opExternal, stringResource(R.string.frm_op_external_hint), maxLen = 60) { framing.opExternal = it }
 }
 
 /** Perfil de color o log que se grabará (p. ej. S-Log3, I-Log); aparece en la barra de la foto. */

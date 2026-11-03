@@ -158,4 +158,12 @@ class FirmwareModesTest {
         assertEquals(false, cam("canon_eos_r5").modes.first { it.id == "video_4k_dci_crop" }.fps.contains("119.88"))
         assertEquals(true, cam("sony_fx3").modes.first { it.id == "foto_ff_3_2_L" }.fps.isEmpty())
     }
+
+    @Test
+    fun fx3ListsItsPictureProfilesFromSonysSheet() {
+        val pp = cam("sony_fx3").pictureProfiles
+        assertEquals(true, pp.containsAll(listOf("PP1", "PP6", "PP10", "PP11")))
+        assertEquals(false, pp.contains("PP7"))      // la ficha de Sony lista PP1-PP6 y PP10-PP11
+        assertEquals(true, cam("canon_eos_r5").pictureProfiles.isEmpty())
+    }
 }

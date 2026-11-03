@@ -62,6 +62,8 @@ data class Camera(
     /** Historial de firmware (los fabricantes agregan formatos después del lanzamiento); vacío = sin documentar. */
     val firmwareHistory: List<FirmwareEntry> = emptyList(),
     val colorProfiles: List<ColorProfile> = emptyList(),
+    /** Picture Profiles de la cámara (Sony PP1…); vacío si la marca no los usa. El contenido de cada PP lo define quien configura la cámara. */
+    val pictureProfiles: List<String> = emptyList(),
 ) {
     val displayName: String get() = "$brand $model"
 

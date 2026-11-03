@@ -51,6 +51,15 @@ class FramingState(val db: CameraDb) {
     var opIso by mutableStateOf("")
     var opWb by mutableStateOf("")
     var opNote by mutableStateOf("")
+    /** Picture Profile elegido (p. ej. «PP10»; solo si la cámara los tiene) y grabación externa por HDMI (grabador y formato, p. ej. «Ninja · ProRes RAW»). */
+    var opPP by mutableStateOf("")
+    var opExternal by mutableStateOf("")
+    /** Línea de notas para el operador: PP, nota libre y grabación externa, con lo que haya. */
+    fun operatorNotes(): String = listOfNotNull(
+        opPP.trim().takeIf { it.isNotEmpty() && camera?.pictureProfiles?.contains(it) != false },
+        opNote.trim().takeIf { it.isNotEmpty() },
+        opExternal.trim().takeIf { it.isNotEmpty() }?.let { "EXT $it" },
+    ).joinToString(" · ")
     fun shutterText(): String = opShutter ?: app.mado.optics.Shutter.suggest180(opFps.toDoubleOrNull())
     /** «29.97p · 1/60 · ISO 800 · 5600K» con lo que haya; vacío si no hay nada. */
     fun operatorLine(): String = listOfNotNull(
@@ -84,6 +93,7 @@ class FramingState(val db: CameraDb) {
         put("delivery", deliveryIdx)
         put("scene", scene); put("shotNo", shotNo)
         put("opFps", opFps); put("opShutter", opShutter ?: org.json.JSONObject.NULL); put("opIso", opIso); put("opWb", opWb); put("opNote", opNote)
+        put("opPP", opPP); put("opExternal", opExternal)
     }.toString()
 
     /** Vuelve a la selección guardada por [snapshot]; lo que ya no exista en el catálogo se ignora y queda el valor por omisión. */
@@ -111,6 +121,7 @@ class FramingState(val db: CameraDb) {
             opFps = o.optString("opFps", "").take(8); opIso = o.optString("opIso", "").take(8); opWb = o.optString("opWb", "").take(8)
             opShutter = if (o.isNull("opShutter") || !o.has("opShutter")) null else o.optString("opShutter").take(10)
             opNote = o.optString("opNote", "").take(60)
+            opPP = o.optString("opPP", "").take(10); opExternal = o.optString("opExternal", "").take(60)
         } catch (_: Exception) { /* guardado dañado: se parte desde cero */ }
     }
 

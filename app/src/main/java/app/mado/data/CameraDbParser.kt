@@ -32,6 +32,7 @@ object CameraDbParser {
             priority = if (o.has("principal_orden") && !o.isNull("principal_orden")) o.optInt("principal_orden") else null,
             firmwareHistory = o.optJSONArray("firmware_historial").objects().mapNotNull(::firmware),
             colorProfiles = o.optJSONArray("perfiles_color").objects().mapNotNull(::colorProfile),
+            pictureProfiles = o.optJSONArray("perfiles_imagen")?.let { a -> (0 until a.length()).map { a.getString(it) } }.orEmpty(),
         )
     }
 

@@ -427,10 +427,11 @@ fun FovScreen(
         val sceneTagText = sceneNow.takeIf { it.isNotEmpty() }?.let { "$it · $shotWordText $shotNow" }
         meta.put("scene", sceneNow); meta.put("shot_no", shotNow); meta.put("delivery_aspect", deliveryLabel)
         // Datos para el operador: van en la barra y en los metadatos. Los ángulos solo si se pidieron (la focal ya dice casi lo mismo).
-        val operatorText = framing.operatorLine(); val opNote = framing.opNote.trim()
+        val operatorText = framing.operatorLine(); val opNote = framing.operatorNotes()
         if (operatorText.isNotEmpty() || opNote.isNotEmpty()) meta.put("operator", JSONObject()
+            .put("picture_profile", framing.opPP.ifEmpty { null }).put("external_recording", framing.opExternal.trim().ifEmpty { null })
             .put("fps", framing.opFps.toDoubleOrNull()).put("shutter", framing.shutterText().ifEmpty { null }).put("iso", framing.opIso.toIntOrNull())
-            .put("white_balance_k", framing.opWb.toIntOrNull()).put("note", opNote.ifEmpty { null }))
+            .put("white_balance_k", framing.opWb.toIntOrNull()).put("note", framing.opNote.trim().ifEmpty { null }))
         val camText = framing.cameraName(); val modeText = listOf(framing.modeName(), aspectText).filter { it.isNotEmpty() }.joinToString("  ·  "); val lensSetText = framing.subLabel(); val bigText = framing.bigLabel()
         val phoneLine = opNote.ifEmpty { String.format(Locale.ROOT, "%s %s · %.1f° · %s", phoneLensShort, lens.id, phoneDeg, if (profileDeg != null) verifiedText else unverifiedText) }
         // Con los ángulos apagados (por omisión) la segunda línea de la derecha es del operador; encendidos, pasan a esa línea y el operador sube a la primera.

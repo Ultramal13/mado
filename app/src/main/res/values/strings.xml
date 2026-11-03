@@ -171,6 +171,9 @@
     <string name="frm_iso">ISO</string>
     <string name="frm_wb">white balance (K)</string>
     <string name="frm_op_note">note for the operator</string>
-    <string name="frm_op_note_hint">e.g. PP7 S-Log3, LUT, ND 0.9</string>
+    <string name="frm_op_note_hint">e.g. LUT, ND 0.9</string>
     <string name="frm_show_angles">show FOV angles in the photo bar</string>
+    <string name="frm_pp">picture profile (PP)</string>
+    <string name="frm_op_external">external recording (HDMI)</string>
+    <string name="frm_op_external_hint">e.g. Ninja · ProRes RAW</string>
 </resources>

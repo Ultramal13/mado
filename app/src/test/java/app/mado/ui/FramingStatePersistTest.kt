@@ -90,4 +90,17 @@ class FramingStatePersistTest {
         assertEquals(null, c.opShutter); assertEquals("1/60", c.shutterText())
         assertEquals("", FramingState(db).operatorLine())
     }
+
+    @Test
+    fun pictureProfileAndExternalRecordingAreRememberedAndFormNotes() {
+        val a = FramingState(db)
+        a.cameraIdx = a.cameras.indexOfFirst { it.id == "sony_fx3" }
+        a.opPP = "PP10"; a.opNote = "LUT x"; a.opExternal = "Ninja · ProRes RAW"
+        assertEquals("PP10 · LUT x · EXT Ninja · ProRes RAW", a.operatorNotes())
+        val b = FramingState(db); b.restore(a.snapshot())
+        assertEquals("PP10", b.opPP); assertEquals("Ninja · ProRes RAW", b.opExternal)
+        // Un PP de otra cámara no se muestra si esta no lo tiene (la R5 no usa Picture Profiles).
+        b.cameraIdx = b.cameras.indexOfFirst { it.id == "canon_eos_r5" }
+        assertEquals("LUT x · EXT Ninja · ProRes RAW", b.operatorNotes())
+    }
 }

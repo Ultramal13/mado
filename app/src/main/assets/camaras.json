@@ -344,6 +344,8 @@
      }
     }
    ],
+   "perfiles_imagen": ["PP1", "PP2", "PP3", "PP4", "PP5", "PP6", "PP10", "PP11"],
+   "perfiles_imagen_fuente": {"texto": "Sony ES, especificaciones ILME-FX3 (pagina oficial; texto pegado por el usuario el 2026-11-02): curva gamma 'Desactivado/PP1-PP6, PP10-PP11'. El contenido de cada PP lo configura el usuario; Edo (location scout, Japon) pidio una lista y una nota libre.", "url": "https://www.sony.es/electronics/support/camcorders-and-video-cameras-interchangeable-lens-camcorders/ilme-fx3/specifications"},
    "notas": "Guia usada: ILME-FX3 (helpguide ilc/2035), no FX3A ni FX30. La Help Guide v1 solo listaba 4K como 3840x2160 (UHD); la pagina oficial actual de Sony agrega XAVC S-I DCI 4K (4096x2160), añadido por firmware: ver firmware_historial. Sony no publica mm por modo de video; todo derivado. Modos de video con estabilizacion (Active/Dynamic) o 'Cinematic' pueden recortar mas: no cuantificado en la fuente.",
    "principal_orden": 3
   },
