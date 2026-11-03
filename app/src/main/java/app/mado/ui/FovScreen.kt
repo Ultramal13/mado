@@ -259,7 +259,11 @@ fun FovScreen(
         framing?.db?.phoneProfiles?.firstOrNull { it.buildModel == Build.MODEL }
             ?.lenses?.firstOrNull { it.camera2Id == lens.id }?.measuredHFovDeg
     }
-    val phoneDeg = profileDeg ?: theory
+    // Sin perfil medido: calibración interna del teléfono (si es plausible) y, si no, el teórico. Ambos sin verificar con cinta.
+    val intrinsicDeg = remember(lens, size) {
+        lens.intrinsicFovDeg(size.width.toDouble() / size.height)?.takeIf { kotlin.math.abs(it / theory - 1.0) < 0.2 }
+    }
+    val phoneDeg = profileDeg ?: intrinsicDeg ?: theory
     val target = framing?.target()
     // En fracciones del ancho y del alto de la pantalla; horizontal en el mundo también con el teléfono en vertical.
     val frame = target?.let { Framing.toScreen(Framing.frame(it, Math.toRadians(phoneDeg), size.width.toDouble() / size.height), size.width.toDouble() / size.height, portrait = !landscape) }
@@ -395,6 +399,7 @@ fun FovScreen(
             put("device", "${Build.MANUFACTURER} ${Build.MODEL}")
             evInfo?.let { (_, st) -> put("exposure_compensation_ev", ev * st) }
             put("phone_lens", JSONObject().put("camera2_id", lens.id).put("hfov_deg_used", phoneDeg).put("hfov_deg_theory", theory)
+                .put("hfov_deg_internal", intrinsicDeg).put("hfov_source", if (profileDeg != null) "measured" else if (intrinsicDeg != null) "internal" else "theory")
                 .put("calibrated", profileDeg != null).put("distortion_correction", if (distortionOff) "off" else "default"))
             put("target", JSONObject().put("label", framing.label()).put("kit_focals", org.json.JSONArray(frameDraws.map { it.label })).put("hfov_deg", target?.let { Math.toDegrees(it.hFovRad) })
                 .put("aspect", target?.aspect).put("focal_mm", framing.focal.toDoubleOrNull()).put("squeeze", framing.squeeze)
@@ -492,7 +497,7 @@ fun FovScreen(
         ) else Controls(
             report = report, lenses = lenses, lensIdx = lensIdx, onLens = { lensIdx = it },
             distortionOff = distortionOff, onDistortion = { distortionOff = it },
-            lens = lens, size = size, theory = theory, distCm = distCm, onDist = { distCm = it },
+            lens = lens, size = size, theory = theory, intrinsic = intrinsicDeg, distCm = distCm, onDist = { distCm = it },
             running = running, hasPermission = hasPermission,
             reason = reason, error = error, guard = guard,
             onToggle = onToggle,
@@ -815,6 +820,7 @@ private fun Controls(
     lens: CameraInfo,
     size: android.util.Size,
     theory: Double,
+    intrinsic: Double?,
     distCm: String,
     onDist: (String) -> Unit,
     running: Boolean,
@@ -838,6 +844,7 @@ private fun Controls(
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         BlackScreen {
             Text(stringResource(R.string.cal_intro), style = mono(10, p.screenDim), modifier = Modifier.padding(bottom = 6.dp))
+            intrinsic?.let { Text(stringResource(R.string.cal_internal, fmt(it, 1), fmt(theory, 1)), style = mono(10, p.screenText), modifier = Modifier.padding(bottom = 6.dp)) }
             Row {
                 val (status, accent) = when {
                     error != null -> stringResource(R.string.fov_state_error) to true
@@ -942,6 +949,7 @@ private fun Controls(
                     put("distance_cm", d)
                     put("measured_hfov_deg", measured)
                     put("theory_hfov_deg", theory)
+                    put("internal_hfov_deg", intrinsic)
                     put("error_pct", errPct)
                     put("thermal", ThermalGuard.name(guard.status))
                 })

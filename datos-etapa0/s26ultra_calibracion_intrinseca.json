@@ -50,5 +50,5 @@
    "fov_h_reportado_deg": 17.5
   }
  ],
- "nota": "Solo la lente 5 tiene medición con cinta (71.8°): el valor intrínseco (72.2°) difiere 0.4°. Las demás lentes están sin verificar con cinta. Falta confirmar la correspondencia entre ids HAL y ids de Camera2 y si el valor aplica con la corrección de distorsión del preview."
+ "nota": "Los valores salen de la propia app (diagnostico, camaras 2, 5, 6 y 7 de Camera2), por lo que la correspondencia de ids queda confirmada. Solo la lente 5 tiene medicion con cinta (71.8°): el valor intrinseco (72.2°) difiere 0.4°. Las demas lentes estan sin verificar con cinta; la pantalla de calibracion de la 0.2.24 muestra este valor junto a lo que mides."
 }

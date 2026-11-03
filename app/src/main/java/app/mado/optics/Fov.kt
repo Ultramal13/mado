@@ -30,6 +30,16 @@ object Fov {
     fun croppedWidthMm(activeW: Double, activeH: Double, streamAspect: Double): Double =
         minOf(activeW, activeH * streamAspect)
 
+    /**
+     * FOV horizontal (grados) según la calibración interna del teléfono (`LENS_INTRINSIC_CALIBRATION`: fx en píxeles del área
+     * activa sin corregir). Un stream más angosto que el sensor recorta el ancho; null si los datos no son usables.
+     */
+    fun intrinsicFovDeg(arrayW: Int, arrayH: Int, fx: Double, streamAspect: Double): Double? {
+        if (arrayW <= 0 || arrayH <= 0 || fx <= 0.0 || streamAspect <= 0.0) return null
+        val width = minOf(arrayW.toDouble(), arrayH * streamAspect)
+        return Math.toDegrees(2.0 * atan(width / (2.0 * fx))).takeIf { it in 5.0..170.0 }
+    }
+
     /** FOV horizontal real (rad) a partir de un ancho visible W medido a distancia d (mismas unidades). */
     fun measuredFovDeg(visibleWidth: Double, distance: Double): Double =
         Math.toDegrees(2.0 * atan(visibleWidth / (2.0 * distance)))

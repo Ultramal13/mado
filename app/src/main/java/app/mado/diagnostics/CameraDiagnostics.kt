@@ -30,7 +30,17 @@ data class CameraInfo(
     val maxDigitalZoom: Float?,
     val hardwareLevel: String,
     val error: String? = null,
-)
+    /** `LENS_INTRINSIC_CALIBRATION` [fx, fy, cx, cy, s] y el tamaño del área activa sin corregir a la que se refiere (si el teléfono lo entrega). */
+    val intrinsic: List<Float>? = null,
+    val intrinsicArray: Pair<Int, Int>? = null,
+) {
+    /** FOV horizontal según la calibración interna para un stream de esa proporción (ancho/alto); null si no hay datos usables. */
+    fun intrinsicFovDeg(streamAspect: Double): Double? {
+        val a = intrinsicArray ?: return null
+        val fx = intrinsic?.firstOrNull()?.toDouble() ?: return null
+        return Fov.intrinsicFovDeg(a.first, a.second, fx, streamAspect)
+    }
+}
 
 data class DiagnosticsReport(
     val device: Map<String, String>,
@@ -63,6 +73,9 @@ private fun CameraInfo.toJson() = JSONObject().apply {
     put("max_digital_zoom", maxDigitalZoom?.toDouble() ?: JSONObject.NULL)
     put("hardware_level", hardwareLevel)
     put("error", error ?: JSONObject.NULL)
+    put("intrinsic_calibration", intrinsic?.let { JSONArray(it.map { v -> v.toDouble() }) } ?: JSONObject.NULL)
+    put("intrinsic_array", intrinsicArray?.let { JSONArray(listOf(it.first, it.second)) } ?: JSONObject.NULL)
+    put("intrinsic_hfov_deg", intrinsicArray?.let { a -> intrinsic?.firstOrNull()?.let { Fov.intrinsicFovDeg(a.first, a.second, it.toDouble(), a.first.toDouble() / a.second) } } ?: JSONObject.NULL)
 }
 
 object CameraDiagnostics {
@@ -111,6 +124,9 @@ object CameraDiagnostics {
         val phys = c.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE)
         val pixel = c.get(CameraCharacteristics.SENSOR_INFO_PIXEL_ARRAY_SIZE)
         val active = c.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE)
+        // La calibración interna se expresa en píxeles del área activa sin corregir (pre-correction), que suele coincidir con la activa.
+        val intrinsic = c.get(CameraCharacteristics.LENS_INTRINSIC_CALIBRATION)?.takeIf { it.size >= 4 }?.toList()
+        val preCorr = c.get(CameraCharacteristics.SENSOR_INFO_PRE_CORRECTION_ACTIVE_ARRAY_SIZE) ?: active
 
         val activeMm = if (phys != null && pixel != null && active != null) {
             Pair(
@@ -145,6 +161,8 @@ object CameraDiagnostics {
             minFocusDiopters = c.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE),
             zoomRatioRange = zoom,
             maxDigitalZoom = c.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM),
+            intrinsic = intrinsic,
+            intrinsicArray = if (intrinsic != null) preCorr?.let { Pair(it.width(), it.height()) } else null,
             hardwareLevel = when (c.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL)) {
                 CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY -> "LEGACY"
                 CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED -> "LIMITED"

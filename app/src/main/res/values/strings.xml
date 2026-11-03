@@ -163,4 +163,5 @@
     <string name="frm_place">location</string>
     <string name="frm_manage">manage</string>
     <string name="frm_scene_pick">scenes already used here</string>
+    <string name="cal_internal">the phone\'s internal calibration: %1$s° (reported by the lens data: %2$s°). Compare it with your tape reading.</string>
 </resources>

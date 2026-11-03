@@ -163,4 +163,5 @@
     <string name="frm_place">locación</string>
     <string name="frm_manage">gestionar</string>
     <string name="frm_scene_pick">escenas ya usadas aquí</string>
+    <string name="cal_internal">calibración interna del teléfono: %1$s° (según los datos del lente: %2$s°). Compárala con tu lectura de la cinta.</string>
 </resources>

@@ -10,7 +10,7 @@ Necesitas una cinta métrica (1 m basta), cinta adhesiva y una pared plana.
 4. Lee **qué número de la cinta queda justo en el borde de la imagen**. La app muestra arriba el número esperado (por ejemplo 45 cm). Escríbelo en «número que marca la cinta en el borde» y toca **guardar**.
 5. Toca **detener** antes de cambiar de lente. Repite con cada lente.
 6. Al terminar toca **compartir** para enviar las mediciones.
-Notas: si el teléfono se calienta, detén. El tele puede no enfocar a menos de ~50 cm: usa 1 m o más. Si la distancia escrita en la app no es la real, corrígela antes de guardar.
+Notas: la pantalla muestra también la **calibración interna del teléfono** (si la entrega): compárala con lo que lees en la cinta. Si el teléfono se calienta, detén. El tele puede no enfocar a menos de ~50 cm: usa 1 m o más. Si la distancia escrita en la app no es la real, corrígela antes de guardar.
 
 ## English
 You need a tape measure (1 m is enough), adhesive tape and a flat wall.
@@ -20,7 +20,7 @@ You need a tape measure (1 m is enough), adhesive tape and a flat wall.
 4. Read **which tape number sits right at the image edge**. The app shows the expected number on top (for example 45 cm). Type it into "number the tape shows at the viewfinder edge" and tap **save**.
 5. Tap **stop** before switching lens. Repeat for each lens.
 6. When done tap **share** to send the readings.
-Notes: stop if the phone gets warm. The tele may not focus closer than ~50 cm: use 1 m or more. If the distance typed in the app is not the real one, fix it before saving.
+Notes: the screen also shows the **phone's internal calibration** (if it provides one): compare it with your tape reading. Stop if the phone gets warm. The tele may not focus closer than ~50 cm: use 1 m or more. If the distance typed in the app is not the real one, fix it before saving.
 
 ## 日本語（※翻訳は未確認です）
 メジャー（1 mで十分）、テープ、平らな壁を用意します。
@@ -30,4 +30,4 @@ Notes: stop if the phone gets warm. The tele may not focus closer than ~50 cm: u
 4. **画像の端にちょうど来ているメジャーの数値**を読みます。画面上部に期待値（例: 45 cm）が出ます。その数値を入力欄に入れて「保存」をタップします。
 5. レンズを替える前に「停止」を押し、各レンズで繰り返します。
 6. 終わったら「共有」で測定値を送ってください。
-注意: 本体が熱くなったら停止してください。望遠は約50 cm以内ではピントが合わないことがあります（1 m以上で測定）。
+注意: 画面には端末の**内部キャリブレーション**も表示されます（提供されている場合）。メジャーの読みと比べてください。本体が熱くなったら停止してください。望遠は約50 cm以内ではピントが合わないことがあります（1 m以上で測定）。
