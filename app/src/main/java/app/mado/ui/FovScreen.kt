@@ -15,6 +15,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -464,7 +465,7 @@ fun FovScreen(
                         val posePhoto = poseExp ?: pose                  // la del instante de la toma; si no hubo, la del toque
                         val headText = headingText(posePhoto); val attText = attitudeText(posePhoto)
                         val loc = try { locJob?.await() } catch (e: Exception) { null }
-                        meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms).put("delay_to_exposure_ms", result.exposedMs).put("moved_deg", movedDeg))
+                        meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms).put("delay_to_exposure_ms", result.exposedMs).put("moved_deg", movedDeg).put("focus", camera.lastStillFocus))
                         loc?.let { meta.put("location", JSONObject().put("lat", it.latitude).put("lon", it.longitude).put("accuracy_m", it.accuracy.toDouble())) }
                         val info = BarInfo(camText, modeText, phoneLine, stamp, headText, attText, positionText ?: loc?.let { LocationHelper.format(it) }, barLine1, barLine2, bigText, sceneTagText, if (sceneDot) app.mado.optics.sceneColorArgb(sceneNow) else 0)
                         shot = try {
@@ -531,6 +532,7 @@ fun FovScreen(
                 running = running, working = shot is ShotUi.Working || shot is ShotUi.Exposed, hasPermission = hasPermission,
                 onToggle = onToggle, onShot = takeShot, onMenu = onMenu, onDoubleTap = { cropView = !cropView }, shot = shot, flashTick = flashTick, hint = showHint, cropped = cropOn,
                 evLabel = evInfo?.takeIf { ev != 0 }?.let { evText(ev, it.second) }, onFocus = onFocus,
+                focusReadout = { camera.focusDiopters?.let { d -> if (d > 0.05f) String.format(Locale.ROOT, "%.2f m", 1f / d) else "∞" } },
             )
         } else if (landscape) {
             // El preview ocupa el alto; los controles van en un panel desplazable a la derecha.
@@ -560,6 +562,8 @@ private fun ViewerLayout(
     preview: @Composable (Modifier) -> Unit, controls: @Composable () -> Unit,
     running: Boolean, working: Boolean, hasPermission: Boolean,
     onToggle: () -> Unit, onShot: () -> Unit, onMenu: () -> Unit, onDoubleTap: () -> Unit, evLabel: String? = null, onFocus: (Float, Float) -> Unit = { _, _ -> },
+    /** Distancia a la que está enfocado el lente (p. ej. «0.23 m»), para ver qué enfocó el autofoco tras un toque. */
+    focusReadout: () -> String? = { null },
     shot: ShotUi = ShotUi.Idle, flashTick: Int = 0, hint: Boolean = false, cropped: Boolean = false,
 ) {
     val p = LocalPalette.current
@@ -568,7 +572,13 @@ private fun ViewerLayout(
     // Rectángulo del visor (donde se dibuja la imagen) y última marca de enfoque, ambos en px del contenedor.
     var previewRect by remember { mutableStateOf(androidx.compose.ui.geometry.Rect.Zero) }
     var focusMark by remember { mutableStateOf<Offset?>(null) }
-    androidx.compose.runtime.LaunchedEffect(focusMark) { if (focusMark != null) { kotlinx.coroutines.delay(1200); focusMark = null } }
+    var focusLabel by remember { mutableStateOf<String?>(null) }
+    androidx.compose.runtime.LaunchedEffect(focusMark) {
+        if (focusMark != null) {
+            repeat(8) { focusLabel = focusReadout(); kotlinx.coroutines.delay(320) }
+            focusMark = null; focusLabel = null
+        }
+    }
     androidx.compose.foundation.layout.BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
         val screenH = maxHeight
         val screenW = maxWidth
@@ -598,6 +608,13 @@ private fun ViewerLayout(
             androidx.compose.foundation.Canvas(Modifier.fillMaxSize()) {
                 drawCircle(Color.White, 34.dp.toPx(), m, style = androidx.compose.ui.graphics.drawscope.Stroke(2.dp.toPx()))
                 drawCircle(Accent, 4.dp.toPx(), m)
+            }
+            focusLabel?.let { t ->
+                Text(
+                    t, style = mono(13, Color.White, true),
+                    modifier = Modifier.offset { androidx.compose.ui.unit.IntOffset(m.x.toInt() + 44.dp.roundToPx(), m.y.toInt() - 10.dp.roundToPx()) }
+                        .background(Color.Black.copy(alpha = 0.55f), androidx.compose.foundation.shape.RoundedCornerShape(5.dp)).padding(horizontal = 6.dp, vertical = 2.dp),
+                )
             }
         }
 

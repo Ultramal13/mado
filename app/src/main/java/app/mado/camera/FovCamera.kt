@@ -66,12 +66,17 @@ class FovCamera(
     private var stillReader: ImageReader? = null
     @Volatile private var lastAe = -1
     @Volatile private var lastAf = -1
+    /** Distancia de enfoque actual del lente (dioptrías; 1/dioptrías = metros) según el último cuadro del preview. */
+    @Volatile var focusDiopters: Float? = null
+    /** Estado de enfoque y distancia de enfoque (dioptrías) con que salió la última foto: para entender fotos desenfocadas. */
+    @Volatile var lastStillFocus: String? = null
 
     /** Anota el estado de exposición y foco automáticos del preview (para disparar la foto cuando están estables). */
     private val previewState = object : CameraCaptureSession.CaptureCallback() {
         override fun onCaptureCompleted(sess: CameraCaptureSession, req: CaptureRequest, res: TotalCaptureResult) {
             lastAe = res.get(CaptureResult.CONTROL_AE_STATE) ?: -1
             lastAf = res.get(CaptureResult.CONTROL_AF_STATE) ?: -1
+            focusDiopters = res.get(CaptureResult.LENS_FOCUS_DISTANCE)
         }
     }
 
@@ -297,11 +302,17 @@ class FovCamera(
                 val half = (minOf(arr.width(), arr.height()) * 0.08f).toInt()
                 val cx = (arr.left + x.coerceIn(0f, 1f) * arr.width()).toInt().coerceIn(arr.left + half, arr.right - half)
                 val cy = (arr.top + y.coerceIn(0f, 1f) * arr.height()).toInt().coerceIn(arr.top + half, arr.bottom - half)
+                Log.i("mado", "toque u=$u v=$v rot=$rot -> sensor x=$x y=$y región=($cx,$cy)±$half en ${arr.width()}x${arr.height()}; preview=$previewAspect zoom=$zoomRatio cámara=${d.id}")
                 focusRegion = android.hardware.camera2.params.MeteringRectangle(cx - half, cy - half, 2 * half, 2 * half, android.hardware.camera2.params.MeteringRectangle.METERING_WEIGHT_MAX - 1)
+                // Se suelta el foco anterior y se pide una búsqueda nueva en el punto tocado (el repetido ya lleva modo AUTO y la región).
+                val cancel = requestBuilder(d, a.surface, a.lens, a.distortionOff)
+                cancel.set(CaptureRequest.CONTROL_AF_TRIGGER, CaptureRequest.CONTROL_AF_TRIGGER_CANCEL)
+                s.capture(cancel.build(), null, handler)
                 val trig = requestBuilder(d, a.surface, a.lens, a.distortionOff)
                 trig.set(CaptureRequest.CONTROL_AF_TRIGGER, CaptureRequest.CONTROL_AF_TRIGGER_START)
-                s.capture(trig.build(), null, handler)
+                s.capture(trig.build(), previewState, handler)
                 s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff), previewState, handler)
+                handler.postDelayed({ Log.i("mado", "enfoque tras el toque: af=$lastAf distancia=${focusDiopters?.let { if (it > 0.05f) "%.2f m".format(1f / it) else "∞" }}") }, 900)
             } catch (e: Exception) { Log.w("mado", "focusAt", e) }
         }
     }
@@ -348,13 +359,7 @@ class FovCamera(
             val zr = c.get(CameraCharacteristics.CONTROL_ZOOM_RATIO_RANGE)
             b.set(CaptureRequest.CONTROL_ZOOM_RATIO, if (zr != null) zoomRatio.coerceIn(zr.lower, zr.upper) else 1.0f)
         }
-        // Enfoque continuo (como una app de cámara) y, si el usuario tocó la imagen, enfoque y exposición en ese punto.
-        val afModes = c.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES)?.toList().orEmpty()
-        if (CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE in afModes) b.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE)
-        focusRegion?.let { rg ->
-            if ((c.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AF) ?: 0) > 0) b.set(CaptureRequest.CONTROL_AF_REGIONS, arrayOf(rg))
-            if ((c.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AE) ?: 0) > 0) b.set(CaptureRequest.CONTROL_AE_REGIONS, arrayOf(rg))
-        }
+        applyFocus(b, c)
         if (distortionOff) {
             val modes = c.get(CameraCharacteristics.DISTORTION_CORRECTION_AVAILABLE_MODES)?.toList().orEmpty()
             if (CaptureRequest.DISTORTION_CORRECTION_MODE_OFF in modes) {
@@ -362,6 +367,22 @@ class FovCamera(
             }
         }
         return b
+    }
+
+    /**
+     * Enfoque continuo (como una app de cámara) y, si el usuario tocó la imagen, enfoque y exposición en ese punto. Se aplica igual al
+     * preview y a la foto: si la foto pide otras regiones o modo de enfoque, el autofoco puede volver a buscar y salir desenfocada.
+     */
+    private fun applyFocus(b: CaptureRequest.Builder, c: CameraCharacteristics) {
+        val afModes = c.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES)?.toList().orEmpty()
+        // Tras un toque se usa enfoque AUTO: el disparo del autofoco hace una búsqueda nueva en ese punto y el foco queda fijo ahí
+        // (con enfoque continuo el teléfono bloqueaba el foco que ya tenía y no iba al punto tocado).
+        if (focusRegion != null && CaptureRequest.CONTROL_AF_MODE_AUTO in afModes) b.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO)
+        else if (CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE in afModes) b.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE)
+        focusRegion?.let { rg ->
+            if ((c.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AF) ?: 0) > 0) b.set(CaptureRequest.CONTROL_AF_REGIONS, arrayOf(rg))
+            if ((c.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AE) ?: 0) > 0) b.set(CaptureRequest.CONTROL_AE_REGIONS, arrayOf(rg))
+        }
     }
 
     /** Cierra sesión y dispositivo. Solo en el hilo de cámara. */
@@ -552,6 +573,7 @@ class FovCamera(
             val b = d.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
             b.addTarget(r.surface)
             applyExposure(b, d)
+            applyFocus(b, manager.getCameraCharacteristics(d.id))      // mismo foco que el preview (modo y punto tocado)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) b.set(CaptureRequest.CONTROL_ZOOM_RATIO, 1.0f) // Android 11+; antes no existe y el zoom por defecto ya es 1x
             if (a.distortionOff) {
                 val modes = manager.getCameraCharacteristics(d.id).get(CameraCharacteristics.DISTORTION_CORRECTION_AVAILABLE_MODES)?.toList().orEmpty()
@@ -559,6 +581,12 @@ class FovCamera(
             }
             s.capture(b.build(), object : CameraCaptureSession.CaptureCallback() {
                 override fun onCaptureStarted(sess: CameraCaptureSession, req: CaptureRequest, timestamp: Long, frameNumber: Long) = onStarted()
+                override fun onCaptureCompleted(sess: CameraCaptureSession, req: CaptureRequest, res: TotalCaptureResult) {
+                    val af = res.get(CaptureResult.CONTROL_AF_STATE); val diopters = res.get(CaptureResult.LENS_FOCUS_DISTANCE)
+                    val tapped = req.get(CaptureRequest.CONTROL_AF_REGIONS) != null
+                    lastStillFocus = "af_state=$af focus_diopters=$diopters tap_region=$tapped"
+                    Log.i("mado", "foto: $lastStillFocus (preview af=$lastAf)")
+                }
                 override fun onCaptureFailed(sess: CameraCaptureSession, req: CaptureRequest, f: CaptureFailure) = finish(Shot.Fail("capture failed (${f.reason})"))
             }, handler)
         } catch (e: Exception) { finish(Shot.Fail(e.message ?: "shoot failed")) }
