@@ -265,6 +265,41 @@ private fun FirmwareNote(framing: FramingState) {
     if (needs != null) Text(stringResource(R.string.frm_requires_firmware, needs), style = mono(10, p.accent))
 }
 
+/**
+ * Datos para el operador de la cámara: lo decide quien hace el scout y los lee quien opera. Salen en la barra de la foto.
+ * La obturación se propone sola con la regla de los 180° a partir de los fps, y se puede cambiar.
+ */
+@Composable
+private fun OperatorFields(framing: FramingState) {
+    val p = LocalPalette.current
+    Label(stringResource(R.string.frm_operator))
+    val fpsOptions = framing.modes.getOrNull(framing.modeIdx)?.fps.orEmpty()
+    if (fpsOptions.isNotEmpty()) Seg(fpsOptions, fpsOptions.indexOf(framing.opFps)) { framing.opFps = fpsOptions[it] }
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.weight(1f)) {
+            Label(stringResource(R.string.frm_fps))
+            TextInput(framing.opFps, "29.97", maxLen = 8) { framing.opFps = it.filter { ch -> ch.isDigit() || ch == '.' } }
+        }
+        Column(Modifier.weight(1f)) {
+            Label(stringResource(R.string.frm_shutter))
+            TextInput(framing.shutterText(), "1/60", maxLen = 10) { framing.opShutter = it.trim().ifEmpty { null } }
+        }
+    }
+    if (framing.opShutter == null && framing.shutterText().isNotEmpty()) Text(stringResource(R.string.frm_shutter_auto), style = mono(10, p.text.copy(alpha = 0.7f)))
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.weight(1f)) {
+            Label(stringResource(R.string.frm_iso))
+            TextInput(framing.opIso, "800", maxLen = 8) { framing.opIso = it.filter { ch -> ch.isDigit() } }
+        }
+        Column(Modifier.weight(1f)) {
+            Label(stringResource(R.string.frm_wb))
+            TextInput(framing.opWb, "5600", maxLen = 8) { framing.opWb = it.filter { ch -> ch.isDigit() } }
+        }
+    }
+    Label(stringResource(R.string.frm_op_note))
+    TextInput(framing.opNote, stringResource(R.string.frm_op_note_hint), maxLen = 60) { framing.opNote = it }
+}
+
 /** Perfil de color o log que se grabará (p. ej. S-Log3, I-Log); aparece en la barra de la foto. */
 @Composable
 private fun ColorChooser(framing: FramingState) {
@@ -328,6 +363,8 @@ internal fun FramingControls(
     shots: List<app.mado.data.ShotEntry> = emptyList(),
     onBook: (app.mado.data.ProjectBook) -> Unit = {},
     onManage: () -> Unit = {},
+    showAngles: Boolean = false,
+    onShowAngles: (Boolean) -> Unit = {},
 ) {
     val p = LocalPalette.current
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -390,6 +427,8 @@ internal fun FramingControls(
             FirmwareNote(framing)
         }
 
+        OperatorFields(framing)
+
         Label(stringResource(R.string.frm_delivery))
         Seg(listOf(stringResource(R.string.frm_delivery_same)) + framing.deliveryAspects.map { it.second }, framing.deliveryIdx + 1) { framing.deliveryIdx = it - 1 }
 
@@ -424,6 +463,9 @@ internal fun FramingControls(
 
         Label(stringResource(R.string.frm_scene_dot))
         Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (sceneDot) 1 else 0) { onSceneDot(it == 1) }
+
+        Label(stringResource(R.string.frm_show_angles))
+        Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (showAngles) 1 else 0) { onShowAngles(it == 1) }
 
         Label(stringResource(R.string.frm_fast_capture))
         Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (fastOn) 1 else 0) { onFast(it == 1) }

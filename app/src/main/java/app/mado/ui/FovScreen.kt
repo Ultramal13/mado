@@ -215,6 +215,7 @@ fun FovScreen(
     // para que el preview salga derecho (si no, queda de lado hasta detener e iniciar).
     val displayRotation = LocalView.current.display?.rotation ?: 0
     // Captura rápida (stream de foto en la sesión del preview): activada por omisión; se puede apagar desde el panel.
+    var showAngles by remember { mutableStateOf(ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).getBoolean("bar_angles", false)) }
     var sceneDot by remember { mutableStateOf(ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).getBoolean("scene_dot", true)) }
     var fastOn by remember { mutableStateOf(ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).getBoolean("fast_capture", true)) }
     LaunchedEffect(running, lens.id, distortionOff, retry, surfaceGen, displayRotation, fastOn) {
@@ -424,8 +425,19 @@ fun FovScreen(
         val sceneNow = framing.scene.trim(); val shotNow = framing.shotNo
         val sceneTagText = sceneNow.takeIf { it.isNotEmpty() }?.let { "$it · $shotWordText $shotNow" }
         meta.put("scene", sceneNow); meta.put("shot_no", shotNow); meta.put("delivery_aspect", deliveryLabel)
+        // Datos para el operador: van en la barra y en los metadatos. Los ángulos solo si se pidieron (la focal ya dice casi lo mismo).
+        val operatorText = framing.operatorLine(); val opNote = framing.opNote.trim()
+        if (operatorText.isNotEmpty() || opNote.isNotEmpty()) meta.put("operator", JSONObject()
+            .put("fps", framing.opFps.toDoubleOrNull()).put("shutter", framing.shutterText().ifEmpty { null }).put("iso", framing.opIso.toIntOrNull())
+            .put("white_balance_k", framing.opWb.toIntOrNull()).put("note", opNote.ifEmpty { null }))
         val camText = framing.cameraName(); val modeText = listOf(framing.modeName(), aspectText).filter { it.isNotEmpty() }.joinToString("  ·  "); val lensSetText = framing.subLabel(); val bigText = framing.bigLabel()
-        val phoneLine = String.format(Locale.ROOT, "%s %s · %.1f° · %s", phoneLensShort, lens.id, phoneDeg, if (profileDeg != null) verifiedText else unverifiedText)
+        val phoneLine = opNote.ifEmpty { String.format(Locale.ROOT, "%s %s · %.1f° · %s", phoneLensShort, lens.id, phoneDeg, if (profileDeg != null) verifiedText else unverifiedText) }
+        // Con los ángulos apagados (por omisión) la segunda línea de la derecha es del operador; encendidos, pasan a esa línea y el operador sube a la primera.
+        val barLine1 = if (showAngles) operatorText.ifEmpty { lensSetText } else lensSetText
+        val barLine2 = if (showAngles) anglesText else operatorText
+        // En vez de coordenadas, el nombre de la locación del proyecto (sin internet ni mandar la posición a nadie); sin locación, las coordenadas.
+        val placeNow = book.place
+        val positionText = if (placeNow != null) listOf(placeNow.name, placeNow.address.substringBefore(',').trim()).filter { it.isNotEmpty() }.joinToString(" · ") else null
         val stamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT).format(java.util.Date())
         var poseExp: OrientationMath.Pose? = null                   // orientación en el instante real de la toma
         var movedDeg = 0
@@ -454,7 +466,7 @@ fun FovScreen(
                         val loc = try { locJob?.await() } catch (e: Exception) { null }
                         meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms).put("delay_to_exposure_ms", result.exposedMs).put("moved_deg", movedDeg))
                         loc?.let { meta.put("location", JSONObject().put("lat", it.latitude).put("lon", it.longitude).put("accuracy_m", it.accuracy.toDouble())) }
-                        val info = BarInfo(camText, modeText, phoneLine, stamp, headText, attText, loc?.let { LocationHelper.format(it) }, lensSetText, anglesText, bigText, sceneTagText, if (sceneDot) app.mado.optics.sceneColorArgb(sceneNow) else 0)
+                        val info = BarInfo(camText, modeText, phoneLine, stamp, headText, attText, positionText ?: loc?.let { LocationHelper.format(it) }, barLine1, barLine2, bigText, sceneTagText, if (sceneDot) app.mado.optics.sceneColorArgb(sceneNow) else 0)
                         shot = try {
                             val now = java.util.Date()
                             val saved = withContext(Dispatchers.IO) {
@@ -492,6 +504,7 @@ fun FovScreen(
             orientation = orientationText(tracker.pose), gpsOn = gpsOn, onGps = onGps, gpsDenied = gpsDenied,
             ev = ev, evInfo = evInfo, onEv = { ev = it },
             book = book, shots = shots, onBook = onBook, onManage = onProjects,
+            showAngles = showAngles, onShowAngles = { showAngles = it; ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).edit().putBoolean("bar_angles", it).apply() },
             sceneDot = sceneDot, onSceneDot = { sceneDot = it; ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).edit().putBoolean("scene_dot", it).apply() },
             fastOn = fastOn, onFast = { fastOn = it; ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).edit().putBoolean("fast_capture", it).apply() },
         ) else Controls(

@@ -196,6 +196,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": 1.01,
      "resolucion_px": "3840x2160",
+     "fps": ["119.88", "100", "59.94", "50", "29.97", "25", "23.98"],
      "derivado": true,
      "fuente": {
       "texto": "Sony Help Guide ILME-FX3, 'File Format (movie)' (XAVC S 4K/HD, S-I, HS: 3840x2160 y 1920x1080) y 'APS-C S35 (Super 35mm) Shooting': 4K no se puede grabar con [On]; con [On] angulo ~1.5x la focal",
@@ -242,6 +243,7 @@
      "relacion_aspecto": "17:9",
      "factor_crop_vs_ff": 1.01,
      "resolucion_px": "4096x2160",
+     "fps": ["59.94", "50", "29.97", "25", "24", "23.98"],
      "derivado": true,
      "desde_firmware": "3.00",
      "fuente": {
@@ -257,6 +259,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": 1.01,
      "resolucion_px": "4264x2408",
+     "fps": ["59.94", "50", "29.97", "25", "23.98"],
      "derivado": true,
      "desde_firmware": null,
      "fuente": {
@@ -1075,6 +1078,7 @@
      "relacion_aspecto": "17:9",
      "factor_crop_vs_ff": 1.0,
      "resolucion_px": "8192x4320",
+     "fps": ["29.97", "25", "24", "23.98"],
      "derivado": true,
      "fuente": {
       "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
@@ -1090,6 +1094,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": 1.07,
      "resolucion_px": "7680x4320",
+     "fps": ["29.97", "25", "23.98"],
      "derivado": true,
      "fuente": {
       "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
@@ -1105,6 +1110,7 @@
      "relacion_aspecto": "17:9",
      "factor_crop_vs_ff": 1.0,
      "resolucion_px": "4096x2160",
+     "fps": ["119.88", "100", "59.94", "50", "29.97", "25", "24", "23.98"],
      "derivado": true,
      "fuente": {
       "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
@@ -1120,6 +1126,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": 1.07,
      "resolucion_px": "3840x2160",
+     "fps": ["119.88", "100", "59.94", "50", "29.97", "25", "23.98"],
      "derivado": true,
      "fuente": {
       "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
@@ -1135,6 +1142,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": 1.07,
      "resolucion_px": "1920x1080",
+     "fps": ["119.88", "100", "59.94", "50", "29.97", "25", "23.98"],
      "derivado": true,
      "fuente": {
       "texto": "Canon EOS R5 Product Manual > Movie Recording Quality: tamanos 8192x4320 (17:9), 7680x4320, 4096x2160, 3840x2160, 1920x1080 y 'Image Area' (areas (1)-(6)); 8K/High Frame Rate/4K HQ no se pueden grabar con Movie cropping",
@@ -1150,6 +1158,7 @@
      "relacion_aspecto": "17:9",
      "factor_crop_vs_ff": 1.6,
      "resolucion_px": "4096x2160",
+     "fps": ["59.94", "50", "29.97", "25", "24", "23.98"],
      "derivado": true,
      "fuente": {
       "texto": "Canon EOS R5 Product Manual > Movie Cropping: el recorte equivale a usar lentes RF-S/EF-S; Specifications: 'Using RF-S or EF-S lenses: Approx. 1.6 times the indicated focal length'",
@@ -1166,6 +1175,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": 1.71,
      "resolucion_px": "3840x2160",
+     "fps": ["59.94", "50", "29.97", "25", "23.98"],
      "derivado": true,
      "fuente": {
       "texto": "Canon EOS R5 Product Manual > Movie Cropping: el recorte equivale a usar lentes RF-S/EF-S; Specifications: 'Using RF-S or EF-S lenses: Approx. 1.6 times the indicated focal length'",
@@ -1182,6 +1192,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": 1.71,
      "resolucion_px": "1920x1080",
+     "fps": ["59.94", "50", "29.97", "25", "23.98"],
      "derivado": true,
      "fuente": {
       "texto": "Canon EOS R5 Product Manual > Movie Cropping: el recorte equivale a usar lentes RF-S/EF-S; Specifications: 'Using RF-S or EF-S lenses: Approx. 1.6 times the indicated focal length'",
@@ -1306,6 +1317,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "7680x4320",
+     "fps": ["30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1321,6 +1333,7 @@
      "relacion_aspecto": "2.35:1",
      "factor_crop_vs_ff": null,
      "resolucion_px": "7680x3264",
+     "fps": ["30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1336,6 +1349,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "3840x2160",
+     "fps": ["120", "100", "60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1351,6 +1365,7 @@
      "relacion_aspecto": "9:16",
      "factor_crop_vs_ff": null,
      "resolucion_px": "2160x3840",
+     "fps": ["30", "25", "24"],
      "derivado": false,
      "desde_firmware": "1.1.8",
      "fuente": {
@@ -1366,6 +1381,7 @@
      "relacion_aspecto": "2.35:1",
      "factor_crop_vs_ff": null,
      "resolucion_px": "3840x1632",
+     "fps": ["120", "100", "60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1381,6 +1397,7 @@
      "relacion_aspecto": "1:1",
      "factor_crop_vs_ff": null,
      "resolucion_px": "3072x3072",
+     "fps": ["60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1396,6 +1413,7 @@
      "relacion_aspecto": "9:16",
      "factor_crop_vs_ff": null,
      "resolucion_px": "1728x3072",
+     "fps": ["60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1411,6 +1429,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "2688x1520",
+     "fps": ["120", "100", "60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1426,6 +1445,7 @@
      "relacion_aspecto": "9:16",
      "factor_crop_vs_ff": null,
      "resolucion_px": "1520x2688",
+     "fps": ["60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1441,6 +1461,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "1920x1080",
+     "fps": ["240", "200", "120", "100", "60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1456,6 +1477,7 @@
      "relacion_aspecto": "9:16",
      "factor_crop_vs_ff": null,
      "resolucion_px": "1080x1920",
+     "fps": ["60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1471,6 +1493,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "3840x2160",
+     "fps": ["60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1486,6 +1509,7 @@
      "relacion_aspecto": "9:16",
      "factor_crop_vs_ff": null,
      "resolucion_px": "1728x3072",
+     "fps": ["60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1501,6 +1525,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "2688x1520",
+     "fps": ["60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1516,6 +1541,7 @@
      "relacion_aspecto": "9:16",
      "factor_crop_vs_ff": null,
      "resolucion_px": "1520x2688",
+     "fps": ["60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1531,6 +1557,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "1920x1080",
+     "fps": ["60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1546,6 +1573,7 @@
      "relacion_aspecto": "9:16",
      "factor_crop_vs_ff": null,
      "resolucion_px": "1080x1920",
+     "fps": ["60", "50", "48", "30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1561,6 +1589,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "3840x2160",
+     "fps": ["30", "25", "24"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1576,6 +1605,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "3840x2160",
+     "fps": ["120", "100"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1591,6 +1621,7 @@
      "relacion_aspecto": "2.35:1",
      "factor_crop_vs_ff": null,
      "resolucion_px": "3840x1632",
+     "fps": ["120", "100"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1606,6 +1637,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "2688x1520",
+     "fps": ["120", "100"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1621,6 +1653,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "1920x1080",
+     "fps": ["240", "200", "120", "100"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1636,6 +1669,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "3840x2160",
+     "fps": ["30"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1651,6 +1685,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "2688x1520",
+     "fps": ["30"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {
@@ -1666,6 +1701,7 @@
      "relacion_aspecto": "16:9",
      "factor_crop_vs_ff": null,
      "resolucion_px": "1920x1080",
+     "fps": ["30"],
      "derivado": false,
      "desde_firmware": null,
      "fuente": {

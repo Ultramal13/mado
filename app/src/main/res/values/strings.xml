@@ -164,4 +164,13 @@
     <string name="frm_manage">manage</string>
     <string name="frm_scene_pick">scenes already used here</string>
     <string name="cal_internal">the phone\'s internal calibration: %1$s° (reported by the lens data: %2$s°). Compare it with your tape reading.</string>
+    <string name="frm_operator">camera settings for the operator</string>
+    <string name="frm_fps">frame rate (fps)</string>
+    <string name="frm_shutter">shutter</string>
+    <string name="frm_shutter_auto">shutter suggested with the 180° rule; type to change it</string>
+    <string name="frm_iso">ISO</string>
+    <string name="frm_wb">white balance (K)</string>
+    <string name="frm_op_note">note for the operator</string>
+    <string name="frm_op_note_hint">e.g. PP7 S-Log3, LUT, ND 0.9</string>
+    <string name="frm_show_angles">show FOV angles in the photo bar</string>
 </resources>

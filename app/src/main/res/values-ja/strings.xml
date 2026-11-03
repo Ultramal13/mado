@@ -164,4 +164,13 @@
     <string name="frm_manage">管理</string>
     <string name="frm_scene_pick">この場所で使ったシーン</string>
     <string name="cal_internal">端末の内部キャリブレーション：%1$s°（レンズ情報の値：%2$s°）。メジャーの読みと比べてください。</string>
+    <string name="frm_operator">カメラマン向けの設定</string>
+    <string name="frm_fps">フレームレート (fps)</string>
+    <string name="frm_shutter">シャッター</string>
+    <string name="frm_shutter_auto">180°ルールで提案。入力すると変更できます</string>
+    <string name="frm_iso">ISO</string>
+    <string name="frm_wb">ホワイトバランス (K)</string>
+    <string name="frm_op_note">カメラマンへのメモ</string>
+    <string name="frm_op_note_hint">例：PP7 S-Log3、LUT、ND 0.9</string>
+    <string name="frm_show_angles">写真のバーに画角（FOV）を表示</string>
 </resources>

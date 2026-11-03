@@ -27,4 +27,12 @@ class AspectAndDiagonalTest {
         val (w2, h2) = deliveryRect(300.0, 200.0, 1.0)               // 1:1: se recorta a los lados
         assertEquals(200.0, w2, 1e-9); assertEquals(200.0, h2, 1e-9)
     }
+
+    @Test
+    fun shutterFollowsTheHundredEightyDegreeRule() {
+        assertEquals("1/60", Shutter.suggest180(30.0)); assertEquals("1/60", Shutter.suggest180(29.97))
+        assertEquals("1/48", Shutter.suggest180(24.0)); assertEquals("1/48", Shutter.suggest180(23.976))
+        assertEquals("1/50", Shutter.suggest180(25.0)); assertEquals("1/120", Shutter.suggest180(59.94))
+        assertEquals("1/240", Shutter.suggest180(119.88)); assertEquals("", Shutter.suggest180(null)); assertEquals("", Shutter.suggest180(0.0))
+    }
 }

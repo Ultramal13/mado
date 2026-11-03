@@ -74,4 +74,20 @@ class FramingStatePersistTest {
         val t = a.target()!!
         assertEquals(9.0 / 16.0, t.aspect, 1e-9)
     }
+
+    @Test
+    fun operatorSettingsAreRememberedAndShutterIsAutomaticUntilEdited() {
+        val a = FramingState(db)
+        a.opFps = "29.97"; a.opIso = "800"; a.opWb = "5600"; a.opNote = "PP7 S-Log3"
+        assertEquals("1/60", a.shutterText())
+        assertEquals("29.97p · 1/60 · ISO 800 · 5600K", a.operatorLine())
+        a.opShutter = "1/100"
+        val b = FramingState(db); b.restore(a.snapshot())
+        assertEquals("1/100", b.shutterText()); assertEquals("PP7 S-Log3", b.opNote)
+        assertEquals("29.97p · 1/100 · ISO 800 · 5600K", b.operatorLine())
+        a.opShutter = null
+        val c = FramingState(db); c.restore(a.snapshot())
+        assertEquals(null, c.opShutter); assertEquals("1/60", c.shutterText())
+        assertEquals("", FramingState(db).operatorLine())
+    }
 }

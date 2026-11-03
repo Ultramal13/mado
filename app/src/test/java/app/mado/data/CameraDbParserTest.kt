@@ -149,4 +149,13 @@ class FirmwareModesTest {
         assertEquals(4.0 / 3.0, four3.aspect, 0.01)
         assertEquals(31.99, four3.widthMm!!, 1e-9)
     }
+
+    @Test
+    fun modesCarryFrameRatesWhenKnown() {
+        assertEquals(listOf("30", "25", "24"), cam("insta360_luna_ultra").modes.first { it.id == "video_4k_9_16" }.fps)
+        assertEquals(true, cam("canon_eos_r5").modes.first { it.id == "video_4k_dci" }.fps.contains("119.88"))
+        // Con Movie cropping no hay alta velocidad (manual de Canon).
+        assertEquals(false, cam("canon_eos_r5").modes.first { it.id == "video_4k_dci_crop" }.fps.contains("119.88"))
+        assertEquals(true, cam("sony_fx3").modes.first { it.id == "foto_ff_3_2_L" }.fps.isEmpty())
+    }
 }

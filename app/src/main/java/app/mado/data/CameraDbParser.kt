@@ -71,6 +71,7 @@ object CameraDbParser {
             sinceFirmware = o.optStringOrNull("desde_firmware"),
             resolution = o.optStringOrNull("resolucion_px"),
             aspectRatio = if (area) null else aspect,
+            fps = o.optJSONArray("fps")?.let { a -> (0 until a.length()).map { a.get(it).toString() } }.orEmpty(),
         )
     }
 

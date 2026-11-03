@@ -18,6 +18,8 @@ data class RecordingMode(
     val resolution: String? = null,
     /** Aspecto publicado (p. ej. 9/16); se usa cuando el modo no trae medidas de sensor. */
     val aspectRatio: Double? = null,
+    /** Cuadros por segundo que ofrece el modo (texto, p. ej. «29.97»); vacío si no se conocen con certeza. */
+    val fps: List<String> = emptyList(),
 ) {
     val hasArea: Boolean get() = widthMm != null && heightMm != null
     val aspect: Double get() = aspectRatio ?: (widthMm!! / heightMm!!)

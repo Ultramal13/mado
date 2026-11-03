@@ -44,6 +44,22 @@ class FramingState(val db: CameraDb) {
     val deliveryAspects = listOf(16.0 / 9.0 to "16:9", 2.39 to "2.39:1", 1.85 to "1.85:1", 4.0 / 3.0 to "4:3", 1.0 to "1:1", 9.0 / 16.0 to "9:16", 4.0 / 5.0 to "4:5")
     var deliveryIdx by mutableIntStateOf(-1)
     val delivery: Double? get() = deliveryAspects.getOrNull(deliveryIdx)?.first
+    /** Datos para el operador de la cámara (lo que decide el cinematógrafo): cuadros por segundo, obturación, ISO, balance de blancos y una nota (PP, LUT, ND…). */
+    var opFps by mutableStateOf("")
+    /** null = obturación automática por la regla de los 180° a partir de los fps. */
+    var opShutter by mutableStateOf<String?>(null)
+    var opIso by mutableStateOf("")
+    var opWb by mutableStateOf("")
+    var opNote by mutableStateOf("")
+    fun shutterText(): String = opShutter ?: app.mado.optics.Shutter.suggest180(opFps.toDoubleOrNull())
+    /** «29.97p · 1/60 · ISO 800 · 5600K» con lo que haya; vacío si no hay nada. */
+    fun operatorLine(): String = listOfNotNull(
+        opFps.trim().takeIf { it.isNotEmpty() }?.let { "${it}p" },
+        shutterText().takeIf { it.isNotEmpty() },
+        opIso.trim().takeIf { it.isNotEmpty() }?.let { "ISO $it" },
+        opWb.trim().takeIf { it.isNotEmpty() }?.let { "${it}K" },
+    ).joinToString(" · ")
+
     /** Escena o lugar de las próximas fotos («暖炉», «cocina») y número de plano dentro de esa escena; se recuerdan. */
     var scene by mutableStateOf("")
     var shotNo by mutableIntStateOf(1)
@@ -67,6 +83,7 @@ class FramingState(val db: CameraDb) {
         put("aspect", fixedAspectIdx)
         put("delivery", deliveryIdx)
         put("scene", scene); put("shotNo", shotNo)
+        put("opFps", opFps); put("opShutter", opShutter ?: org.json.JSONObject.NULL); put("opIso", opIso); put("opWb", opWb); put("opNote", opNote)
     }.toString()
 
     /** Vuelve a la selección guardada por [snapshot]; lo que ya no exista en el catálogo se ignora y queda el valor por omisión. */
@@ -91,6 +108,9 @@ class FramingState(val db: CameraDb) {
             deliveryIdx = o.optInt("delivery", -1).takeIf { it in deliveryAspects.indices } ?: -1
             scene = o.optString("scene", "").take(40)
             shotNo = o.optInt("shotNo", 1).coerceIn(1, 999)
+            opFps = o.optString("opFps", "").take(8); opIso = o.optString("opIso", "").take(8); opWb = o.optString("opWb", "").take(8)
+            opShutter = if (o.isNull("opShutter") || !o.has("opShutter")) null else o.optString("opShutter").take(10)
+            opNote = o.optString("opNote", "").take(60)
         } catch (_: Exception) { /* guardado dañado: se parte desde cero */ }
     }
 
