@@ -181,4 +181,24 @@
     <string name="calnotice_body">El recuadro usa los datos que el teléfono informa de este lente, que pueden errar unos grados (más en los gran angulares). Para mejorarlo, mide el lente con una cinta métrica (unos 10 minutos, un lente a la vez) o comparte el archivo de diagnóstico para agregar este modelo de teléfono.</string>
     <string name="calnotice_share">compartir diagnóstico</string>
     <string name="calnotice_calibrate">calibrar lentes</string>
+    <string name="proj_export">hoja de locación</string>
+    <string name="proj_template">diseño</string>
+    <string name="proj_template_list">lista (varios planos por página)</string>
+    <string name="proj_template_large">grande (un plano por página)</string>
+    <string name="proj_accent">color de acento</string>
+    <string name="proj_accent_orange">naranja</string>
+    <string name="proj_accent_blue">azul</string>
+    <string name="proj_accent_green">verde</string>
+    <string name="proj_accent_graphite">grafito</string>
+    <string name="proj_make_pdf">crear PDF</string>
+    <string name="proj_make_csv">datos (CSV)</string>
+    <string name="proj_working">creando el archivo…</string>
+    <string name="proj_saved">guardado en %1$s</string>
+    <string name="proj_export_error">no se pudo crear el archivo:</string>
+    <string name="sheet_shot">Plano</string>
+    <string name="sheet_generated">Generado</string>
+    <string name="sheet_summary">%1$d planos · %2$d escenas</string>
+    <string name="sheet_cameras">Cámaras</string>
+    <string name="sheet_page">pág.</string>
+    <string name="sheet_no_photo">foto no disponible</string>
 </resources>

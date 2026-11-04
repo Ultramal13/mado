@@ -102,3 +102,51 @@ class ShotLogTest {
         assertTrue(ShotLog.parse(null).isEmpty())
     }
 }
+
+class LocationSheetTest {
+    private fun entry(file: String, place: String, scene: String, no: Int, time: String, extra: String = "") =
+        """{"file":"$file","uri":"content://x/$file","meta":{"scene":"$scene","shot_no":$no,"time":"$time","target":{"label":"Canon EOS R5 · Photo 3:2","focal_mm":35.0},"place":{"id":"$place"},"project":{"id":"p1"}$extra}}"""
+
+    private val op = ""","operator":{"fps":29.97,"shutter":"1/60","iso":800,"white_balance_k":5600,"picture_profile":"PP10","note":"LUT x","external_recording":"Ninja"},"orientation":{"heading_deg_magnetic":348.4}"""
+    private val json = "[" + listOf(
+        entry("MADO_2_marco.jpg", "l1", "stairs", 1, "2026-11-02T10:05:00Z"), entry("MADO_2_plano.jpg", "l1", "stairs", 1, "2026-11-02T10:05:00Z"),
+        entry("MADO_1_marco.jpg", "l1", "kitchen", 2, "2026-11-02T10:00:00Z", op), entry("MADO_1_plano.jpg", "l1", "kitchen", 2, "2026-11-02T10:00:00Z", op),
+        entry("MADO_0_marco.jpg", "l1", "Kitchen", 1, "2026-11-02T09:55:00Z"),
+        entry("MADO_9_marco.jpg", "l2", "garden", 1, "2026-11-02T09:00:00Z"),
+    ).joinToString(",") + "]"
+    private val sheet = LocationSheets.build("Fuyu", Place("l1", "Footprints", "Saitama", "parking: 2 cars"), ShotLog.parse(json))
+
+    @Test
+    fun groupsByPlaceSceneAndShotNumber() {
+        assertEquals(listOf("Kitchen", "stairs"), sheet.scenes.map { it.name })          // por hora de la primera toma
+        assertEquals(listOf(1, 2), sheet.scenes[0].shots.map { it.shotNo })
+        assertEquals(3, sheet.shotCount)                                                // el jardín es de otra locación
+        assertEquals("content://x/MADO_1_plano.jpg", sheet.scenes[0].shots[1].planoUri)
+        assertEquals(null, sheet.scenes[0].shots[0].planoUri)
+        assertEquals(listOf("Canon EOS R5"), sheet.cameras)
+    }
+
+    @Test
+    fun operatorAndNotesComeFromTheMetadata() {
+        val s = sheet.scenes[0].shots[1]
+        assertEquals("29.97p · 1/60 · ISO 800 · 5600K", s.operator)
+        assertEquals("PP10 · LUT x · EXT Ninja", s.notes)
+        assertEquals(348.4, s.headingDeg!!, 1e-9)
+        assertEquals("", sheet.scenes[1].shots[0].operator)
+    }
+
+    @Test
+    fun csvQuotesAndKeepsJapanese() {
+        val s = LocationSheets.build("ふゆ\"キュン\"", Place("l1", "暖炉, 部屋"), ShotLog.parse(json))
+        val csv = LocationSheets.csv(s, java.time.ZoneId.of("UTC"))
+        assertTrue(csv.startsWith("﻿\"project\""))
+        assertTrue(csv.contains("\"ふゆ\"\"キュン\"\"\",\"暖炉, 部屋\",\"Kitchen\",\"1\",\"2026-11-02 09:55\""))
+        assertEquals(1 + 3, csv.trim().split("\r\n").size)
+    }
+
+    @Test
+    fun localTimeFallsBackToTheRawText() {
+        assertEquals("2026-11-03 07:00", LocationSheets.localTime("2026-11-02T22:00:00Z", java.time.ZoneId.of("Asia/Tokyo")))
+        assertEquals("sin hora", LocationSheets.localTime("sin hora"))
+    }
+}

@@ -181,4 +181,24 @@
     <string name="calnotice_body">The frame uses the data the phone reports for this lens, which can be off by a few degrees (more on wide-angle lenses). To improve it, measure the lens with a tape measure (about 10 minutes, one lens at a time) or share the diagnostic file so this phone model can be added.</string>
     <string name="calnotice_share">share diagnostic</string>
     <string name="calnotice_calibrate">calibrate lenses</string>
+    <string name="proj_export">location sheet</string>
+    <string name="proj_template">layout</string>
+    <string name="proj_template_list">list (several shots per page)</string>
+    <string name="proj_template_large">large (one shot per page)</string>
+    <string name="proj_accent">accent colour</string>
+    <string name="proj_accent_orange">orange</string>
+    <string name="proj_accent_blue">blue</string>
+    <string name="proj_accent_green">green</string>
+    <string name="proj_accent_graphite">graphite</string>
+    <string name="proj_make_pdf">create PDF</string>
+    <string name="proj_make_csv">data (CSV)</string>
+    <string name="proj_working">creating the file…</string>
+    <string name="proj_saved">saved in %1$s</string>
+    <string name="proj_export_error">could not create the file:</string>
+    <string name="sheet_shot">Shot</string>
+    <string name="sheet_generated">Generated</string>
+    <string name="sheet_summary">%1$d shots · %2$d scenes</string>
+    <string name="sheet_cameras">Cameras</string>
+    <string name="sheet_page">p.</string>
+    <string name="sheet_no_photo">photo not available</string>
 </resources>

@@ -407,7 +407,10 @@ fun FovScreen(
                 .put("hfov_deg_internal", intrinsicDeg).put("hfov_source", if (profileDeg != null) "measured" else if (intrinsicDeg != null) "internal" else "theory")
                 .put("calibrated", profileDeg != null).put("distortion_correction", if (distortionOff) "off" else "default"))
             put("target", JSONObject().put("label", framing.label()).put("kit_focals", org.json.JSONArray(frameDraws.map { it.label })).put("hfov_deg", target?.let { Math.toDegrees(it.hFovRad) })
-                .put("aspect", target?.aspect).put("focal_mm", framing.focal.toDoubleOrNull()).put("squeeze", framing.squeeze)
+                .put("aspect", target?.aspect).put("squeeze", framing.squeeze)
+                // Lente fija: la focal es la equivalente full frame del lente integrado elegido; si no, la que se escribió en el panel.
+                .put("focal_mm", if (framing.isFixedLens) framing.camera?.builtInLenses?.getOrNull(framing.builtInIdx)?.equivalentFocalMm else framing.focal.toDoubleOrNull())
+                .put("focal_equivalent", framing.isFixedLens)
                 .put("frame_width_pct", frame?.let { it.widthFrac * 100 }).put("frame_height_pct", frame?.let { it.heightFrac * 100 })
                 .put("padding", frame?.padding))
             pose?.let { put("orientation", JSONObject().put("heading_deg_magnetic", it.headingDeg).put("elevation_deg", it.elevationDeg).put("level_deg", it.levelDeg)) }

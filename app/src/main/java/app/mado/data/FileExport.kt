@@ -29,6 +29,26 @@ object FileExport {
         return Saved(uri, "Download/Mado/$name")
     }
 
+    /** Guarda bytes (PDF, CSV…) en Descargas/Mado; [write] escribe el contenido en el flujo de salida. */
+    fun saveFile(context: Context, name: String, mime: String, write: (java.io.OutputStream) -> Unit): Saved {
+        val resolver = context.contentResolver
+        val values = ContentValues().apply {
+            put(MediaStore.Downloads.DISPLAY_NAME, name)
+            put(MediaStore.Downloads.MIME_TYPE, mime)
+            put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Mado")
+            put(MediaStore.Downloads.IS_PENDING, 1)
+        }
+        val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values) ?: error("no se pudo crear el archivo")
+        try {
+            resolver.openOutputStream(uri)?.use(write) ?: error("no se pudo escribir")
+            resolver.update(uri, ContentValues().apply { put(MediaStore.Downloads.IS_PENDING, 0) }, null, null)
+        } catch (e: Exception) {
+            resolver.delete(uri, null, null)
+            throw e
+        }
+        return Saved(uri, "Download/Mado/$name")
+    }
+
     /** Nombre seguro para archivo: solo letras, números, punto, guion y guion bajo. */
     fun safeName(raw: String) = raw.replace(Regex("[^A-Za-z0-9._-]+"), "_").trim('_')
 }

@@ -181,4 +181,24 @@
     <string name="calnotice_body">枠は端末が報告するレンズ情報に基づくため、数度ずれることがあります（広角レンズほど大きくなります）。メジャーで測定する（1本あたり約10分）か、診断ファイルを共有してこの機種を追加してください。</string>
     <string name="calnotice_share">診断を共有</string>
     <string name="calnotice_calibrate">レンズ校正</string>
+    <string name="proj_export">ロケ地シート</string>
+    <string name="proj_template">レイアウト</string>
+    <string name="proj_template_list">リスト（1ページに複数ショット）</string>
+    <string name="proj_template_large">大（1ページに1ショット）</string>
+    <string name="proj_accent">アクセントカラー</string>
+    <string name="proj_accent_orange">オレンジ</string>
+    <string name="proj_accent_blue">青</string>
+    <string name="proj_accent_green">緑</string>
+    <string name="proj_accent_graphite">グラファイト</string>
+    <string name="proj_make_pdf">PDFを作成</string>
+    <string name="proj_make_csv">データ（CSV）</string>
+    <string name="proj_working">ファイルを作成中…</string>
+    <string name="proj_saved">%1$s に保存しました</string>
+    <string name="proj_export_error">ファイルを作成できませんでした：</string>
+    <string name="sheet_shot">ショット</string>
+    <string name="sheet_generated">作成日</string>
+    <string name="sheet_summary">%1$d ショット · %2$d シーン</string>
+    <string name="sheet_cameras">カメラ</string>
+    <string name="sheet_page">p.</string>
+    <string name="sheet_no_photo">写真がありません</string>
 </resources>

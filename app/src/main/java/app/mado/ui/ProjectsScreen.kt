@@ -21,6 +21,7 @@ import app.mado.R
 import app.mado.data.ProjectBook
 import app.mado.data.ShotEntry
 import app.mado.data.ShotLog
+import kotlinx.coroutines.launch
 
 /** Proyectos y locaciones del scout: altas, nombres, dirección, notas de logística y las escenas con sus planos. */
 @Composable
@@ -68,6 +69,7 @@ fun ProjectsScreen(book: ProjectBook, shots: List<ShotEntry>, onBook: (ProjectBo
                 else scenes.forEach { (scene, n) ->
                     Text("${scene.ifEmpty { "—" }} · ${stringResource(R.string.proj_shots_count, n)}", style = mono(13, p.text), modifier = Modifier.padding(vertical = 2.dp))
                 }
+                if (scenes.isNotEmpty()) ExportSection(project.name, place, shots)
             }
         }
     }
@@ -127,4 +129,66 @@ internal fun ProjectPicker(
             framing.shotNo = ShotLog.nextShotNo(shots, book.place?.id, scenes[i].first).coerceAtMost(999)
         }
     }
+}
+
+/** Hoja de locaciones: PDF con plantilla y color a elegir, y los datos en CSV; se guarda en Descargas/Mado y se comparte. */
+@Composable
+private fun ExportSection(projectName: String, place: app.mado.data.Place, shots: List<ShotEntry>) {
+    val p = LocalPalette.current
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    var template by remember { mutableStateOf(0) }
+    var accent by remember { mutableStateOf(0) }
+    var status by remember { mutableStateOf<String?>(null) }
+    var busy by remember { mutableStateOf(false) }
+    val summaryFmt = stringResource(R.string.sheet_summary)
+    val labels = app.mado.data.SheetPdf.Labels(
+        shot = stringResource(R.string.sheet_shot), address = stringResource(R.string.proj_address), notes = stringResource(R.string.proj_notes),
+        generated = stringResource(R.string.sheet_generated),
+        summary = { n, sc -> String.format(summaryFmt, n, sc) },
+        cameras = stringResource(R.string.sheet_cameras), page = stringResource(R.string.sheet_page), scene = stringResource(R.string.frm_scene_label),
+        noPhoto = stringResource(R.string.sheet_no_photo),
+    )
+    val errorText = stringResource(R.string.proj_export_error)
+    val workingText = stringResource(R.string.proj_working)
+    val savedFmt = stringResource(R.string.proj_saved)
+    val shareLabel = stringResource(R.string.action_share)
+
+    fun run(pdf: Boolean) {
+        if (busy) return
+        busy = true; status = workingText
+        scope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val result = runCatching {
+                val sheet = app.mado.data.LocationSheets.build(projectName, place, ShotLog.read(ctx))
+                val base = app.mado.data.FileExport.safeName("Mado_${projectName}_${place.name}").ifEmpty { "Mado_location" } +
+                    "_" + java.time.LocalDate.now().toString().replace("-", "")
+                if (pdf) app.mado.data.FileExport.saveFile(ctx, "$base.pdf", "application/pdf") {
+                    app.mado.data.SheetPdf.write(ctx, sheet, if (template == 0) app.mado.data.SheetPdf.Template.LIST else app.mado.data.SheetPdf.Template.LARGE, app.mado.data.SheetPdf.ACCENTS[accent], labels, it)
+                } else app.mado.data.FileExport.saveFile(ctx, "$base.csv", "text/csv") { it.write(app.mado.data.LocationSheets.csv(sheet).toByteArray(Charsets.UTF_8)) }
+            }
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                busy = false
+                result.onSuccess { saved ->
+                    status = String.format(savedFmt, saved.displayPath)
+                    val send = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                        type = if (pdf) "application/pdf" else "text/csv"
+                        putExtra(android.content.Intent.EXTRA_STREAM, saved.uri)
+                        addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    ctx.startActivity(android.content.Intent.createChooser(send, shareLabel))
+                }.onFailure { status = "$errorText ${it.message.orEmpty()}" }
+            }
+        }
+    }
+
+    Label(stringResource(R.string.proj_export))
+    Text(stringResource(R.string.proj_template), style = mono(10, p.text.copy(alpha = 0.7f)))
+    Seg(listOf(stringResource(R.string.proj_template_list), stringResource(R.string.proj_template_large)), template) { template = it }
+    Text(stringResource(R.string.proj_accent), style = mono(10, p.text.copy(alpha = 0.7f)))
+    Seg(listOf(R.string.proj_accent_orange, R.string.proj_accent_blue, R.string.proj_accent_green, R.string.proj_accent_graphite).map { stringResource(it) }, accent) { accent = it }
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        WideKey(stringResource(R.string.proj_make_pdf), true, Modifier.weight(1f)) { run(true) }
+        WideKey(stringResource(R.string.proj_make_csv), false, Modifier.weight(1f)) { run(false) }
+    }
+    status?.let { Text(it, style = mono(11, p.text)) }
 }

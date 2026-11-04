@@ -11,6 +11,15 @@ data class ShotEntry(
     val placeId: String?,
     val scene: String,
     val shotNo: Int,
+    /** Hora de la toma (ISO, UTC), cámara y modo simulados, focal, ajustes del operador y rumbo, para la hoja de locaciones. */
+    val time: String = "",
+    val camera: String = "",
+    val focalMm: Double? = null,
+    /** La focal es la equivalente full frame de un lente fijo (se muestra «mm eq»). */
+    val focalEquivalent: Boolean = false,
+    val operator: String = "",
+    val notes: String = "",
+    val headingDeg: Double? = null,
 )
 
 object ShotLog {
@@ -26,9 +35,34 @@ object ShotLog {
                 projectId = meta.optJSONObject("project")?.optString("id")?.ifBlank { null },
                 placeId = meta.optJSONObject("place")?.optString("id")?.ifBlank { null },
                 scene = meta.optString("scene").trim(), shotNo = meta.optInt("shot_no", 0),
+                time = meta.optString("time"),
+                camera = meta.optJSONObject("target")?.optString("label").orEmpty(),
+                focalMm = meta.optJSONObject("target")?.let { if (it.isNull("focal_mm")) null else it.optDouble("focal_mm").takeIf { v -> !v.isNaN() } },
+                focalEquivalent = meta.optJSONObject("target")?.optBoolean("focal_equivalent", false) ?: false,
+                operator = operatorSettings(meta.optJSONObject("operator")), notes = operatorNotes(meta.optJSONObject("operator")),
+                headingDeg = meta.optJSONObject("orientation")?.let { if (it.isNull("heading_deg_magnetic")) null else it.optDouble("heading_deg_magnetic").takeIf { v -> !v.isNaN() } },
             )
         }
     } catch (_: Exception) { emptyList() }
+
+    private fun num(v: Double) = if (v % 1.0 == 0.0) v.toInt().toString() else v.toString()
+
+    /** «29.97p · 1/60 · ISO 800 · 5600K» con lo que haya en los datos del operador. */
+    internal fun operatorSettings(o: org.json.JSONObject?): String {
+        if (o == null) return ""
+        fun d(k: String) = if (o.isNull(k)) null else o.optDouble(k).takeIf { !it.isNaN() }
+        return listOfNotNull(
+            d("fps")?.let { "${num(it)}p" }, o.optString("shutter").takeIf { it.isNotEmpty() && it != "null" },
+            d("iso")?.let { "ISO ${num(it)}" }, d("white_balance_k")?.let { "${num(it)}K" },
+        ).joinToString(" · ")
+    }
+
+    /** Picture Profile, nota libre y grabación externa («EXT …»), separados por « · ». */
+    internal fun operatorNotes(o: org.json.JSONObject?): String {
+        if (o == null) return ""
+        fun s(k: String) = if (o.isNull(k)) null else o.optString(k).trim().takeIf { it.isNotEmpty() }
+        return listOfNotNull(s("picture_profile"), s("note"), s("external_recording")?.let { "EXT $it" }).joinToString(" · ")
+    }
 
     fun read(context: android.content.Context): List<ShotEntry> =
         parse(runCatching { context.filesDir.resolve("captures.json").readText() }.getOrNull())
