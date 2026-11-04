@@ -99,6 +99,10 @@ Minimum Android 10 (API 29).
 3. **Stage 2:** focal-length arrows with neighbouring frames at once, composition guides, favourite setups, gallery, projects and PDF shot lists.
 4. **Stage 3:** field tests in Japan and a decision on commercialisation.
 
+## User manual
+
+Full manual with screenshots, in [Español](docs/manual/manual-es.pdf), [English](docs/manual/manual-en.pdf) and [日本語](docs/manual/manual-ja.pdf) (translation not yet reviewed). The texts are in `docs/manual/manual-*.md` and are turned into PDF with `python3 tools/make_manual.py es en ja`.
+
 ## Licence
 
 All rights reserved (see [LICENSE](LICENSE)). Mado is proprietary: beta versions are only for invited people and may not be shared or redistributed. The privacy policy is in [`docs/politica-privacidad.md`](docs/politica-privacidad.md).
