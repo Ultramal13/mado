@@ -98,6 +98,10 @@ Mínimo Android 10 (API 29).
 3. **Etapa 2:** selector de focal con flechas y focales vecinas a la vez, guías de composición, setups favoritos, galería, proyectos y *shotlist* en PDF.
 4. **Etapa 3:** pruebas de campo en Japón y decisión de comercialización.
 
+## Licencia
+
+Todos los derechos reservados (ver [LICENSE](LICENSE)). Mado es un producto propietario: las versiones de prueba son solo para las personas invitadas y no se pueden compartir ni redistribuir. La política de privacidad está en [`docs/politica-privacidad.md`](docs/politica-privacidad.md).
+
 ## Más información
 
 - Decisiones, reglas y estado: [`CLAUDE.md`](CLAUDE.md)

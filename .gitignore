@@ -33,3 +33,9 @@ dist/
 /*.mp4
 /*.ogg
 .playwright-mcp/
+
+# datos de personas que ayudan a probar y calibrar (nunca se publican) y claves de firma de la app
+/privado/
+keystore.properties
+*.jks
+*.keystore

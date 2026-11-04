@@ -1,6 +1,15 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+}
+
+// Firma de la versión de tienda: la clave NO va en el repositorio. Se lee de `keystore.properties` (ignorado por git) con
+// storeFile, storePassword, keyAlias y keyPassword. Sin ese archivo, la versión de tienda sale sin firmar.
+val keystoreProps = Properties().apply {
+    val f = rootProject.file("keystore.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
 }
 
 android {
@@ -16,9 +25,19 @@ android {
         versionName = "0.2.28-beta"
     }
 
+    signingConfigs {
+        if (keystoreProps.getProperty("storeFile") != null) create("release") {
+            storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
+            storePassword = keystoreProps.getProperty("storePassword")
+            keyAlias = keystoreProps.getProperty("keyAlias")
+            keyPassword = keystoreProps.getProperty("keyPassword")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfigs.findByName("release")?.let { signingConfig = it }
         }
     }
 

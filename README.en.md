@@ -98,6 +98,10 @@ Minimum Android 10 (API 29).
 3. **Stage 2:** focal-length arrows with neighbouring frames at once, composition guides, favourite setups, gallery, projects and PDF shot lists.
 4. **Stage 3:** field tests in Japan and a decision on commercialisation.
 
+## Licence
+
+All rights reserved (see [LICENSE](LICENSE)). Mado is proprietary: beta versions are only for invited people and may not be shared or redistributed. The privacy policy is in [`docs/politica-privacidad.md`](docs/politica-privacidad.md).
+
 ## More
 
 - Decisions, rules and status: [`CLAUDE.md`](CLAUDE.md) (in Spanish)
