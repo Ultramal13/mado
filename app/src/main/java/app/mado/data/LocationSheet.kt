@@ -8,6 +8,8 @@ import java.time.format.DateTimeFormatter
 data class SheetShot(
     val key: String, val shotNo: Int, val scene: String, val time: String, val camera: String, val focalMm: Double?, val focalEquivalent: Boolean,
     val operator: String, val notes: String, val headingDeg: Double?, val marcoUri: String?, val planoUri: String?,
+    /** Los ajustes del operador tal como se escribieron (para corregirlos). */
+    val op: OperatorData = OperatorData(),
 )
 
 data class SheetScene(val name: String, val shots: List<SheetShot>)
@@ -25,7 +27,7 @@ object LocationSheets {
             val first = files.first()
             SheetShot(
                 key = key, shotNo = first.shotNo, scene = first.scene, time = first.time, camera = first.camera, focalMm = first.focalMm, focalEquivalent = first.focalEquivalent,
-                operator = first.operator, notes = first.notes, headingDeg = first.headingDeg,
+                operator = first.operator, notes = first.notes, headingDeg = first.headingDeg, op = first.op,
                 marcoUri = files.firstOrNull { it.file.endsWith("_marco.jpg") }?.uri, planoUri = files.firstOrNull { it.file.endsWith("_plano.jpg") }?.uri,
             )
         }.filter { it.marcoUri != null || it.planoUri != null }

@@ -201,4 +201,15 @@
     <string name="sheet_cameras">カメラ</string>
     <string name="sheet_page">p.</string>
     <string name="sheet_no_photo">写真がありません</string>
+    <string name="screen_shots">ショット</string>
+    <string name="proj_view_shots">ショットを見る・編集</string>
+    <string name="shots_empty">このロケ地にはまだショットがありません</string>
+    <string name="shot_edit_note">写真には撮影時のラベルが残ります。ロケ地シートと CSV は修正後のデータを使います。</string>
+    <string name="shot_save">保存</string>
+    <string name="shot_cancel">キャンセル</string>
+    <string name="shot_open_photo">写真を開く</string>
+    <string name="shot_delete">ショットを削除</string>
+    <string name="shot_delete_note">外側をタップするとキャンセルします。シートからだけ外す（写真はギャラリーに残る）か、写真も削除できます。後者は元に戻せません。</string>
+    <string name="shot_remove_sheet">シートからのみ外す</string>
+    <string name="shot_delete_files">写真も削除</string>
 </resources>

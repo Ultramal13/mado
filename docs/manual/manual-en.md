@@ -1,7 +1,7 @@
 # Mado · Director's Viewfinder
 ## User manual
 
-Version 0.2.30 beta · November 2026
+Version 0.2.31 beta · November 2026
 
 ---
 
@@ -110,6 +110,10 @@ Menu **☰ → projects and locations**.
 2. **Location** (a studio, a house…): type the name and tap **+**. Write the **address** and the **logistics notes** (parking, dressing room, art department…).
 3. In the options panel you choose the active project and location. Every photo is tied to them.
 4. The **scene** (for example "fireplace") and the **shot number** are typed in the panel. After each photo the number goes up by itself. Scenes already used in the location appear as shortcuts and continue their numbering.
+
+5. **View and edit the shots:** on the same screen, tap **view and edit shots**. You will see each shot with its thumbnail, grouped by scene. Tap one to correct its **scene**, **shot number** and **operator settings**, to **open the photo** or to **delete it**. The photo keeps the label it was taken with; the location sheet and the CSV use the corrected data. When deleting, you choose between removing it only from the sheet (the photos stay in the gallery) or deleting its photos too (this cannot be undone).
+
+![The shots of a location|30](img/en/shots.jpg) ![Correcting a shot|30](img/en/shot-edit.jpg)
 
 Deleting a project or a location only removes it from the list: **the photos stay in the gallery.**
 

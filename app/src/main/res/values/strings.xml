@@ -201,4 +201,15 @@
     <string name="sheet_cameras">Cameras</string>
     <string name="sheet_page">p.</string>
     <string name="sheet_no_photo">photo not available</string>
+    <string name="screen_shots">shots</string>
+    <string name="proj_view_shots">view and edit shots</string>
+    <string name="shots_empty">no shots in this location yet</string>
+    <string name="shot_edit_note">The photo keeps the label it was taken with; the location sheet and the CSV use the corrected data.</string>
+    <string name="shot_save">save</string>
+    <string name="shot_cancel">cancel</string>
+    <string name="shot_open_photo">open photo</string>
+    <string name="shot_delete">delete shot</string>
+    <string name="shot_delete_note">Tap outside to cancel. You can remove the shot only from the sheet (the photos stay in the gallery) or delete its photos too; that cannot be undone.</string>
+    <string name="shot_remove_sheet">remove from sheet only</string>
+    <string name="shot_delete_files">delete photos too</string>
 </resources>

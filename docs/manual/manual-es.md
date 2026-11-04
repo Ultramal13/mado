@@ -1,7 +1,7 @@
 # Mado · Director's Viewfinder
 ## Manual de uso
 
-Versión 0.2.30 beta · noviembre de 2026
+Versión 0.2.31 beta · noviembre de 2026
 
 ---
 
@@ -110,6 +110,10 @@ Menú **☰ → proyectos y locaciones**.
 2. **Locación** (un estudio, una casa…): escribe el nombre y toca **+**. Anota la **dirección** y las **notas de logística** (estacionamiento, camarín, arte…).
 3. En el panel de opciones eliges el proyecto y la locación activos. Cada foto queda asociada a ellos.
 4. La **escena** (por ejemplo «chimenea») y el **número de plano** se escriben en el panel. Después de cada foto, el número sube solo. Las escenas ya usadas en la locación aparecen como atajos y continúan su numeración.
+
+5. **Ver y editar los planos:** en la misma pantalla, toca **ver y editar planos**. Verás cada plano con su miniatura, agrupados por escena. Tócalo para corregir la **escena**, el **número de plano** y los **ajustes del operador**, para **abrir la foto** o para **borrarlo**. La foto conserva la etiqueta con que se tomó; la hoja de locación y el CSV usan los datos corregidos. Al borrar, eliges entre quitarlo solo de la hoja (las fotos quedan en la galería) o borrar también sus fotos (no se puede deshacer).
+
+![Los planos de una locación|30](img/es/shots.jpg) ![Corregir un plano|30](img/es/shot-edit.jpg)
 
 Borrar un proyecto o una locación solo los quita de la lista: **las fotos quedan en la galería.**
 

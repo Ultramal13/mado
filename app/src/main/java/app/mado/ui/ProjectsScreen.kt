@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 /** Proyectos y locaciones del scout: altas, nombres, dirección, notas de logística y las escenas con sus planos. */
 @Composable
-fun ProjectsScreen(book: ProjectBook, shots: List<ShotEntry>, onBook: (ProjectBook) -> Unit) {
+fun ProjectsScreen(book: ProjectBook, shots: List<ShotEntry>, onBook: (ProjectBook) -> Unit, onShots: () -> Unit = {}) {
     val p = LocalPalette.current
     var confirm by remember { mutableStateOf<String?>(null) }       // "project" o "place"
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -69,7 +69,10 @@ fun ProjectsScreen(book: ProjectBook, shots: List<ShotEntry>, onBook: (ProjectBo
                 else scenes.forEach { (scene, n) ->
                     Text("${scene.ifEmpty { "—" }} · ${stringResource(R.string.proj_shots_count, n)}", style = mono(13, p.text), modifier = Modifier.padding(vertical = 2.dp))
                 }
-                if (scenes.isNotEmpty()) ExportSection(project.name, place, shots)
+                if (scenes.isNotEmpty()) {
+                    Row { SmallKey(stringResource(R.string.proj_view_shots), onShots) }
+                    ExportSection(project.name, place, shots)
+                }
             }
         }
     }

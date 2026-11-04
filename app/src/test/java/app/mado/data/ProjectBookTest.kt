@@ -207,3 +207,44 @@ class PdfJpegTest {
         assertEquals(1500 to 900, PdfJpeg.jpegSize(jpeg(1500, 900)))
     }
 }
+
+class ShotEditTest {
+    private fun entry(file: String, scene: String, no: Int, extra: String = "") =
+        """{"file":"$file","uri":"content://x/$file","meta":{"scene":"$scene","shot_no":$no,"time":"2026-11-02T10:00:00Z","place":{"id":"l1"}$extra}}"""
+    private val op = ""","operator":{"fps":29.97,"shutter":"1/60","iso":800,"white_balance_k":5600,"picture_profile":"PP10","note":"LUT x","external_recording":"Ninja"}"""
+    private val json = "[" + listOf(entry("MADO_1_marco.jpg", "kitchen", 1, op), entry("MADO_1_plano.jpg", "kitchen", 1, op), entry("MADO_2_marco.jpg", "stairs", 1)).joinToString(",") + "]"
+
+    @Test
+    fun operatorDataRoundTripsThroughTheMetadata() {
+        val e = ShotLog.parse(json).first()
+        assertEquals(OperatorData("29.97", "1/60", "800", "5600", "PP10", "LUT x", "Ninja"), e.op)
+        assertEquals("29.97p · 1/60 · ISO 800 · 5600K", e.operator); assertEquals("PP10 · LUT x · EXT Ninja", e.notes)
+    }
+
+    @Test
+    fun editChangesBothFilesOfTheShotAndNothingElse() {
+        val edit = ShotEdit("cocina", 4, OperatorData(fps = "24", iso = "400", note = "ND 0.9"))
+        val out = ShotLog.applyEdit(json, "MADO_1", edit)!!
+        val e = ShotLog.parse(out)
+        assertEquals(listOf("cocina", "cocina", "stairs"), e.map { it.scene })
+        assertEquals(listOf(4, 4, 1), e.map { it.shotNo })
+        assertEquals("24p · ISO 400", e[0].operator); assertEquals("24p · ISO 400", e[1].operator)
+        assertEquals("ND 0.9", e[1].notes)
+        assertEquals("", e[2].operator)
+        assertEquals(null, ShotLog.applyEdit(json, "NOPE", edit))
+    }
+
+    @Test
+    fun clearingEveryOperatorFieldRemovesTheOperatorBlock() {
+        val out = ShotLog.applyEdit(json, "MADO_1", ShotEdit("kitchen", 1, OperatorData()))!!
+        assertEquals(true, ShotLog.parse(out).all { it.op.isEmpty })
+    }
+
+    @Test
+    fun removeDropsBothFilesAndReturnsTheirUris() {
+        val (out, uris) = ShotLog.remove(json, "MADO_1")!!
+        assertEquals(listOf("content://x/MADO_1_marco.jpg", "content://x/MADO_1_plano.jpg"), uris)
+        assertEquals(listOf("MADO_2"), ShotLog.parse(out).map { it.shotKey })
+        assertEquals(null, ShotLog.remove(json, "NOPE"))
+    }
+}

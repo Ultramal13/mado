@@ -201,4 +201,15 @@
     <string name="sheet_cameras">Cámaras</string>
     <string name="sheet_page">pág.</string>
     <string name="sheet_no_photo">foto no disponible</string>
+    <string name="screen_shots">planos</string>
+    <string name="proj_view_shots">ver y editar planos</string>
+    <string name="shots_empty">aún no hay planos en esta locación</string>
+    <string name="shot_edit_note">La foto conserva la etiqueta con que se tomó; la hoja de locación y el CSV usan los datos corregidos.</string>
+    <string name="shot_save">guardar</string>
+    <string name="shot_cancel">cancelar</string>
+    <string name="shot_open_photo">abrir foto</string>
+    <string name="shot_delete">borrar plano</string>
+    <string name="shot_delete_note">Toca fuera para cancelar. Puedes quitar el plano solo de la hoja (las fotos quedan en la galería) o borrar también sus fotos; eso no se puede deshacer.</string>
+    <string name="shot_remove_sheet">quitar solo de la hoja</string>
+    <string name="shot_delete_files">borrar también las fotos</string>
 </resources>

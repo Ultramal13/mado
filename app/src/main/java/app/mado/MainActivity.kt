@@ -41,6 +41,7 @@ import app.mado.ui.LocalPalette
 import app.mado.ui.NocheRoja
 import app.mado.ui.Oscuro
 import app.mado.ui.ProjectsScreen
+import app.mado.ui.ShotsScreen
 
 private val THEMES = listOf("auto", "light", "dark", "red")
 
@@ -85,15 +86,15 @@ class MainActivity : ComponentActivity() {
             var book by remember { mutableStateOf(store.load()) }
             val onBook: (app.mado.data.ProjectBook) -> Unit = { book = it; store.save(it) }
             val framing = remember { FramingState(CameraRepository.load(applicationContext)).also { it.restore(prefs.getString("framing", null)) } }
-            androidx.activity.compose.BackHandler(enabled = screen != 0) { screen = 0 }
+            androidx.activity.compose.BackHandler(enabled = screen != 0) { screen = if (screen == 4) 3 else 0 }
 
-            val title = stringResource(when (screen) { 0 -> R.string.screen_viewer; 1 -> R.string.screen_calibration; 3 -> R.string.screen_projects; else -> R.string.mode_diagnostics })
+            val title = stringResource(when (screen) { 0 -> R.string.screen_viewer; 1 -> R.string.screen_calibration; 3 -> R.string.screen_projects; 4 -> R.string.screen_shots; else -> R.string.mode_diagnostics })
             // Orientación según el tamaño real de la ventana: la configuración que reporta Android puede quedar desfasada tras girar
             // (en algunos teléfonos, p. ej. el Xperia, el diseño se quedaba en vertical con el teléfono en horizontal).
             val win = androidx.compose.ui.platform.LocalWindowInfo.current.containerSize
             val landscape = win.width > win.height
             val chrome: @Composable () -> Unit = {
-                Header(title, onMenu = { menuOpen = true }, onBack = if (screen != 0) ({ screen = 0 }) else null)
+                Header(title, onMenu = { menuOpen = true }, onBack = if (screen != 0) ({ screen = if (screen == 4) 3 else 0 }) else null)
             }
             // En horizontal, el visor y la calibración meten el encabezado en su panel derecho: la imagen usa todo el alto.
             val chromeInPanel = landscape && screen == 1
@@ -136,7 +137,8 @@ class MainActivity : ComponentActivity() {
                     when (screen) {
                         0 -> FovScreen(report, results, onShare = ::share, framing = framing, onMenu = { menuOpen = true }, book = book, onBook = onBook, onProjects = { screen = 3 },
                             onShareDiagnostics = { shareDiagnostics(report.toJson()) }, onCalibrate = { screen = 1 })
-                        3 -> ProjectsScreen(book, remember(screen) { app.mado.data.ShotLog.read(applicationContext) }, onBook)
+                        3 -> ProjectsScreen(book, remember(screen) { app.mado.data.ShotLog.read(applicationContext) }, onBook, onShots = { screen = 4 })
+                        4 -> ShotsScreen(book)
                         1 -> FovScreen(report, results, onShare = ::share, header = if (chromeInPanel) chrome else null)
                         else -> DiagnosticsScreen(report, onCopy = { copy(report.toJson()) }, onShare = { shareDiagnostics(report.toJson()) }, onSave = { saveDiagnostics(report.toJson()) })
                     }
