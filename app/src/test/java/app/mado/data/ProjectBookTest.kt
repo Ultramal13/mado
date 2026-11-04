@@ -150,3 +150,60 @@ class LocationSheetTest {
         assertEquals("sin hora", LocationSheets.localTime("sin hora"))
     }
 }
+
+class PdfJpegTest {
+    private fun objs(): String = buildString {
+        append("%PDF-1.4\n%Óëéá\n")
+        append("1 0 obj\n<</Producer (Skia)>>\nendobj\n")
+        append("2 0 obj\n<</Type /Catalog\n/Pages 3 0 R>>\nendobj\n")
+        append("3 0 obj\n<</Type /Pages\n/Count 0\n/Kids []>>\nendobj\n")
+        append("4 0 obj\n<</Type /XObject\n/Subtype /Image\n/Width 9000\n/Height 2\n/ColorSpace /DeviceRGB\n/BitsPerComponent 8\n/Filter /FlateDecode\n/Length 4>> stream\nABCD\nendstream\nendobj\n")
+        append("5 0 obj\n<</Length 9>> stream\nendobj\nxx\nendstream\nendobj\n")        // un flujo cuyo contenido incluye «endobj»
+    }
+
+    private fun jpeg(w: Int, h: Int): ByteArray = byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0xC0.toByte(), 0, 17, 8, (h shr 8).toByte(), h.toByte(), (w shr 8).toByte(), w.toByte(), 3, 1, 0x22, 0, 2, 0x11, 1, 3, 0x11, 1, 0xFF.toByte(), 0xD9.toByte())
+
+    @Test
+    fun replacesTheMarkedImageAndRebuildsTheXref() {
+        val body = objs()
+        val offs = Regex("""(\d+) 0 obj\n""").findAll(body).map { it.range.first }.toList()
+        val xref = "xref\n0 6\n0000000000 65535 f \n" + offs.joinToString("") { "%010d 00000 n \n".format(it) } +
+            "trailer\n<</Size 6\n/Root 2 0 R\n/Info 1 0 R>>\nstartxref\n${body.length}\n%%EOF\n"
+        val src = (body + xref).toByteArray(Charsets.ISO_8859_1)
+        val j = jpeg(1500, 900)
+        val out = PdfJpeg.swap(src, mapOf(9000 to PdfJpeg.Jpeg(j)))!!
+        val text = String(out, Charsets.ISO_8859_1)
+        assertTrue(text.contains("/Filter /DCTDecode") && text.contains("/Width 1500") && text.contains("/Height 900"))
+        assertTrue(text.contains("5 0 obj\n<</Length 9>> stream\nendobj\nxx\nendstream\nendobj\n"))       // el otro flujo queda intacto
+        // Cada entrada de la nueva tabla xref apunta al inicio exacto de su objeto.
+        val newOffsets = Regex("""(\d{10}) 00000 n \n""").findAll(text.substring(text.indexOf("xref\n"))).map { it.groupValues[1].toInt() }.toList()
+        assertEquals(5, newOffsets.size)
+        newOffsets.forEachIndexed { i, o -> assertTrue(text.startsWith("${i + 1} 0 obj\n", o)) }
+        assertEquals(text.indexOf("xref\n"), Regex("""startxref\n(\d+)""").find(text)!!.groupValues[1].toInt())
+        assertTrue(text.contains("/Root 2 0 R") && text.contains("/Info 1 0 R"))
+    }
+
+    @Test
+    fun acceptsObjectsWrittenOutOfOrder() {
+        // Android escribe los objetos mezclados (1, 3, 2…): la nueva xref debe seguir el número, no el orden del archivo.
+        val body = "%PDF-1.4\n%\u00d3\u00eb\u00e9\u00e1\n1 0 obj\n<</Producer (x)>>\nendobj\n3 0 obj\n<</Type /Pages>>\nendobj\n" +
+            "2 0 obj\n<</Type /Catalog\n/Pages 3 0 R>>\nendobj\n"
+        val src = (body + "xref\n0 4\n0000000000 65535 f \n0000000000 00000 n \n0000000000 00000 n \n0000000000 00000 n \n" +
+            "trailer\n<</Size 4\n/Root 2 0 R>>\nstartxref\n${body.length}\n%%EOF\n").toByteArray(Charsets.ISO_8859_1)
+        val text = String(PdfJpeg.swap(src, emptyMap())!!, Charsets.ISO_8859_1)
+        val offs = Regex("(\\d{10}) 00000 n \n").findAll(text.substring(text.indexOf("xref\n"))).map { it.groupValues[1].toInt() }.toList()
+        assertEquals(3, offs.size)
+        offs.forEachIndexed { i, o -> assertTrue(text.startsWith("${i + 1} 0 obj\n", o)) }
+    }
+
+    @Test
+    fun returnsNullWhenTheFileIsNotWhatAndroidWrites() {
+        assertEquals(null, PdfJpeg.swap("no es un pdf".toByteArray(), emptyMap()))
+        assertEquals(null, PdfJpeg.swap("%PDF-1.4\n1 0 obj\n<</Length 99>> stream\nx\nendstream\nendobj\n".toByteArray(), emptyMap()))
+    }
+
+    @Test
+    fun readsTheJpegSize() {
+        assertEquals(1500 to 900, PdfJpeg.jpegSize(jpeg(1500, 900)))
+    }
+}

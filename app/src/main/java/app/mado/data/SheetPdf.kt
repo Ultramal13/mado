@@ -37,14 +37,25 @@ object SheetPdf {
     private val INK = 0xFF111111.toInt(); private val SOFT = 0xFF666666.toInt(); private val RULE = 0xFFDDDDDD.toInt()
 
     fun write(context: Context, sheet: LocationSheet, template: Template, accent: Int, labels: Labels, out: OutputStream) {
+        // Las fotos van como JPEG de buena calidad en vez de imágenes sin pérdida (más nítidas y mucho más livianas).
         val doc = PdfDocument()
-        try {
-            Writer(context, doc, sheet, template, accent, labels).run()
-            doc.writeTo(out)
+        val swapped = try {
+            val writer = Writer(context, doc, sheet, template, accent, labels, jpegMode = true)
+            writer.run()
+            PdfJpeg.swap(java.io.ByteArrayOutputStream().also { doc.writeTo(it) }.toByteArray(), writer.jpegs)
         } finally { doc.close() }
+        if (swapped != null) { out.write(swapped); return }
+        // Si el archivo que escribe el teléfono no tiene la forma esperada, se rehace con imágenes sin pérdida, más chicas y pesadas.
+        val plain = PdfDocument()
+        try {
+            Writer(context, plain, sheet, template, accent, labels, jpegMode = false).run()
+            plain.writeTo(out)
+        } finally { plain.close() }
     }
 
-    private class Writer(val ctx: Context, val doc: PdfDocument, val sheet: LocationSheet, val template: Template, val accent: Int, val labels: Labels) {
+    private class Writer(val ctx: Context, val doc: PdfDocument, val sheet: LocationSheet, val template: Template, val accent: Int, val labels: Labels, val jpegMode: Boolean) {
+        /** Fotos ya codificadas en JPEG, por el ancho de su imagen de marcador (ver [PdfJpeg]). */
+        val jpegs = HashMap<Int, PdfJpeg.Jpeg>()
         var pageNo = 0
         var page: PdfDocument.Page? = null
         var c: Canvas = Canvas()
@@ -89,6 +100,20 @@ object SheetPdf {
 
         fun ensure(h: Float) { if (y + h > H - M - FOOT) startPage(true) }
 
+        /** Foto lista para el PDF: su tamaño real en píxeles y una imagen diminuta de marcador que se dibuja en su lugar. */
+        class Pic(val w: Int, val h: Int, val placeholder: Bitmap)
+
+        fun pic(uri: String?, widthPx: Int): Pic? {
+            if (!jpegMode) return bitmap(uri, if (widthPx > 1500) 900 else 560)?.let { Pic(it.width, it.height, it) }
+            val bm = bitmap(uri, widthPx) ?: return null
+            val bytes = java.io.ByteArrayOutputStream(bm.width * bm.height / 6).also { bm.compress(Bitmap.CompressFormat.JPEG, 86, it) }.toByteArray()
+            val w = bm.width; val h = bm.height
+            bm.recycle()
+            val key = 9000 + jpegs.size
+            jpegs[key] = PdfJpeg.Jpeg(bytes)
+            return Pic(w, h, Bitmap.createBitmap(key, 2, Bitmap.Config.ARGB_8888).apply { eraseColor(0xFFFFFFFF.toInt()); setHasAlpha(false) })
+        }
+
         fun bitmap(uri: String?, widthPx: Int): Bitmap? {
             if (uri == null) return null
             return try {
@@ -103,16 +128,16 @@ object SheetPdf {
             } catch (_: Exception) { null }
         }
 
-        fun photo(bm: Bitmap?, x: Float, top: Float, width: Float, maxH: Float, center: Boolean = false): Float {
+        fun photo(bm: Pic?, x: Float, top: Float, width: Float, maxH: Float, center: Boolean = false): Float {
             if (bm == null) {
                 c.drawRect(RectF(x, top, x + width, top + maxH * 0.6f), Paint().apply { color = 0xFFF2F2F2.toInt() })
                 text(labels.noPhoto, paint(10f, SOFT), x + 8f, top + 8f, width - 16f)
                 return maxH * 0.6f
             }
-            var w = width; var h = bm.height * w / bm.width
-            if (h > maxH) { h = maxH; w = bm.width * h / bm.height }
+            var w = width; var h = bm.h * w / bm.w
+            if (h > maxH) { h = maxH; w = bm.w * h / bm.h }
             val left = if (center) x + (width - w) / 2f else x
-            c.drawBitmap(bm, Rect(0, 0, bm.width, bm.height), RectF(left, top, left + w, top + h), Paint(Paint.FILTER_BITMAP_FLAG))
+            c.drawBitmap(bm.placeholder, Rect(0, 0, bm.placeholder.width, bm.placeholder.height), RectF(left, top, left + w, top + h), Paint(Paint.FILTER_BITMAP_FLAG))
             c.drawRect(RectF(left, top, left + w, top + h), Paint().apply { style = Paint.Style.STROKE; strokeWidth = 0.6f; color = RULE })
             return h
         }
@@ -167,8 +192,8 @@ object SheetPdf {
                     for (s in scene.shots) {
                         if (y > M + 40f) startPage(true)
                         sceneBar(scene.name, null)
-                        val bm = bitmap(s.marcoUri ?: s.planoUri, 1000)
-                        val h = photo(bm, M, y, CW, 430f, center = true); bm?.recycle()
+                        val bm = pic(s.marcoUri ?: s.planoUri, 2000)
+                        val h = photo(bm, M, y, CW, 430f, center = true)
                         y += h + 14f
                         y += shotText(s, M, y, CW, true)
                     }
@@ -180,8 +205,8 @@ object SheetPdf {
                     val photoH = 150f
                     val rowH = maxOf(photoH, textH) + 14f
                     if (y + rowH > H - M - FOOT) { startPage(true); sceneBar(scene.name, null) }
-                    val bm = bitmap(s.planoUri ?: s.marcoUri, 520)
-                    val h = photo(bm, M, y, 210f, photoH); bm?.recycle()
+                    val bm = pic(s.planoUri ?: s.marcoUri, 1000)
+                    val h = photo(bm, M, y, 210f, photoH)
                     shotText(s, M + 224f, y, CW - 224f, true)
                     y += maxOf(h, textH) + 10f
                     c.drawRect(M, y, W - M, y + 0.6f, Paint().apply { color = RULE }); y += 8f
