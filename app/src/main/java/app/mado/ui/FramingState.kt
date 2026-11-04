@@ -109,7 +109,7 @@ class FramingState(val db: CameraDb) {
                 modes.indexOfFirst { it.id == o.optString("mode") }.takeIf { it >= 0 }?.let { modeIdx = it }
                 camera?.builtInLenses?.indexOfFirst { it.id == o.optString("builtIn") }?.takeIf { it >= 0 }?.let { builtInIdx = it }
             }
-            db.lensSets.indexOfFirst { it.id == o.optString("lensSet") }.takeIf { it >= 0 }?.let { lensSetIdx = it }
+            lensSets.indexOfFirst { it.id == o.optString("lensSet") }.takeIf { it >= 0 }?.let { lensSetIdx = it }
             o.optString("focal").takeIf { it.toDoubleOrNull() != null }?.let { focal = it }
             o.optJSONArray("kit")?.let { a -> List(a.length()) { a.optDouble(it) }.filter { it > 0 }.takeIf { it.isNotEmpty() }?.let { kit = it } }
             o.optString("customW").takeIf { it.toDoubleOrNull() != null }?.let { customW = it }
@@ -127,7 +127,37 @@ class FramingState(val db: CameraDb) {
 
     val isCustom get() = cameraIdx >= cameras.size
     val camera: Camera? get() = cameras.getOrNull(cameraIdx)
-    val lensSet get() = db.lensSets.getOrNull(lensSetIdx)
+    /** Juegos de lentes: los del catálogo y, al final, los propios del usuario. */
+    var customKits by mutableStateOf(listOf<app.mado.data.LensSet>())
+    var kitStore: app.mado.data.KitStore? = null
+    val lensSets: List<app.mado.data.LensSet> get() = db.lensSets + customKits
+    val lensSet get() = lensSets.getOrNull(lensSetIdx)
+
+    /** Elige un juego de lentes: el kit dibujado pasa a las focales del juego más cercanas a 24, 35, 50 y 85 mm, y la focal actual a la más cercana. */
+    fun selectLensSet(idx: Int) {
+        val set = lensSets.getOrNull(idx) ?: return
+        lensSetIdx = idx
+        if (set.focalsMm.isEmpty()) return
+        fun nearest(f: Double) = set.focalsMm.minBy { kotlin.math.abs(it - f) }
+        kit = listOf(24.0, 35.0, 50.0, 85.0).map(::nearest).distinct().sorted()
+        currentFocal?.let { focal = fmtF(nearest(it)) }
+    }
+
+    /** Crea ([id] null) o cambia un juego propio, lo guarda en el teléfono y lo deja elegido. */
+    fun saveKit(id: String?, name: String, squeeze: Double, focals: List<Double>) {
+        val kitId = id ?: app.mado.data.KitStore.newId()
+        val kit = app.mado.data.LensSet(kitId, name.trim().ifEmpty { "—" }, null, squeeze.coerceAtLeast(1.0), focals, custom = true)
+        customKits = if (customKits.any { it.id == kitId }) customKits.map { if (it.id == kitId) kit else it } else customKits + kit
+        kitStore?.save(customKits)
+        selectLensSet(lensSets.indexOfFirst { it.id == kitId })
+    }
+
+    fun deleteKit(id: String) {
+        val current = lensSet?.id
+        customKits = customKits.filterNot { it.id == id }
+        kitStore?.save(customKits)
+        lensSetIdx = if (current == id) 0 else lensSets.indexOfFirst { it.id == current }.coerceAtLeast(0)
+    }
     val squeeze get() = lensSet?.squeeze ?: 1.0
     /** Modos de la cámara actual. El catálogo siempre refleja el firmware más nuevo que conocemos (`Camera.latestFirmware`). */
     val modes: List<app.mado.data.RecordingMode> get() = camera?.modes.orEmpty()

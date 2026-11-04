@@ -1,7 +1,7 @@
 # Mado · Director's Viewfinder
 ## Manual de uso
 
-Versión 0.2.31 beta · noviembre de 2026
+Versión 0.2.32 beta · noviembre de 2026
 
 ---
 
@@ -56,7 +56,11 @@ El campo de visión depende del **área del sensor que usa cada modo**, no solo 
 Elige el perfil que vas a grabar (Canon Log, Canon Log 3, S-Log3, I-Log, HDR PQ…). Aparece junto al modo, en el visor y en la barra de la foto. En la **Sony FX3** también puedes elegir el **Picture Profile** (PP1 a PP6, PP10 y PP11); lo que contiene cada PP lo configura quien opera la cámara, así que descríbelo en la nota (capítulo 6).
 
 ### 5.4 Juego de lentes y kit de focales
-- **Juego de lentes:** esféricos o anamórficos (2x, 1.33x). En anamórfico, el recuadro se ensancha según el factor de compresión.
+- **Juego de lentes:** elige uno de la lista. Hay genéricos (esféricos y anamórficos 2x y 1.33x) y juegos con **nombre real**: **DZOFilm Arles**, **Zeiss CP.3**, **Cooke S4/i** y **Atlas Orion 2x**, cada uno con la fuente de sus focales. En anamórfico, el recuadro se ensancha según el factor de compresión.
+- **Tus propios juegos:** con **juego nuevo** escribes el nombre, las focales separadas por comas y, si es anamórfico, su compresión. Aparecen al final de la lista con ★ y se corrigen o borran con **editar este juego**.
+- Al elegir un juego, el kit dibujado pasa a las focales más cercanas a 24, 35, 50 y 85 mm. Las listas de focales de los juegos con nombre salen de fichas de tiendas y de la prensa, no siempre del fabricante: confirma el set que llevas y, si difiere, crea el tuyo.
+
+![La lista de juegos de lentes|30](img/es/kits.jpg) ![Crear un juego propio|30](img/es/kit-new.jpg)
 - **Kit de focales:** toca los números para sumar o quitar focales; todas se dibujan a la vez.
 - **Focal (mm):** la focal actual. En cámaras de lente fijo (como la Luna Ultra) eliges el lente integrado y la focal es la equivalente.
 

@@ -42,6 +42,8 @@ data class ShotEntry(
     val focalEquivalent: Boolean = false,
     val op: OperatorData = OperatorData(),
     val headingDeg: Double? = null,
+    /** Juego de lentes usado (vacío en cámaras de lente fijo). */
+    val lensSet: String = "",
 ) {
     val operator: String get() = op.settingsLine()
     val notes: String get() = op.notesLine()
@@ -65,6 +67,7 @@ object ShotLog {
                 focalMm = meta.optJSONObject("target")?.let { if (it.isNull("focal_mm")) null else it.optDouble("focal_mm").takeIf { v -> !v.isNaN() } },
                 focalEquivalent = meta.optJSONObject("target")?.optBoolean("focal_equivalent", false) ?: false,
                 op = operatorData(meta.optJSONObject("operator")),
+                lensSet = meta.optJSONObject("target")?.let { if (it.isNull("lens_set")) "" else it.optString("lens_set") }.orEmpty(),
                 headingDeg = meta.optJSONObject("orientation")?.let { if (it.isNull("heading_deg_magnetic")) null else it.optDouble("heading_deg_magnetic").takeIf { v -> !v.isNaN() } },
             )
         }

@@ -10,6 +10,7 @@ data class SheetShot(
     val operator: String, val notes: String, val headingDeg: Double?, val marcoUri: String?, val planoUri: String?,
     /** Los ajustes del operador tal como se escribieron (para corregirlos). */
     val op: OperatorData = OperatorData(),
+    val lensSet: String = "",
 )
 
 data class SheetScene(val name: String, val shots: List<SheetShot>)
@@ -27,7 +28,7 @@ object LocationSheets {
             val first = files.first()
             SheetShot(
                 key = key, shotNo = first.shotNo, scene = first.scene, time = first.time, camera = first.camera, focalMm = first.focalMm, focalEquivalent = first.focalEquivalent,
-                operator = first.operator, notes = first.notes, headingDeg = first.headingDeg, op = first.op,
+                operator = first.operator, notes = first.notes, headingDeg = first.headingDeg, op = first.op, lensSet = first.lensSet,
                 marcoUri = files.firstOrNull { it.file.endsWith("_marco.jpg") }?.uri, planoUri = files.firstOrNull { it.file.endsWith("_plano.jpg") }?.uri,
             )
         }.filter { it.marcoUri != null || it.planoUri != null }
@@ -46,11 +47,11 @@ object LocationSheets {
     /** Hoja de datos en CSV (una fila por plano) para quien prefiera armar el documento en Keynote, Canva o una planilla. */
     fun csv(sheet: LocationSheet, zone: ZoneId = ZoneId.systemDefault()): String {
         fun cell(v: String) = "\"" + v.replace("\"", "\"\"") + "\""
-        val header = listOf("project", "location", "scene", "shot", "time", "camera", "focal_mm", "operator", "notes", "heading_deg", "plano_file", "marco_file")
+        val header = listOf("project", "location", "scene", "shot", "time", "camera", "lens_set", "focal_mm", "operator", "notes", "heading_deg", "plano_file", "marco_file")
         val rows = sheet.scenes.flatMap { sc ->
             sc.shots.map { s ->
                 listOf(
-                    sheet.projectName, sheet.place.name, sc.name, s.shotNo.toString(), localTime(s.time, zone), s.camera, s.focalMm?.toString().orEmpty(),
+                    sheet.projectName, sheet.place.name, sc.name, s.shotNo.toString(), localTime(s.time, zone), s.camera, s.lensSet, s.focalMm?.toString().orEmpty(),
                     s.operator, s.notes, s.headingDeg?.let { "%.0f".format(java.util.Locale.ROOT, it) }.orEmpty(),
                     s.key + "_plano.jpg", s.key + "_marco.jpg",
                 )

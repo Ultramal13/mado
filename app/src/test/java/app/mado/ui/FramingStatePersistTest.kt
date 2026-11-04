@@ -103,4 +103,20 @@ class FramingStatePersistTest {
         b.cameraIdx = b.cameras.indexOfFirst { it.id == "canon_eos_r5" }
         assertEquals("LUT x · EXT Ninja · ProRes RAW", b.operatorNotes())
     }
+
+    @Test
+    fun choosingAKitDrawsItsClosestFocalsAndCustomKitsSurviveRestart() {
+        val f = FramingState(db)
+        f.cameraIdx = f.cameras.indexOfFirst { it.id == "canon_eos_r5" }
+        f.selectLensSet(f.lensSets.indexOfFirst { it.id == "zeiss_cp3" })
+        assertEquals(listOf(25.0, 35.0, 50.0, 85.0), f.kit)             // las más cercanas a 24, 35, 50 y 85 mm de las 10 del juego
+        f.saveKit(null, "Mis primes", 1.0, listOf(20.0, 40.0, 80.0))
+        assertEquals("Mis primes", f.lensSet?.name)
+        assertEquals(true, f.lensSet?.custom)
+        assertEquals(listOf(20.0, 40.0, 80.0), f.kit)
+        val g = FramingState(db); g.customKits = f.customKits; g.restore(f.snapshot())
+        assertEquals("Mis primes", g.lensSet?.name)
+        f.deleteKit(f.lensSet!!.id)
+        assertEquals(0, f.lensSetIdx); assertTrue(f.customKits.isEmpty())
+    }
 }

@@ -87,6 +87,7 @@ object CameraDbParser {
         mount = o.optStringOrNull("montura"),
         squeeze = o.optDoubleOrNull("squeeze") ?: 1.0,
         focalsMm = o.optJSONArray("focales_mm")?.let { a -> (0 until a.length()).map { a.getDouble(it) } }.orEmpty(),
+        source = source(o.optJSONObject("fuente")),
     )
 
     private fun phoneProfile(o: JSONObject) = PhoneProfile(

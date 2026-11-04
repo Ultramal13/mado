@@ -1,7 +1,7 @@
 # Mado · Director's Viewfinder
 ## User manual
 
-Version 0.2.31 beta · November 2026
+Version 0.2.32 beta · November 2026
 
 ---
 
@@ -56,7 +56,11 @@ The field of view depends on the **sensor area each mode uses**, not only on the
 Choose the profile you will record (Canon Log, Canon Log 3, S-Log3, I-Log, HDR PQ…). It appears next to the mode, in the viewfinder and in the photo bar. On the **Sony FX3** you can also pick the **Picture Profile** (PP1 to PP6, PP10 and PP11); what each PP contains is set by whoever operates the camera, so describe it in the note (chapter 6).
 
 ### 5.4 Lens set and focal kit
-- **Lens set:** spherical or anamorphic (2x, 1.33x). With anamorphic, the frame widens by the squeeze factor.
+- **Lens set:** pick one from the list. There are generic ones (spherical and anamorphic 2x and 1.33x) and sets with a **real name**: **DZOFilm Arles**, **Zeiss CP.3**, **Cooke S4/i** and **Atlas Orion 2x**, each with the source of its focal lengths. With anamorphic, the frame widens by the squeeze factor.
+- **Your own sets:** with **new lens set** you type the name, the focal lengths separated by commas and, if it is anamorphic, its squeeze. They appear at the end of the list with ★ and are corrected or deleted with **edit this set**.
+- When you choose a set, the drawn kit becomes the focal lengths closest to 24, 35, 50 and 85 mm. The focal lists of the named sets come from retailer listings and press, not always from the maker: check the set you carry and, if it differs, create your own.
+
+![The lens set list|30](img/en/kits.jpg) ![Creating your own set|30](img/en/kit-new.jpg)
 - **Focal kit:** tap the numbers to add or remove focal lengths; all of them are drawn at once.
 - **Focal length (mm):** the current focal length. On fixed-lens cameras (such as the Luna Ultra) you choose the built-in lens and the focal length is the equivalent.
 

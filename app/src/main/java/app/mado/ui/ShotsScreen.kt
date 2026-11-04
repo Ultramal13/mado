@@ -78,7 +78,7 @@ private fun ShotRow(s: SheetShot, onClick: () -> Unit) {
             val focal = s.focalMm?.let { (if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()) + if (s.focalEquivalent) " mm eq" else " mm" }
             Text(listOfNotNull("${stringResource(R.string.sheet_shot)} ${s.shotNo}", focal).joinToString(" · "), style = mono(13, p.keyText, true))
             Text(LocationSheets.localTime(s.time), style = mono(10, p.keyText.copy(alpha = 0.6f)))
-            if (s.camera.isNotEmpty()) Text(s.camera, style = mono(10, p.keyText))
+            if (s.camera.isNotEmpty()) Text(listOf(s.camera, s.lensSet).filter { it.isNotEmpty() }.joinToString(" · "), style = mono(10, p.keyText))
             if (s.operator.isNotEmpty()) Text(s.operator, style = mono(11, p.keyText, true))
             if (s.notes.isNotEmpty()) Text(s.notes, style = mono(10, p.accent))
         }

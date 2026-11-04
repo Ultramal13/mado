@@ -410,7 +410,7 @@ fun FovScreen(
                 .put("aspect", target?.aspect).put("squeeze", framing.squeeze)
                 // Lente fija: la focal es la equivalente full frame del lente integrado elegido; si no, la que se escribió en el panel.
                 .put("focal_mm", if (framing.isFixedLens) framing.camera?.builtInLenses?.getOrNull(framing.builtInIdx)?.equivalentFocalMm else framing.focal.toDoubleOrNull())
-                .put("focal_equivalent", framing.isFixedLens)
+                .put("focal_equivalent", framing.isFixedLens).put("lens_set", if (framing.isFixedLens) null else framing.lensSet?.name?.substringBefore(" ("))
                 .put("frame_width_pct", frame?.let { it.widthFrac * 100 }).put("frame_height_pct", frame?.let { it.heightFrac * 100 })
                 .put("padding", frame?.padding))
             pose?.let { put("orientation", JSONObject().put("heading_deg_magnetic", it.headingDeg).put("elevation_deg", it.elevationDeg).put("level_deg", it.levelDeg)) }

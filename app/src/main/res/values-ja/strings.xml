@@ -212,4 +212,13 @@
     <string name="shot_delete_note">外側をタップするとキャンセルします。シートからだけ外す（写真はギャラリーに残る）か、写真も削除できます。後者は元に戻せません。</string>
     <string name="shot_remove_sheet">シートからのみ外す</string>
     <string name="shot_delete_files">写真も削除</string>
+    <string name="kit_new">新しいレンズセット</string>
+    <string name="kit_edit">このセットを編集</string>
+    <string name="kit_name">名前</string>
+    <string name="kit_name_hint">例：マイシネプライム</string>
+    <string name="kit_focals">焦点距離（mm、カンマ区切り）</string>
+    <string name="kit_focals_read">%1$d 本の焦点距離</string>
+    <string name="kit_squeeze">アナモルフィック圧縮率（空欄＝球面）</string>
+    <string name="kit_squeeze_hint">例：2.0、1.5、1.33</string>
+    <string name="kit_delete">このセットを削除</string>
 </resources>

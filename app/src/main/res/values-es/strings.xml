@@ -212,4 +212,13 @@
     <string name="shot_delete_note">Toca fuera para cancelar. Puedes quitar el plano solo de la hoja (las fotos quedan en la galería) o borrar también sus fotos; eso no se puede deshacer.</string>
     <string name="shot_remove_sheet">quitar solo de la hoja</string>
     <string name="shot_delete_files">borrar también las fotos</string>
+    <string name="kit_new">juego nuevo</string>
+    <string name="kit_edit">editar este juego</string>
+    <string name="kit_name">nombre</string>
+    <string name="kit_name_hint">p. ej. mis primes de cine</string>
+    <string name="kit_focals">focales (mm, separadas por comas)</string>
+    <string name="kit_focals_read">%1$d focales leídas</string>
+    <string name="kit_squeeze">compresión anamórfica (vacío = esférico)</string>
+    <string name="kit_squeeze_hint">p. ej. 2.0, 1.5 o 1.33</string>
+    <string name="kit_delete">borrar este juego</string>
 </resources>

@@ -88,6 +88,10 @@ data class LensSet(
     val mount: String?,
     val squeeze: Double,
     val focalsMm: List<Double>,
+    /** Fuente de la lista de focales (juegos con nombre real); null en los ejemplos y en los juegos propios. */
+    val source: Source? = null,
+    /** true si lo creó el usuario en el teléfono (se puede editar y borrar). */
+    val custom: Boolean = false,
 )
 
 /** Calibración de una lente del teléfono; `measuredHFovDeg` null = sin verificar. */

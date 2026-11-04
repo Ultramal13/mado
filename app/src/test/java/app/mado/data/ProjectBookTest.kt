@@ -141,6 +141,7 @@ class LocationSheetTest {
         val csv = LocationSheets.csv(s, java.time.ZoneId.of("UTC"))
         assertTrue(csv.startsWith("﻿\"project\""))
         assertTrue(csv.contains("\"ふゆ\"\"キュン\"\"\",\"暖炉, 部屋\",\"Kitchen\",\"1\",\"2026-11-02 09:55\""))
+        assertTrue(csv.lines()[0].contains("\"camera\",\"lens_set\",\"focal_mm\""))
         assertEquals(1 + 3, csv.trim().split("\r\n").size)
     }
 
@@ -246,5 +247,36 @@ class ShotEditTest {
         assertEquals(listOf("content://x/MADO_1_marco.jpg", "content://x/MADO_1_plano.jpg"), uris)
         assertEquals(listOf("MADO_2"), ShotLog.parse(out).map { it.shotKey })
         assertEquals(null, ShotLog.remove(json, "NOPE"))
+    }
+}
+
+
+class LensKitsTest {
+    private val db = CameraDbParser.parse(java.io.File("src/main/assets/camaras.json").readText())
+
+    @Test
+    fun namedKitsComeWithTheirSource() {
+        val names = db.lensSets.map { it.id }
+        assertTrue(names.containsAll(listOf("dzofilm_arles", "zeiss_cp3", "cooke_s4i", "atlas_orion_2x")))
+        listOf("dzofilm_arles", "zeiss_cp3", "cooke_s4i", "atlas_orion_2x").forEach { id ->
+            val k = db.lensSets.first { it.id == id }
+            assertTrue("$id sin fuente", k.source?.text?.isNotBlank() == true)
+            assertTrue("$id sin focales", k.focalsMm.size >= 10)
+        }
+        assertEquals(2.0, db.lensSets.first { it.id == "atlas_orion_2x" }.squeeze, 1e-9)
+        assertEquals(listOf(15.0, 18.0, 21.0, 25.0, 28.0, 35.0, 50.0, 85.0, 100.0, 135.0), db.lensSets.first { it.id == "zeiss_cp3" }.focalsMm)
+    }
+
+    @Test
+    fun parsesFocalsTolerantly() {
+        assertEquals(listOf(18.0, 25.0, 35.0, 50.5), KitStore.parseFocals("50.5, 18 25mm;35 35 abc 0 99999"))
+    }
+
+    @Test
+    fun storeRoundTripsAndIgnoresGarbage() {
+        val kits = listOf(LensSet("custom_1", "Mis primes", null, 1.0, listOf(24.0, 50.0), custom = true), LensSet("custom_2", "Ana 1.5", null, 1.5, listOf(40.0), custom = true))
+        assertEquals(kits, KitStore.parse(KitStore.toJson(kits)))
+        assertTrue(KitStore.parse("basura").isEmpty())
+        assertTrue(KitStore.parse(null).isEmpty())
     }
 }

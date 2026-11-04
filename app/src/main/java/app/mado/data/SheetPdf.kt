@@ -149,7 +149,7 @@ object SheetPdf {
             val focal = s.focalMm?.let { (if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()) + if (s.focalEquivalent) " mm eq" else " mm" }
             line(listOfNotNull("${labels.shot} ${s.shotNo}", focal).joinToString(" · "), paint(13f, INK, true), 5f)
             line(LocationSheets.localTime(s.time) + (s.headingDeg?.let { "  ·  %.0f° %s".format(java.util.Locale.ROOT, Math.floorMod(Math.round(it).toInt(), 360).toDouble(), COMPASS[app.mado.optics.OrientationMath.compassIndex(it)]) } ?: ""), paint(9.5f, SOFT), 5f)
-            line(s.camera, paint(10.5f))
+            line(listOf(s.camera, s.lensSet).filter { it.isNotEmpty() }.joinToString(" · "), paint(10.5f))
             line(s.operator, paint(11f, INK, true))
             line(s.notes, paint(10.5f, accent))
             return t - top

@@ -212,4 +212,13 @@
     <string name="shot_delete_note">Tap outside to cancel. You can remove the shot only from the sheet (the photos stay in the gallery) or delete its photos too; that cannot be undone.</string>
     <string name="shot_remove_sheet">remove from sheet only</string>
     <string name="shot_delete_files">delete photos too</string>
+    <string name="kit_new">new lens set</string>
+    <string name="kit_edit">edit this set</string>
+    <string name="kit_name">name</string>
+    <string name="kit_name_hint">e.g. my cine primes</string>
+    <string name="kit_focals">focal lengths (mm, separated by commas)</string>
+    <string name="kit_focals_read">%1$d focal lengths read</string>
+    <string name="kit_squeeze">anamorphic squeeze (leave empty for spherical)</string>
+    <string name="kit_squeeze_hint">e.g. 2.0, 1.5 or 1.33</string>
+    <string name="kit_delete">delete this set</string>
 </resources>

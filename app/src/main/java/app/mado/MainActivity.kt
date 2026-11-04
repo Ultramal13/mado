@@ -85,7 +85,13 @@ class MainActivity : ComponentActivity() {
             val store = remember { app.mado.data.ProjectStore(filesDir.resolve("projects.json")) }
             var book by remember { mutableStateOf(store.load()) }
             val onBook: (app.mado.data.ProjectBook) -> Unit = { book = it; store.save(it) }
-            val framing = remember { FramingState(CameraRepository.load(applicationContext)).also { it.restore(prefs.getString("framing", null)) } }
+            val framing = remember {
+                val kits = app.mado.data.KitStore(filesDir.resolve("kits.json"))
+                FramingState(CameraRepository.load(applicationContext)).also {
+                    it.kitStore = kits; it.customKits = kits.load()          // antes de restaurar: el juego elegido puede ser uno propio
+                    it.restore(prefs.getString("framing", null))
+                }
+            }
             androidx.activity.compose.BackHandler(enabled = screen != 0) { screen = if (screen == 4) 3 else 0 }
 
             val title = stringResource(when (screen) { 0 -> R.string.screen_viewer; 1 -> R.string.screen_calibration; 3 -> R.string.screen_projects; 4 -> R.string.screen_shots; else -> R.string.mode_diagnostics })

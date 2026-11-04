@@ -24,7 +24,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -308,6 +310,62 @@ private fun OperatorFields(framing: FramingState) {
     TextInput(framing.opExternal, stringResource(R.string.frm_op_external_hint), maxLen = 60) { framing.opExternal = it }
 }
 
+/** Juego de lentes: lista con los del catálogo (nombres reales) y los propios, más crear, editar y borrar los propios. */
+@Composable
+private fun LensSetChooser(framing: FramingState) {
+    val p = LocalPalette.current
+    var open by remember { mutableStateOf(false) }
+    var editor by remember { mutableStateOf<app.mado.data.LensSet?>(null) }
+    var creating by remember { mutableStateOf(false) }
+    val sets = framing.lensSets
+    val current = framing.lensSet
+    Seg(listOf((current?.name?.substringBefore(" (")?.loc() ?: "—") + "  ▾"), 0) { open = true }
+    current?.source?.let { Text(it.text, style = mono(9, p.text.copy(alpha = 0.6f))) }
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        SmallKey(stringResource(R.string.kit_new)) { creating = true }
+        if (current?.custom == true) SmallKey(stringResource(R.string.kit_edit)) { editor = current }
+    }
+    if (open) PickerDialog(
+        title = stringResource(R.string.frm_lens_set),
+        items = sets.map { it.name.substringBefore(" (").loc() + if (it.custom) " ★" else "" },
+        selected = framing.lensSetIdx,
+        onPick = { framing.selectLensSet(it) }, onDismiss = { open = false },
+    )
+    if (creating) KitEditor(null, framing) { creating = false }
+    editor?.let { k -> KitEditor(k, framing) { editor = null } }
+}
+
+/** Crear o editar un juego propio: nombre, compresión anamórfica y focales (separadas por comas). */
+@Composable
+private fun KitEditor(kit: app.mado.data.LensSet?, framing: FramingState, onDone: () -> Unit) {
+    val p = LocalPalette.current
+    var name by remember { mutableStateOf(kit?.name.orEmpty()) }
+    var squeeze by remember { mutableStateOf(kit?.squeeze?.takeIf { it != 1.0 }?.toString().orEmpty()) }
+    var focals by remember { mutableStateOf(kit?.focalsMm?.joinToString(", ") { if (it % 1.0 == 0.0) it.toInt().toString() else it.toString() }.orEmpty()) }
+    val parsed = app.mado.data.KitStore.parseFocals(focals)
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDone,
+        containerColor = p.body,
+        title = { Text(stringResource(if (kit == null) R.string.kit_new else R.string.kit_edit), style = mono(15, p.text, true)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.androidx_vscroll()) {
+                Label(stringResource(R.string.kit_name)); TextInput(name, stringResource(R.string.kit_name_hint)) { name = it }
+                Label(stringResource(R.string.kit_focals)); TextInput(focals, "18, 25, 35, 50, 75, 100", maxLen = 120) { focals = it }
+                Text(stringResource(R.string.kit_focals_read, parsed.size), style = mono(10, p.text.copy(alpha = 0.7f)))
+                Label(stringResource(R.string.kit_squeeze)); TextInput(squeeze, "2.0", maxLen = 5) { squeeze = it.filter { c -> c.isDigit() || c == '.' } }
+                Text(stringResource(R.string.kit_squeeze_hint), style = mono(10, p.text.copy(alpha = 0.7f)))
+                if (kit != null) SmallKey(stringResource(R.string.kit_delete)) { framing.deleteKit(kit.id); onDone() }
+            }
+        },
+        confirmButton = {
+            androidx.compose.material3.TextButton(enabled = parsed.isNotEmpty() && name.isNotBlank(), onClick = {
+                framing.saveKit(kit?.id, name, squeeze.toDoubleOrNull() ?: 1.0, parsed); onDone()
+            }) { Text(stringResource(R.string.shot_save), style = mono(13, p.accent, true)) }
+        },
+        dismissButton = { androidx.compose.material3.TextButton(onClick = onDone) { Text(stringResource(R.string.shot_cancel), style = mono(13, p.text)) } },
+    )
+}
+
 /** Perfil de color o log que se grabará (p. ej. S-Log3, I-Log); aparece en la barra de la foto. */
 @Composable
 private fun ColorChooser(framing: FramingState) {
@@ -442,7 +500,7 @@ internal fun FramingControls(
 
         if (!framing.isFixedLens) {
             Label(stringResource(R.string.frm_lens_set))
-            Seg(framing.db.lensSets.map { it.name.substringBefore(" (").loc() }, framing.lensSetIdx) { framing.lensSetIdx = it }
+            LensSetChooser(framing)
             val focals = framing.lensSet?.focalsMm.orEmpty()
             if (focals.isNotEmpty()) {
                 Label(stringResource(R.string.frm_kit))
@@ -600,3 +658,5 @@ internal fun PickerDialog(title: String, items: List<String>, selected: Int, onP
         },
     )
 }
+
+private fun Modifier.androidx_vscroll(): Modifier = composed { this.verticalScroll(androidx.compose.foundation.rememberScrollState()) }
