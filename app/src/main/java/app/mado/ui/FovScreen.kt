@@ -144,6 +144,9 @@ fun FovScreen(
     book: app.mado.data.ProjectBook = app.mado.data.ProjectBook(),
     onBook: (app.mado.data.ProjectBook) -> Unit = {},
     onProjects: () -> Unit = {},
+    /** Compartir el archivo de diagnóstico del teléfono y abrir la calibración de lentes (desde el aviso de «precisión no verificada»). */
+    onShareDiagnostics: () -> Unit = {},
+    onCalibrate: () -> Unit = {},
 ) {
     val ctx = LocalContext.current
     var shots by remember { mutableStateOf(app.mado.data.ShotLog.read(ctx)) }
@@ -533,6 +536,7 @@ fun FovScreen(
                 running = running, working = shot is ShotUi.Working || shot is ShotUi.Exposed, hasPermission = hasPermission,
                 onToggle = onToggle, onShot = takeShot, onMenu = onMenu, onDoubleTap = { cropView = !cropView }, shot = shot, flashTick = flashTick, hint = showHint, cropped = cropOn,
                 evLabel = evInfo?.takeIf { ev != 0 }?.let { evText(ev, it.second) }, onFocus = onFocus,
+                calibNotice = profileDeg == null, onShareDiagnostics = onShareDiagnostics, onCalibrate = onCalibrate,
                 focusReadout = { camera.focusDiopters?.let { d -> if (d > 0.05f) String.format(Locale.ROOT, "%.2f m", 1f / d) else "∞" } },
             )
         } else if (landscape) {
@@ -565,6 +569,8 @@ private fun ViewerLayout(
     onToggle: () -> Unit, onShot: () -> Unit, onMenu: () -> Unit, onDoubleTap: () -> Unit, evLabel: String? = null, onFocus: (Float, Float) -> Unit = { _, _ -> },
     /** Distancia a la que está enfocado el lente (p. ej. «0.23 m»), para ver qué enfocó el autofoco tras un toque. */
     focusReadout: () -> String? = { null },
+    /** Este lente del teléfono no tiene calibración medida: aviso tocable que explica qué hacer. */
+    calibNotice: Boolean = false, onShareDiagnostics: () -> Unit = {}, onCalibrate: () -> Unit = {},
     shot: ShotUi = ShotUi.Idle, flashTick: Int = 0, hint: Boolean = false, cropped: Boolean = false,
 ) {
     val p = LocalPalette.current
@@ -659,6 +665,22 @@ private fun ViewerLayout(
                     .padding(horizontal = 14.dp, vertical = 9.dp),
             ) { Text(text, style = mono(13, Color.White, true)) }
         }
+
+        // Lente sin calibrar: el recuadro usa los datos que reporta el teléfono (pueden errar unos grados); aviso corto y tocable.
+        var noticeOpen by remember { mutableStateOf(false) }
+        if (calibNotice) Box(
+            Modifier.align(Alignment.TopStart).windowInsetsPadding(safe.only(WindowInsetsSides.Top + WindowInsetsSides.Start)).padding(start = 8.dp, top = 62.dp)
+                .clip(RoundedCornerShape(10.dp)).background(Color.Black.copy(alpha = 0.6f)).clickable { noticeOpen = true }
+                .padding(horizontal = 10.dp, vertical = 5.dp),
+        ) { Text(stringResource(R.string.calnotice_short), style = mono(10, Accent, true)) }
+        if (noticeOpen) androidx.compose.material3.AlertDialog(
+            onDismissRequest = { noticeOpen = false },
+            containerColor = p.body,
+            title = { Text(stringResource(R.string.calnotice_title), style = mono(15, p.text, true)) },
+            text = { Text(stringResource(R.string.calnotice_body), style = mono(12, p.text)) },
+            confirmButton = { androidx.compose.material3.TextButton(onClick = { noticeOpen = false; onShareDiagnostics() }) { Text(stringResource(R.string.calnotice_share), style = mono(13, p.accent, true)) } },
+            dismissButton = { androidx.compose.material3.TextButton(onClick = { noticeOpen = false; onCalibrate() }) { Text(stringResource(R.string.calnotice_calibrate), style = mono(13, p.text)) } },
+        )
 
         // Mientras está la vista recortada, un aviso fijo (y tocable) explica por qué la imagen se ve así y cómo volver.
         if (cropped) Box(

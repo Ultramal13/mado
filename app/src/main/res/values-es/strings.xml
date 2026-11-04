@@ -176,4 +176,9 @@
     <string name="frm_pp">picture profile (PP)</string>
     <string name="frm_op_external">grabación externa (HDMI)</string>
     <string name="frm_op_external_hint">p. ej. Ninja · ProRes RAW</string>
+    <string name="calnotice_short">precisión del recuadro no verificada · toca</string>
+    <string name="calnotice_title">Este lente del teléfono no está calibrado</string>
+    <string name="calnotice_body">El recuadro usa los datos que el teléfono informa de este lente, que pueden errar unos grados (más en los gran angulares). Para mejorarlo, mide el lente con una cinta métrica (unos 10 minutos, un lente a la vez) o comparte el archivo de diagnóstico para agregar este modelo de teléfono.</string>
+    <string name="calnotice_share">compartir diagnóstico</string>
+    <string name="calnotice_calibrate">calibrar lentes</string>
 </resources>

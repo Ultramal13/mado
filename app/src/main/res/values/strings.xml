@@ -176,4 +176,9 @@
     <string name="frm_pp">picture profile (PP)</string>
     <string name="frm_op_external">external recording (HDMI)</string>
     <string name="frm_op_external_hint">e.g. Ninja · ProRes RAW</string>
+    <string name="calnotice_short">frame precision not verified · tap</string>
+    <string name="calnotice_title">This phone lens is not calibrated</string>
+    <string name="calnotice_body">The frame uses the data the phone reports for this lens, which can be off by a few degrees (more on wide-angle lenses). To improve it, measure the lens with a tape measure (about 10 minutes, one lens at a time) or share the diagnostic file so this phone model can be added.</string>
+    <string name="calnotice_share">share diagnostic</string>
+    <string name="calnotice_calibrate">calibrate lenses</string>
 </resources>

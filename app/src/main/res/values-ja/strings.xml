@@ -176,4 +176,9 @@
     <string name="frm_pp">ピクチャープロファイル (PP)</string>
     <string name="frm_op_external">外部収録 (HDMI)</string>
     <string name="frm_op_external_hint">例：Ninja · ProRes RAW</string>
+    <string name="calnotice_short">枠の精度は未検証・タップ</string>
+    <string name="calnotice_title">このレンズは未校正です</string>
+    <string name="calnotice_body">枠は端末が報告するレンズ情報に基づくため、数度ずれることがあります（広角レンズほど大きくなります）。メジャーで測定する（1本あたり約10分）か、診断ファイルを共有してこの機種を追加してください。</string>
+    <string name="calnotice_share">診断を共有</string>
+    <string name="calnotice_calibrate">レンズ校正</string>
 </resources>

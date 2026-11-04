@@ -134,7 +134,8 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     when (screen) {
-                        0 -> FovScreen(report, results, onShare = ::share, framing = framing, onMenu = { menuOpen = true }, book = book, onBook = onBook, onProjects = { screen = 3 })
+                        0 -> FovScreen(report, results, onShare = ::share, framing = framing, onMenu = { menuOpen = true }, book = book, onBook = onBook, onProjects = { screen = 3 },
+                            onShareDiagnostics = { shareDiagnostics(report.toJson()) }, onCalibrate = { screen = 1 })
                         3 -> ProjectsScreen(book, remember(screen) { app.mado.data.ShotLog.read(applicationContext) }, onBook)
                         1 -> FovScreen(report, results, onShare = ::share, header = if (chromeInPanel) chrome else null)
                         else -> DiagnosticsScreen(report, onCopy = { copy(report.toJson()) }, onShare = { shareDiagnostics(report.toJson()) }, onSave = { saveDiagnostics(report.toJson()) })
