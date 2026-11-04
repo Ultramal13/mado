@@ -4018,16 +4018,18 @@
     {
      "camera2_id": "6",
      "nombre": "tele corto",
-     "fov_horizontal_medido_grados": null,
+     "fov_horizontal_medido_grados": 29.1,
      "fov_horizontal_reportado_grados": 29.2,
-     "fecha_calibracion": null
+     "fecha_calibracion": "2026-11-04",
+     "fuente": "datos-etapa0/mediciones_fov_s26ultra_2026-11-04.json (1 medición con cinta en la pared, stream de preview 4:3)"
     },
     {
      "camera2_id": "7",
      "nombre": "tele largo",
-     "fov_horizontal_medido_grados": null,
+     "fov_horizontal_medido_grados": 17.1,
      "fov_horizontal_reportado_grados": 17.5,
-     "fecha_calibracion": null
+     "fecha_calibracion": "2026-11-04",
+     "fuente": "datos-etapa0/mediciones_fov_s26ultra_2026-11-04.json (1 medición con cinta en la pared, stream de preview 4:3)"
     }
    ]
   },

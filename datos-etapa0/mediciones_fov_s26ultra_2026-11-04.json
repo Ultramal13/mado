@@ -1,0 +1,45 @@
+{
+ "dispositivo": "Samsung Galaxy S26 Ultra (SM-S948B)",
+ "fecha": "2026-11-04",
+ "metodo": "Pantalla de calibración de Mado (stream de preview 4:3), cinta métrica pegada en la pared con el 0 bajo la cruz; se lee el número de la cinta en el borde extremo de la pantalla; distancia desde el vidrio del lente a la pared. FOV = 2*atan(lectura/distancia).",
+ "mediciones": [
+  {
+   "camera2_id": "2",
+   "focal_mm": 2.2,
+   "distancia_cm": 35,
+   "lectura_borde_cm": 49,
+   "fov_h_deg": 108.9,
+   "teorico_deg": 104.8,
+   "interno_deg": 102.8
+  },
+  {
+   "camera2_id": "5",
+   "focal_mm": 6.5,
+   "distancia_cm": 60,
+   "lectura_borde_cm": 46,
+   "fov_h_deg": 74.9,
+   "teorico_deg": 74.0,
+   "interno_deg": 72.2,
+   "nota": "La medición anterior de esta lente dio 71.8° (71.6° y 71.9°): no coincide con esta; hay que repetirla."
+  },
+  {
+   "camera2_id": "6",
+   "focal_mm": 7.0,
+   "distancia_cm": 100,
+   "lectura_borde_cm": 26,
+   "fov_h_deg": 29.1,
+   "teorico_deg": 29.2,
+   "interno_deg": 29.0
+  },
+  {
+   "camera2_id": "7",
+   "focal_mm": 18.6,
+   "distancia_cm": 100,
+   "lectura_borde_cm": 15,
+   "fov_h_deg": 17.1,
+   "teorico_deg": 17.5,
+   "interno_deg": 17.0
+  }
+ ],
+ "lectura": "Las dos teles (6 y 7) coinciden con la calibración interna dentro de 0.2°. Las dos anchas (2 y 5) dan más campo que el interno (+6.1° y +2.7°): una distancia real de ~39 cm (lente 2) y ~63 cm (lente 5) explicaría el valor interno, es decir un error de distancia de 3-4 cm, que pesa mucho más en las lentes anchas y a corta distancia. Pendiente: repetir las lentes 2 y 5 con el método de dos distancias (la diferencia de lecturas entre dos distancias no depende del desfase de la distancia)."
+}
