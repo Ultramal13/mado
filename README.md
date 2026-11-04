@@ -4,7 +4,7 @@
 
 <p align="center"><b>Español</b> · <a href="README.en.md">English</a> · 日本語: en la app</p>
 
-# Mado 窓
+# Mado 窓 · Director's Viewfinder
 
 **Visor de director para Android.** Simula cámaras y lentes sobre la cámara de tu teléfono para componer el encuadre durante *location scouting*, sin cargar equipo. *Mado* (窓) significa ventana.
 

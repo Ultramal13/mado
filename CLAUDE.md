@@ -1,7 +1,7 @@
 # Mado — visor de director para Android
 
 ## Qué es
-App Android (nombre provisorio: **Mado**, 窓 = ventana) que simula cámaras y lentes sobre la cámara del teléfono para componer el encuadre durante location scouting, sin cargar equipo. Referencia funcional: apps de visor de director existentes para iPhone, que tienen versión Android antigua con menos funciones; las alternativas gratuitas probadas por el usuario final eran básicas, con anuncios y con cámaras desactualizadas.
+App Android (nombre comercial elegido el 2026-11-04: **Mado · Director's Viewfinder**; Mado, 窓 = ventana; pendiente búsqueda de marca) que simula cámaras y lentes sobre la cámara del teléfono para componer el encuadre durante location scouting, sin cargar equipo. Referencia funcional: apps de visor de director existentes para iPhone, que tienen versión Android antigua con menos funciones; las alternativas gratuitas probadas por el usuario final eran básicas, con anuncios y con cámaras desactualizadas.
 
 ## Contexto y alcance
 - Uso inicial: **herramienta de campo**, no producto de pago. Se decidirá comercialización según uso real.
