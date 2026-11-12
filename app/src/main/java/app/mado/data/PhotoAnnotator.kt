@@ -99,7 +99,7 @@ object PhotoAnnotator {
             drawGuides(c, guides, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, unit / 12f)
             delivery?.let { drawDelivery(c, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, it, deliveryLabel, unit) }
         }
-        sun?.let { drawSun(c, it, w / 2f, h / 2f, iw / 2f, ih / 2f, w.toFloat(), h.toFloat(), unit) }
+        sun?.let { drawSun(c, it, w / 2f, h / 2f, iw / 2f, ih / 2f, w.toFloat(), h.toFloat(), unit, listOfNotNull(info.sceneTag?.let { t -> scenePillRect(t, info.sceneColor != 0, h.toFloat(), unit) })) }
         info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, barUnit, info)
         photo.recycle()
@@ -157,7 +157,7 @@ object PhotoAnnotator {
         drawGuides(c, guides, 0f, 0f, w.toFloat(), h.toFloat(), unit / 8f)
         delivery?.let { drawDelivery(c, 0f, 0f, w.toFloat(), h.toFloat(), it, deliveryLabel, unit * 1.1f) }
         // En el recorte el borde de la foto está a ±1/fracción del recuadro: la escala del sol cambia con el encuadre.
-        sun?.let { drawSun(c, it, w / 2f, h / 2f, w / 2f / fwFrac, h / 2f / fhFrac, w.toFloat(), h.toFloat(), unit * 1.1f) }
+        sun?.let { drawSun(c, it, w / 2f, h / 2f, w / 2f / fwFrac, h / 2f / fhFrac, w.toFloat(), h.toFloat(), unit * 1.1f, listOfNotNull(info.sceneTag?.let { t -> scenePillRect(t, info.sceneColor != 0, h.toFloat(), unit * 1.1f) })) }
         info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit * 1.1f) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, unit, info)
         body.recycle()
@@ -201,6 +201,15 @@ object PhotoAnnotator {
      * Escena y plano: una píldora oscura redondeada en la esquina inferior izquierda de la imagen (justo sobre la barra de datos),
      * con un punto del color de la escena. `bottom` es el borde inferior de la imagen.
      */
+    private fun scenePillRect(text: String, hasDot: Boolean, bottom: Float, unit: Float): RectF {
+        val p = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD); textSize = unit * 1.25f }
+        val m = unit * 0.9f; val padX = unit * 0.7f; val th = unit * 2.1f; val dot = unit * 0.55f
+        val lead = if (hasDot) dot * 2 + unit * 0.55f else 0f
+        val tw = p.measureText(text) + padX * 2 + lead
+        val top = bottom - m - th
+        return RectF(m, top, m + tw, top + th)
+    }
+
     private fun drawScenePill(c: Canvas, text: String, color: Int, bottom: Float, unit: Float) {
         val p = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD); textSize = unit * 1.25f; this.color = Color.WHITE }
         val m = unit * 0.9f; val padX = unit * 0.7f; val th = unit * 2.1f; val dot = unit * 0.55f
@@ -219,7 +228,7 @@ object PhotoAnnotator {
      * El sol sobre la imagen. (cx, cy) es el centro de la foto y (hx, hy) la mitad de su tamaño en píxeles: un punto con x = 1 cae en el borde
      * derecho de la foto. Líneas con un borde oscuro para que se vean sobre cualquier fondo; las insignias van arriba a la derecha.
      */
-    private fun drawSun(c: Canvas, sun: SunNote, cx: Float, cy: Float, hx: Float, hy: Float, bw: Float, bh: Float, unit: Float) {
+    private fun drawSun(c: Canvas, sun: SunNote, cx: Float, cy: Float, hx: Float, hy: Float, bw: Float, bh: Float, unit: Float, avoid: List<RectF> = emptyList()) {
         fun px(x: Double) = cx + (x * hx).toFloat()
         fun py(y: Double) = cy - (y * hy).toFloat()
         fun inside(pt: SunPoint, m: Double = 1.0) = kotlin.math.abs(pt.x) <= m && kotlin.math.abs(pt.y) <= m
@@ -227,6 +236,17 @@ object PhotoAnnotator {
         val bold = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
         val shadow = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 0.85f; style = Paint.Style.STROKE; strokeWidth = unit * 0.22f; color = Color.argb(190, 0, 0, 0) }
         val tick = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 0.85f }
+        // Insignias de arriba a la derecha: se calculan antes para que las marcas de hora no se dibujen debajo de ellas ni de la píldora de escena.
+        val lp = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 1.0f; color = Color.BLACK }
+        val badges = ArrayList<Pair<RectF, String>>()
+        var bTop = unit * 0.7f
+        for (text in listOfNotNull(sun.badge, sun.window)) {
+            val tw = lp.measureText(text) + unit * 0.9f; val th = unit * 1.5f
+            badges.add(RectF(bw - unit * 0.7f - tw, bTop, bw - unit * 0.7f, bTop + th) to text)
+            bTop += th + unit * 0.25f
+        }
+        val blocked = avoid + badges.map { it.first }
+        fun free(r: RectF) = blocked.none { RectF.intersects(it, r) } && r.left >= 0f && r.right <= bw
         for (arc in sun.arcs) {
             val line = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; color = arc.color }
             dark.strokeWidth = unit * if (arc.hours) 0.34f else 0.26f
@@ -243,7 +263,12 @@ object PhotoAnnotator {
                         c.drawCircle(px(pt.x), py(pt.y), unit * 0.2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = arc.color })
                         val t = String.format(java.util.Locale.ROOT, sun.hourFmt, pt.hour)
                         tick.color = arc.color
-                        c.drawText(t, px(pt.x) + unit * 0.5f, py(pt.y) + unit * 0.3f, shadow); c.drawText(t, px(pt.x) + unit * 0.5f, py(pt.y) + unit * 0.3f, tick)
+                        // La etiqueta va a la derecha del punto; si ahí tapa una insignia o la píldora, se prueba a la izquierda y, si tampoco, se omite.
+                        val tw = tick.measureText(t); val ty = py(pt.y) + unit * 0.3f
+                        val right = RectF(px(pt.x) + unit * 0.5f - 2f, ty - unit * 0.9f, px(pt.x) + unit * 0.5f + tw + 2f, ty + unit * 0.25f)
+                        val left = RectF(px(pt.x) - unit * 0.5f - tw - 2f, ty - unit * 0.9f, px(pt.x) - unit * 0.5f + 2f, ty + unit * 0.25f)
+                        val tx = when { free(right) -> right.left + 2f; free(left) -> left.left + 2f; else -> null }
+                        if (tx != null) { c.drawText(t, tx, ty, shadow); c.drawText(t, tx, ty, tick) }
                     } else if (!arc.hours && !labelled && arc.label != null) {
                         labelled = true
                         tick.color = arc.color
@@ -268,13 +293,9 @@ object PhotoAnnotator {
             c.drawCircle(x, y, unit * 0.22f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = SUN })
         }
         // Insignias arriba a la derecha: grados del sol y, debajo, la ventana horaria en el encuadre.
-        val lp = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 1.0f; color = Color.BLACK }
-        var top = unit * 0.7f
-        for (text in listOfNotNull(sun.badge, sun.window)) {
-            val tw = lp.measureText(text) + unit * 0.9f; val th = unit * 1.5f
-            c.drawRect(bw - unit * 0.7f - tw, top, bw - unit * 0.7f, top + th, Paint().apply { color = SUN })
-            c.drawText(text, bw - unit * 0.7f - tw + unit * 0.45f, top + th * 0.74f, lp)
-            top += th + unit * 0.25f
+        for ((r, text) in badges) {
+            c.drawRect(r, Paint().apply { color = SUN })
+            c.drawText(text, r.left + unit * 0.45f, r.top + r.height() * 0.74f, lp)
         }
     }
 
