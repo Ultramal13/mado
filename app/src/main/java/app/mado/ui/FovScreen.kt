@@ -88,6 +88,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import app.mado.R
 import kotlinx.coroutines.async
 import app.mado.optics.OrientationMath
+import app.mado.optics.SunMath
 import app.mado.data.LocationHelper
 import app.mado.data.BarInfo
 import app.mado.camera.OrientationTracker
@@ -192,7 +193,7 @@ fun FovScreen(
         guard.start()
         val obs = LifecycleEventObserver { _, e ->
             // Al salir de la app la cámara se apaga y no vuelve sola.
-            if (e == Lifecycle.Event.ON_PAUSE) { android.util.Log.i("mado", "ON_PAUSE"); camera.stop(); reason = Reason.USER }
+            if (e == Lifecycle.Event.ON_PAUSE) { camera.stop(); reason = Reason.USER }
         }
         owner.lifecycle.addObserver(obs)
         onDispose {
@@ -223,7 +224,6 @@ fun FovScreen(
     var sceneDot by remember { mutableStateOf(ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).getBoolean("scene_dot", true)) }
     var fastOn by remember { mutableStateOf(ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).getBoolean("fast_capture", true)) }
     LaunchedEffect(running, lens.id, distortionOff, retry, surfaceGen, displayRotation, fastOn) {
-        android.util.Log.i("mado", "effect running=$running perm=$hasPermission holder=${holder != null} reason=$reason err=$error hot=${guard.hot} lens=${lens.id} surfaceGen=$surfaceGen retry=$retry rot=$displayRotation fast=$fastOn dist=$distortionOff")
         if (running) {
             error = null
             holder!!.setFixedSize(size.width, size.height)
@@ -305,6 +305,22 @@ fun FovScreen(
     }
     val cropDraws = if (cropOn) frameDraws.filter { it.current }.map { it.copy(frame = Framing.Frame(1.0, 1.0)) } else frameDraws
 
+    // Orientación de la cámara (rumbo, elevación, nivel): el sensor solo escucha mientras el visor corre en modo marco.
+    val tracker = remember { OrientationTracker(ctx) }
+    DisposableEffect(running, framing != null) {
+        if (running && framing != null) tracker.start()
+        onDispose { tracker.stop() }
+    }
+    // Sol: posición y horas clave para el lugar y el momento elegidos. Campo visible en cada eje de la pantalla (el horizontal del
+    // teléfono es el del sensor; en vertical el ancho de pantalla corresponde al lado corto).
+    val sun = remember { SunState(ctx.getSharedPreferences("mado", Context.MODE_PRIVATE)) }
+    val (sunHwL, sunHhL) = SunMath.halfTans(phoneDeg, size.width.toDouble() / size.height)
+    val sunHalfW = if (landscape) sunHwL else sunHhL
+    val sunHalfH = if (landscape) sunHhL else sunHwL
+    // Mitad del encuadre actual en unidades de «mitad de la imagen»: la ventana del sol se calcula para ese recuadro, no para toda la imagen.
+    val sunFrame = frameDraws.firstOrNull { it.current }?.frame
+    val sunView = SunView(tracker.pose, sunHalfW, sunHalfH, sunFrame?.widthFrac ?: 1.0, sunFrame?.heightFrac ?: 1.0)
+
     val preview: @Composable (Modifier) -> Unit = { mod ->
         Preview(
             modifier = mod,
@@ -318,6 +334,7 @@ fun FovScreen(
             overlay = {
                 if (framing != null) Box(Modifier.fillMaxSize()) {
                     FrameOverlay(cropDraws, if (cropOn) 1f else imageScale, showTags = !cropOn, guides = framing.guides, delivery = framing.delivery)
+                    if (!cropOn) SunOverlay(sun, sunView, imageScale)
                     if (cropOn) {
                         val hDeg = target?.let { Math.toDegrees(it.hFovRad) }
                         val vDeg = target?.let { Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(it.hFovRad / 2.0) / it.aspect)) }
@@ -331,6 +348,21 @@ fun FovScreen(
 
     // Captura (solo modo marco): una toma por toque.
     val scope = rememberCoroutineScope()
+    // Sol: una sola lectura de ubicación (o coordenadas escritas a mano); sin seguimiento continuo.
+    val locateSun: () -> Unit = {
+        sun.locating = true; sun.locError = false
+        scope.launch {
+            val l = LocationHelper.current(ctx)
+            if (l != null) sun.setLocation(l.latitude, l.longitude, true) else sun.locError = true
+            sun.locating = false
+        }
+    }
+    val sunPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) locateSun() else { sun.locError = true; sun.showCoords = true }
+    }
+    val onSunLocate: () -> Unit = {
+        if (LocationHelper.hasPermission(ctx)) locateSun() else sunPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+    }
     val view = LocalView.current
     var shot by remember { mutableStateOf<ShotUi>(ShotUi.Idle) }
     // Pista de una sola vez: el doble toque (vista recortada) no se descubre solo, así que se avisa la primera vez que corre el visor.
@@ -346,12 +378,6 @@ fun FovScreen(
     }
     var flashTick by remember { mutableIntStateOf(0) }           // sube en el instante de la toma: destello blanco
 
-    // Orientación de la cámara (rumbo, elevación, nivel): el sensor solo escucha mientras el visor corre en modo marco.
-    val tracker = remember { OrientationTracker(ctx) }
-    DisposableEffect(running, framing != null) {
-        if (running && framing != null) tracker.start()
-        onDispose { tracker.stop() }
-    }
     val compass = androidx.compose.ui.res.stringArrayResource(R.array.compass_points)
     val elevWord = stringResource(R.string.orient_elev)
     val levelWord = stringResource(R.string.orient_level)
@@ -510,6 +536,7 @@ fun FovScreen(
             running = running, hasPermission = hasPermission, reason = reason, error = error, guard = guard,
             onToggle = onToggle, shot = shot, onShot = takeShot,
             orientation = orientationText(tracker.pose), gpsOn = gpsOn, onGps = onGps, gpsDenied = gpsDenied,
+            sun = sun, onSunLocate = onSunLocate, sunView = sunView,
             ev = ev, evInfo = evInfo, onEv = { ev = it },
             book = book, shots = shots, onBook = onBook, onManage = onProjects,
             showAngles = showAngles, onShowAngles = { showAngles = it; ctx.getSharedPreferences("mado", Context.MODE_PRIVATE).edit().putBoolean("bar_angles", it).apply() },
@@ -541,6 +568,7 @@ fun FovScreen(
                 evLabel = evInfo?.takeIf { ev != 0 }?.let { evText(ev, it.second) }, onFocus = onFocus,
                 calibNotice = profileDeg == null, onShareDiagnostics = onShareDiagnostics, onCalibrate = onCalibrate,
                 focusReadout = { camera.focusDiopters?.let { d -> if (d > 0.05f) String.format(Locale.ROOT, "%.2f m", 1f / d) else "∞" } },
+                sunOn = sun.on, onSun = { sun.enable(!sun.on); if (sun.on && !sun.located && !sun.locating) onSunLocate() },
             )
         } else if (landscape) {
             // El preview ocupa el alto; los controles van en un panel desplazable a la derecha.
@@ -575,6 +603,8 @@ private fun ViewerLayout(
     /** Este lente del teléfono no tiene calibración medida: aviso tocable que explica qué hacer. */
     calibNotice: Boolean = false, onShareDiagnostics: () -> Unit = {}, onCalibrate: () -> Unit = {},
     shot: ShotUi = ShotUi.Idle, flashTick: Int = 0, hint: Boolean = false, cropped: Boolean = false,
+    /** Tecla ☀ del visor: activa o apaga el sol sin abrir el panel de opciones. */
+    sunOn: Boolean = false, onSun: () -> Unit = {},
 ) {
     val p = LocalPalette.current
     var optionsOpen by rememberSaveable { mutableStateOf(false) }
@@ -723,7 +753,7 @@ private fun ViewerLayout(
 
         if (landscape) {
             ViewerBar(
-                framing, running, working, onToggle, onShot, vertical = true, onMenu = onMenu,
+                framing, running, working, onToggle, onShot, vertical = true, onMenu = onMenu, onSun = onSun, sunOn = sunOn,
                 modifier = Modifier.align(Alignment.CenterEnd)
                     .windowInsetsPadding(safe.only(WindowInsetsSides.End + WindowInsetsSides.Vertical)).padding(6.dp),
             )
@@ -735,11 +765,12 @@ private fun ViewerLayout(
                     .clip(RoundedCornerShape(16.dp)).background(p.body),
             )
         } else {
-            // Arriba a la derecha: detener (si corre) y menú ☰.
+            // Arriba a la derecha: sol ☀, detener (si corre) y menú ☰.
             Row(
                 Modifier.align(Alignment.TopEnd).windowInsetsPadding(safe.only(WindowInsetsSides.Top + WindowInsetsSides.End)).padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
+                BarKey("☀", onSun, accent = sunOn)
                 if (running) BarKey("■", onToggle)
                 BarKey("☰", onMenu)
             }
@@ -775,9 +806,9 @@ private fun Preview(
             factory = { c ->
                 SurfaceView(c).apply {
                     holder.addCallback(object : SurfaceHolder.Callback {
-                        override fun surfaceCreated(h: SurfaceHolder) { android.util.Log.i("mado", "surfaceCreated"); onHolder(h) }
+                        override fun surfaceCreated(h: SurfaceHolder) { onHolder(h) }
                         override fun surfaceChanged(h: SurfaceHolder, f: Int, w: Int, hh: Int) {}
-                        override fun surfaceDestroyed(h: SurfaceHolder) { android.util.Log.i("mado", "surfaceDestroyed"); onHolder(null); onDestroyed() }
+                        override fun surfaceDestroyed(h: SurfaceHolder) { onHolder(null); onDestroyed() }
                     })
                 }
             },

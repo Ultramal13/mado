@@ -125,7 +125,6 @@ class FovCamera(
         wanted = true
         previewAspect = size.width.toDouble() / size.height
         focusRegion = null
-        Log.i("mado", "cam.start gen=$gen lens=${lens.id} size=${size.width}x${size.height}")
         val surface = holder.surface
         handler.post { startInternal(surface, lens, size, distortionOff, gen) }
     }
@@ -133,7 +132,6 @@ class FovCamera(
     fun stop() {
         generation++
         wanted = false
-        Log.i("mado", "cam.stop gen=$generation")
         if (!released) handler.post { closeAll() }
     }
 
@@ -228,7 +226,6 @@ class FovCamera(
                         stillReader = reader
                         lastAe = -1; lastAf = -1
                         active = Active(surface, lens, direct, distortionOff, fast = reader != null)
-                        Log.i("mado", "sesión lista, captura rápida=${reader != null}")
                         try {
                             s.setRepeatingRequest(request(d, surface, lens, distortionOff), previewState, handler)
                         } catch (e: Exception) {
@@ -302,7 +299,6 @@ class FovCamera(
                 val half = (minOf(arr.width(), arr.height()) * 0.08f).toInt()
                 val cx = (arr.left + x.coerceIn(0f, 1f) * arr.width()).toInt().coerceIn(arr.left + half, arr.right - half)
                 val cy = (arr.top + y.coerceIn(0f, 1f) * arr.height()).toInt().coerceIn(arr.top + half, arr.bottom - half)
-                Log.i("mado", "toque u=$u v=$v rot=$rot -> sensor x=$x y=$y región=($cx,$cy)±$half en ${arr.width()}x${arr.height()}; preview=$previewAspect zoom=$zoomRatio cámara=${d.id}")
                 focusRegion = android.hardware.camera2.params.MeteringRectangle(cx - half, cy - half, 2 * half, 2 * half, android.hardware.camera2.params.MeteringRectangle.METERING_WEIGHT_MAX - 1)
                 // Se suelta el foco anterior y se pide una búsqueda nueva en el punto tocado (el repetido ya lleva modo AUTO y la región).
                 val cancel = requestBuilder(d, a.surface, a.lens, a.distortionOff)
@@ -312,7 +308,6 @@ class FovCamera(
                 trig.set(CaptureRequest.CONTROL_AF_TRIGGER, CaptureRequest.CONTROL_AF_TRIGGER_START)
                 s.capture(trig.build(), previewState, handler)
                 s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff), previewState, handler)
-                handler.postDelayed({ Log.i("mado", "enfoque tras el toque: af=$lastAf distancia=${focusDiopters?.let { if (it > 0.05f) "%.2f m".format(1f / it) else "∞" }}") }, 900)
             } catch (e: Exception) { Log.w("mado", "focusAt", e) }
         }
     }
@@ -387,7 +382,6 @@ class FovCamera(
 
     /** Cierra sesión y dispositivo. Solo en el hilo de cámara. */
     private fun closeAll() {
-        Log.i("mado", "closeAll device=${device != null} session=${session != null}")
         try { session?.close() } catch (_: Exception) {}
         session = null
         try { stillReader?.close() } catch (_: Exception) {}
@@ -480,13 +474,10 @@ class FovCamera(
                     override fun onConfigured(s: CameraCaptureSession) {
                         if (done || gen != generation) { s.close(); finish(Shot.Fail("stopped")); return }
                         session = s
-                        val tConfigured = SystemClock.elapsedRealtime()
                         var fired = false
-                        var lastAe = -1; var lastAf = -1; var nFrames = 0
-                        val fire = { why: String ->
+                        val fire = {
                             if (!fired && !done) {
                                 fired = true
-                                Log.i("mado", "still: configurada en ${tConfigured - t0} ms, disparo a los ${SystemClock.elapsedRealtime() - t0} ms ($why; cuadros=$nFrames ae=$lastAe af=$lastAf)")
                                 shoot(s, d, a, r, gen, finish) { exposedAt = SystemClock.elapsedRealtime(); onExposed() }
                             }
                         }
@@ -495,19 +486,18 @@ class FovCamera(
                             var frames = 0
                             override fun onCaptureCompleted(sess: CameraCaptureSession, req: CaptureRequest, res: TotalCaptureResult) {
                                 if (fired) return
-                                frames++; nFrames = frames
+                                frames++
                                 val ae = res.get(CaptureResult.CONTROL_AE_STATE)
                                 val af = res.get(CaptureResult.CONTROL_AF_STATE)
-                                lastAe = ae ?: -1; lastAf = af ?: -1
                                 val aeOk = ae == null || ae == CaptureResult.CONTROL_AE_STATE_CONVERGED || ae == CaptureResult.CONTROL_AE_STATE_LOCKED ||
                                     ae == CaptureResult.CONTROL_AE_STATE_FLASH_REQUIRED
                                 val afOk = af == null || (af != CaptureResult.CONTROL_AF_STATE_PASSIVE_SCAN && af != CaptureResult.CONTROL_AF_STATE_ACTIVE_SCAN)
-                                if (frames >= STILL_MIN_FRAMES && aeOk && afOk) fire("estable")
+                                if (frames >= STILL_MIN_FRAMES && aeOk && afOk) fire()
                             }
                         }
                         try {
                             s.setRepeatingRequest(request(d, a.surface, a.lens, a.distortionOff, lowFps = false), ready, handler)
-                            handler.postDelayed({ fire("tope") }, timeout, STILL_SETTLE_MS)       // tope si nunca converge
+                            handler.postDelayed({ fire() }, timeout, STILL_SETTLE_MS)       // tope si nunca converge
                         } catch (e: Exception) { finish(Shot.Fail(e.message ?: "repeating failed")) }
                     }
                     override fun onConfigureFailed(s: CameraCaptureSession) = finish(Shot.Fail("configure failed"))
@@ -557,7 +547,6 @@ class FovCamera(
                 val searching = lastAf == CaptureResult.CONTROL_AF_STATE_PASSIVE_SCAN || lastAf == CaptureResult.CONTROL_AF_STATE_ACTIVE_SCAN ||
                     lastAe == CaptureResult.CONTROL_AE_STATE_SEARCHING || lastAe == CaptureResult.CONTROL_AE_STATE_PRECAPTURE || lastAe == CaptureResult.CONTROL_AE_STATE_INACTIVE
                 if (searching && SystemClock.elapsedRealtime() < deadline) { handler.postDelayed({ go() }, token, 40); return }
-                Log.i("mado", "still rápida: disparo a los ${SystemClock.elapsedRealtime() - t0} ms (ae=$lastAe af=$lastAf)")
                 shoot(s, d, a, r, gen, finish) { exposedAt = SystemClock.elapsedRealtime(); onExposed() }
             }
             go()
@@ -585,7 +574,6 @@ class FovCamera(
                     val af = res.get(CaptureResult.CONTROL_AF_STATE); val diopters = res.get(CaptureResult.LENS_FOCUS_DISTANCE)
                     val tapped = req.get(CaptureRequest.CONTROL_AF_REGIONS) != null
                     lastStillFocus = "af_state=$af focus_diopters=$diopters tap_region=$tapped"
-                    Log.i("mado", "foto: $lastStillFocus (preview af=$lastAf)")
                 }
                 override fun onCaptureFailed(sess: CameraCaptureSession, req: CaptureRequest, f: CaptureFailure) = finish(Shot.Fail("capture failed (${f.reason})"))
             }, handler)

@@ -192,6 +192,7 @@ internal fun ShutterKey(working: Boolean, enabled: Boolean, onClick: () -> Unit,
 internal fun ViewerBar(
     framing: FramingState, running: Boolean, working: Boolean,
     onToggle: () -> Unit, onShot: () -> Unit, vertical: Boolean = false, onMenu: (() -> Unit)? = null, modifier: Modifier = Modifier,
+    onSun: (() -> Unit)? = null, sunOn: Boolean = false,
 ) {
     val shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
     val focal: @Composable () -> Unit = {
@@ -204,6 +205,7 @@ internal fun ViewerBar(
         horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         onMenu?.let { BarKey("☰", it) }
+        onSun?.let { BarKey("☀", it, accent = sunOn) }
         if (running) BarKey("■", onToggle)
         focal()
         ShutterKey(working, running && !working, onShot, 52.dp)
@@ -418,6 +420,9 @@ internal fun FramingControls(
     gpsOn: Boolean,
     onGps: (Boolean) -> Unit,
     gpsDenied: Boolean,
+    sun: SunState? = null,
+    onSunLocate: () -> Unit = {},
+    sunView: SunView? = null,
     ev: Int = 0,
     evInfo: Pair<IntRange, Double>? = null,
     onEv: (Int) -> Unit = {},
@@ -527,6 +532,8 @@ internal fun FramingControls(
             framing.guides = if (g in framing.guides) framing.guides - g else framing.guides + g
         }
 
+        sun?.let { SunSection(it, onSunLocate, sunView) }
+
         Label(stringResource(R.string.frm_scene_dot))
         Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (sceneDot) 1 else 0) { onSceneDot(it == 1) }
 
@@ -623,7 +630,7 @@ internal fun TextInput(value: String, hint: String, maxLen: Int = 40, singleLine
 
 /** Tecla chica para sumar o restar un paso. */
 @Composable
-private fun StepKey(text: String, enabled: Boolean, onClick: () -> Unit) {
+internal fun StepKey(text: String, enabled: Boolean, onClick: () -> Unit) {
     val p = LocalPalette.current
     Box(
         Modifier.size(width = 48.dp, height = 40.dp).clip(androidx.compose.foundation.shape.RoundedCornerShape(9.dp))
