@@ -39,3 +39,10 @@ dist/
 keystore.properties
 *.jks
 *.keystore
+
+# videos de promoción: capturas de terceros (Edo) y renders no se publican; solo el generador
+video/assets/
+video/*/assets/
+video/*/renders/
+video/*/.hyperframes/
+video/*/node_modules/
