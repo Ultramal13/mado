@@ -298,13 +298,6 @@ fun FovScreen(
     LaunchedEffect(camZoom) { camera.setZoom(camZoom) }
     val surfFracX = if (cropOn) 1f / (cropFw * camZoom) else imageScale
     val surfFracY = if (cropOn) 1f / (cropFh * camZoom) else imageScale
-    // Toque en la imagen: enfoca y mide la exposición ahí (fracciones del recuadro del visor → fracciones del flujo).
-    val onFocus: (Float, Float) -> Unit = { bu, bv ->
-        val su = 0.5f + (bu - 0.5f) / surfFracX; val sv = 0.5f + (bv - 0.5f) / surfFracY
-        if (su in 0f..1f && sv in 0f..1f) camera.focusAt(su, sv, displayRotation * 90)
-    }
-    val cropDraws = if (cropOn) frameDraws.filter { it.current }.map { it.copy(frame = Framing.Frame(1.0, 1.0)) } else frameDraws
-
     // Orientación de la cámara (rumbo, elevación, nivel): el sensor solo escucha mientras el visor corre en modo marco.
     val tracker = remember { OrientationTracker(ctx) }
     DisposableEffect(running, framing != null) {
@@ -317,9 +310,29 @@ fun FovScreen(
     val (sunHwL, sunHhL) = SunMath.halfTans(phoneDeg, size.width.toDouble() / size.height)
     val sunHalfW = if (landscape) sunHwL else sunHhL
     val sunHalfH = if (landscape) sunHhL else sunHwL
+    // Toque en la imagen: enfoca y mide la exposición ahí (fracciones del recuadro del visor → fracciones del flujo).
+    val onFocus: (Float, Float) -> Unit = { bu, bv ->
+        if (sun.calibrating) {
+            // Calibrar con el sol real: el toque dice dónde está el sol en la imagen; de ahí salen los ajustes de rumbo y elevación.
+            sun.calibrating = false
+            val pose = tracker.pose; val la = sun.lat; val lo = sun.lon
+            if (pose != null && la != null && lo != null && !cropOn) {
+                val tx = (bu - 0.5) * 2.0 / imageScale; val ty = -(bv - 0.5) * 2.0 / imageScale
+                val sp = SunMath.position(la, lo, Instant.now())
+                val az = SunMath.trueToMagnetic(sp.azimuthDeg, sun.declination())
+                val (h, e) = SunMath.solveCamera(az, sp.elevationDeg, tx, ty, sunHalfW, sunHalfH, sun.corrected(pose.headingDeg), sun.correctedElev(pose.elevationDeg))
+                sun.calibrateTo(pose.headingDeg, pose.elevationDeg, h, e)
+            }
+        } else {
+        val su = 0.5f + (bu - 0.5f) / surfFracX; val sv = 0.5f + (bv - 0.5f) / surfFracY
+        if (su in 0f..1f && sv in 0f..1f) camera.focusAt(su, sv, displayRotation * 90)
+        }
+    }
+    val cropDraws = if (cropOn) frameDraws.filter { it.current }.map { it.copy(frame = Framing.Frame(1.0, 1.0)) } else frameDraws
+
     // Mitad del encuadre actual en unidades de «mitad de la imagen»: la ventana del sol se calcula para ese recuadro, no para toda la imagen.
     val sunFrame = frameDraws.firstOrNull { it.current }?.frame
-    val sunView = SunView(tracker.pose, sunHalfW, sunHalfH, sunFrame?.widthFrac ?: 1.0, sunFrame?.heightFrac ?: 1.0)
+    val sunView = SunView(tracker.pose, sunHalfW, sunHalfH, sunFrame?.widthFrac ?: 1.0, sunFrame?.heightFrac ?: 1.0, tracker.accuracy, tracker.headingErrorDeg)
 
     val preview: @Composable (Modifier) -> Unit = { mod ->
         Preview(
@@ -417,6 +430,9 @@ fun FovScreen(
     val verifiedText = stringResource(R.string.bar_verified)
     val unverifiedText = stringResource(R.string.bar_unverified)
     val shotWordText = stringResource(R.string.frm_shot_word)
+    val sunWindowTemplate = stringResource(R.string.sun_in_frame, "\u0001", "\u0002")
+    val sunNotInFrameText = stringResource(R.string.sun_not_in_frame)
+    val sunHourFormat = stringResource(R.string.sun_hour_tick)
     val takeShot: () -> Unit = takeShot@{
         if (framing == null || !running || shot is ShotUi.Working || shot is ShotUi.Exposed) return@takeShot
         shot = ShotUi.Working
@@ -497,6 +513,9 @@ fun FovScreen(
                     is FovCamera.Shot.Ok -> scope.launch {
                         val posePhoto = poseExp ?: pose                  // la del instante de la toma; si no hubo, la del toque
                         val headText = headingText(posePhoto); val attText = attitudeText(posePhoto)
+                        // El sol en la foto: lo mismo que se ve en el visor, con la orientación del instante de la toma.
+                        val sunShot = posePhoto?.let { buildSunShot(sun, it, sunView, sunWindowTemplate, sunNotInFrameText, sunHourFormat) }
+                        sunShot?.let { meta.put("sun", it.meta) }
                         val loc = try { locJob?.await() } catch (e: Exception) { null }
                         meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms).put("delay_to_exposure_ms", result.exposedMs).put("moved_deg", movedDeg).put("focus", camera.lastStillFocus))
                         loc?.let { meta.put("location", JSONObject().put("lat", it.latitude).put("lon", it.longitude).put("accuracy_m", it.accuracy.toDouble())) }
@@ -506,9 +525,9 @@ fun FovScreen(
                             val saved = withContext(Dispatchers.IO) {
                                 // Dos archivos con la barra de datos: la foto con los recuadros del kit y el plano recortado al encuadre.
                                 // (No se guarda la foto sin gráficos: es la misma imagen que la primera.)
-                                val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel)
+                                val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel, sunShot?.note)
                                 val marco = PhotoSaver.save(ctx, overview, 0, meta, now, suffix = "_marco", location = loc, headingDeg = posePhoto?.headingDeg)
-                                val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel)
+                                val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel, sunShot?.note)
                                 PhotoSaver.save(ctx, plano, 0, meta, now, suffix = "_plano", location = loc, headingDeg = posePhoto?.headingDeg)
                                 marco
                             }
@@ -568,7 +587,11 @@ fun FovScreen(
                 evLabel = evInfo?.takeIf { ev != 0 }?.let { evText(ev, it.second) }, onFocus = onFocus,
                 calibNotice = profileDeg == null, onShareDiagnostics = onShareDiagnostics, onCalibrate = onCalibrate,
                 focusReadout = { camera.focusDiopters?.let { d -> if (d > 0.05f) String.format(Locale.ROOT, "%.2f m", 1f / d) else "∞" } },
-                sunOn = sun.on, onSun = { sun.enable(!sun.on); if (sun.on && !sun.located && !sun.locating) onSunLocate() },
+                sunOn = sun.on, onSun = { sun.enable(!sun.on); if (!sun.on) sun.calibrating = false; if (sun.on && !sun.located && !sun.locating) onSunLocate() },
+                // ◎: tocar el sol real en la imagen para corregir la brújula; solo con el sol alto y la hora en «ahora».
+                onSunCal = if (sun.on && sun.located && sun.picked == null && (sun.position()?.elevationDeg ?: 0.0) > 3.0) ({ sun.calibrating = !sun.calibrating }) else null,
+                sunCalOn = sun.calibrating,
+                sunTimeline = if (sun.on && sun.located) ({ m -> SunTimeline(sun, m) }) else null,
             )
         } else if (landscape) {
             // El preview ocupa el alto; los controles van en un panel desplazable a la derecha.
@@ -604,7 +627,9 @@ private fun ViewerLayout(
     calibNotice: Boolean = false, onShareDiagnostics: () -> Unit = {}, onCalibrate: () -> Unit = {},
     shot: ShotUi = ShotUi.Idle, flashTick: Int = 0, hint: Boolean = false, cropped: Boolean = false,
     /** Tecla ☀ del visor: activa o apaga el sol sin abrir el panel de opciones. */
-    sunOn: Boolean = false, onSun: () -> Unit = {},
+    sunOn: Boolean = false, onSun: () -> Unit = {}, onSunCal: (() -> Unit)? = null, sunCalOn: Boolean = false,
+    /** Línea de tiempo del sol (arrastrar para mover la hora): se dibuja abajo, sobre la imagen. */
+    sunTimeline: (@Composable (Modifier) -> Unit)? = null,
 ) {
     val p = LocalPalette.current
     var optionsOpen by rememberSaveable { mutableStateOf(false) }
@@ -753,10 +778,13 @@ private fun ViewerLayout(
 
         if (landscape) {
             ViewerBar(
-                framing, running, working, onToggle, onShot, vertical = true, onMenu = onMenu, onSun = onSun, sunOn = sunOn,
+                framing, running, working, onToggle, onShot, vertical = true, onMenu = onMenu, onSun = onSun, sunOn = sunOn, onSunCal = onSunCal, sunCalOn = sunCalOn,
                 modifier = Modifier.align(Alignment.CenterEnd)
                     .windowInsetsPadding(safe.only(WindowInsetsSides.End + WindowInsetsSides.Vertical)).padding(6.dp),
             )
+            sunTimeline?.let {
+                if (!optionsOpen) it(Modifier.align(Alignment.BottomCenter).padding(bottom = 10.dp, end = 80.dp).fillMaxWidth(0.5f))
+            }
             if (optionsOpen) optionsPanel(
                 Modifier.align(Alignment.CenterEnd)
                     .windowInsetsPadding(safe.only(WindowInsetsSides.End + WindowInsetsSides.Vertical))
@@ -771,6 +799,7 @@ private fun ViewerLayout(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 BarKey("☀", onSun, accent = sunOn)
+                onSunCal?.let { BarKey("◎", it, accent = sunCalOn) }
                 if (running) BarKey("■", onToggle)
                 BarKey("☰", onMenu)
             }
@@ -782,6 +811,7 @@ private fun ViewerLayout(
                     Modifier.fillMaxWidth().padding(horizontal = 6.dp).heightIn(max = screenH * 0.55f)
                         .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)).background(p.body),
                 )
+                if (!optionsOpen) sunTimeline?.invoke(Modifier.fillMaxWidth().padding(horizontal = 12.dp))
                 ViewerBar(framing, running, working, onToggle, onShot, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
             }
         }

@@ -251,10 +251,12 @@
     <string name="sun_in_frame">この枠に太陽が入る時間：%1$s〜%2$s</string>
     <string name="sun_not_in_frame">この日は太陽がこの枠を通りません</string>
     <string name="sun_calibrate_title">実際の太陽でコンパスを校正</string>
-    <string name="sun_calibrate_help">画像の中央を太陽に向け（太陽を直接見ず、画面を見て）タップ</string>
-    <string name="sun_calibrate_need">太陽が地平線から十分高く、時刻が「今」のときに使えます</string>
-    <string name="sun_calibrate">太陽が中央にある</string>
+    <string name="sun_calibrate_help">円が実際の太陽に重ならないときは、ビューアの ◎ をタップし、画面の実際の太陽をタップしてください（太陽を直接見ないでください）</string>
+    <string name="sun_calibrate_need">◎ は太陽が地平線から十分高く、時刻が「今」のときに使えます</string>
     <string name="sun_calibrate_clear">校正を解除</string>
-    <string name="sun_calibrated">実際の太陽でコンパスを %1$+.1f° 補正</string>
+    <string name="sun_calibrated">実際の太陽でコンパスを %1$+.1f°、高度を %2$+.1f° 補正</string>
     <string name="sun_hour_tick">%1$d時</string>
+    <string name="sun_calibrate_hint">画面の実際の太陽をタップ</string>
+    <string name="sun_compass_warn">コンパスの精度が低い：8の字に動かしてください</string>
+    <string name="sun_seasons">夏至・冬至・春分の軌跡も描く</string>
 </resources>

@@ -192,7 +192,7 @@ internal fun ShutterKey(working: Boolean, enabled: Boolean, onClick: () -> Unit,
 internal fun ViewerBar(
     framing: FramingState, running: Boolean, working: Boolean,
     onToggle: () -> Unit, onShot: () -> Unit, vertical: Boolean = false, onMenu: (() -> Unit)? = null, modifier: Modifier = Modifier,
-    onSun: (() -> Unit)? = null, sunOn: Boolean = false,
+    onSun: (() -> Unit)? = null, sunOn: Boolean = false, onSunCal: (() -> Unit)? = null, sunCalOn: Boolean = false,
 ) {
     val shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
     val focal: @Composable () -> Unit = {
@@ -206,6 +206,7 @@ internal fun ViewerBar(
     ) {
         onMenu?.let { BarKey("☰", it) }
         onSun?.let { BarKey("☀", it, accent = sunOn) }
+        onSunCal?.let { BarKey("◎", it, accent = sunCalOn) }
         if (running) BarKey("■", onToggle)
         focal()
         ShutterKey(working, running && !working, onShot, 52.dp)

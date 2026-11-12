@@ -251,10 +251,12 @@
     <string name="sun_in_frame">el sol está en este encuadre: %1$s–%2$s</string>
     <string name="sun_not_in_frame">el sol no pasa por este encuadre ese día</string>
     <string name="sun_calibrate_title">calibrar la brújula con el sol real</string>
-    <string name="sun_calibrate_help">apunta el centro de la imagen al sol (mira la pantalla, no el sol directamente) y toca</string>
-    <string name="sun_calibrate_need">necesita el sol bien sobre el horizonte y la hora en «ahora»</string>
-    <string name="sun_calibrate">el sol está en el centro</string>
+    <string name="sun_calibrate_help">si el círculo no cae sobre el sol real, toca ◎ en el visor y luego toca el sol real en la imagen (mira la pantalla, no el sol directamente)</string>
+    <string name="sun_calibrate_need">◎ necesita el sol bien sobre el horizonte y la hora en «ahora»</string>
     <string name="sun_calibrate_clear">quitar calibración</string>
-    <string name="sun_calibrated">brújula ajustada %1$+.1f° con el sol real</string>
+    <string name="sun_calibrated">brújula ajustada %1$+.1f° y elevación %2$+.1f° con el sol real</string>
     <string name="sun_hour_tick">%1$dh</string>
+    <string name="sun_calibrate_hint">toca el sol real en la imagen</string>
+    <string name="sun_compass_warn">brújula poco fiable: mueve el teléfono en forma de 8</string>
+    <string name="sun_seasons">dibujar también los recorridos de los solsticios y el equinoccio</string>
 </resources>

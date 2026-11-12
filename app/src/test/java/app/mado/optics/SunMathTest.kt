@@ -127,4 +127,22 @@ class SunMathTest {
         val (hw, hh) = SunMath.halfTans(60.0, 1.5)
         assertNull(SunMath.frameWindow(35.6762, 139.6503, date, zone, 0.0, 0.0, 0.0, hw, hh))   // al norte, a ras del horizonte
     }
+
+    @Test fun solveCameraRecoversTheAxisFromWhereTheSunWasSeen() {
+        val (hw, hh) = SunMath.halfTans(70.0, 16.0 / 9.0)
+        val sunAz = 262.0; val sunEl = 8.0
+        val trueHeading = 240.0; val trueElev = -2.0
+        val seen = SunMath.project(sunAz, sunEl, trueHeading, trueElev, hw, hh)
+        assertTrue(seen.inside)
+        // El sensor decía otra cosa (rumbo 22° de más, elevación 3° de más): el toque en el sol real devuelve el eje verdadero.
+        val (h, e) = SunMath.solveCamera(sunAz, sunEl, seen.x, seen.y, hw, hh, trueHeading + 22.0, trueElev + 3.0)
+        assertEquals(trueHeading, h, 0.05); assertEquals(trueElev, e, 0.05)
+    }
+
+    @Test fun solveCameraWorksWhenTheSunIsHighAndOffCenter() {
+        val (hw, hh) = SunMath.halfTans(60.0, 1.5)
+        val seen = SunMath.project(120.0, 50.0, 100.0, 35.0, hw, hh)
+        val (h, e) = SunMath.solveCamera(120.0, 50.0, seen.x, seen.y, hw, hh, 130.0, 30.0)
+        assertEquals(100.0, h, 0.1); assertEquals(35.0, e, 0.1)
+    }
 }

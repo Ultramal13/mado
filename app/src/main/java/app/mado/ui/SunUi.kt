@@ -3,6 +3,15 @@ package app.mado.ui
 import android.content.SharedPreferences
 import android.hardware.GeomagneticField
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Column
@@ -40,10 +49,15 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.mado.R
+import app.mado.data.SunArc
+import app.mado.data.SunNote
+import app.mado.data.SunPoint
 import app.mado.optics.OrientationMath
 import app.mado.optics.SunMath
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -77,21 +91,31 @@ class SunState(private val prefs: SharedPreferences) {
     var locating by mutableStateOf(false)
     var locError by mutableStateOf(false)
     var showCoords by mutableStateOf(false)
+    /** Dibuja también los recorridos de los solsticios y del equinoccio. */
+    var seasons by mutableStateOf(prefs.getBoolean("sun_seasons", false))
+        private set
+    fun enableSeasons(v: Boolean) { seasons = v; prefs.edit().putBoolean("sun_seasons", v).apply() }
 
-    /** Ajuste del rumbo (grados) medido apuntando al sol real; vale solo para esta sesión y este lugar. */
+    /** Ajustes de rumbo y elevación (grados) medidos tocando el sol real; valen solo para esta sesión y este lugar. */
     var headingOffset by mutableStateOf(0.0)
         private set
+    var elevationOffset by mutableStateOf(0.0)
+        private set
+    /** Esperando que el usuario toque el sol real en la imagen. */
+    var calibrating by mutableStateOf(false)
 
     val located get() = lat != null && lon != null
     val zone: ZoneId get() = ZoneId.systemDefault()
 
     /** Rumbo del sensor con el ajuste de la calibración aplicado (0..360). */
     fun corrected(headingDeg: Double) = ((headingDeg + headingOffset) % 360.0 + 360.0) % 360.0
-    /** El sol real está en el centro de la imagen: el rumbo esperado ([sunAzimuthMagDeg]) menos el que midió el sensor es el ajuste. */
-    fun calibrate(sunAzimuthMagDeg: Double, sensorHeadingDeg: Double) {
-        headingOffset = ((sunAzimuthMagDeg - sensorHeadingDeg + 540.0) % 360.0) - 180.0
+    fun correctedElev(elevationDeg: Double) = elevationDeg + elevationOffset
+    /** Tras tocar el sol real: el eje de la cámara era ([newHeading], [newElev]) y el sensor leyó ([sensorHeading], [sensorElev]). */
+    fun calibrateTo(sensorHeading: Double, sensorElev: Double, newHeading: Double, newElev: Double) {
+        headingOffset = ((newHeading - sensorHeading + 540.0) % 360.0) - 180.0
+        elevationOffset = newElev - sensorElev
     }
-    fun clearCalibration() { headingOffset = 0.0 }
+    fun clearCalibration() { headingOffset = 0.0; elevationOffset = 0.0; calibrating = false }
 
     fun enable(v: Boolean) { on = v; prefs.edit().putBoolean("sun_on", v).apply() }
 
@@ -106,6 +130,8 @@ class SunState(private val prefs: SharedPreferences) {
 
     fun localTime(): LocalDateTime = picked ?: LocalDateTime.now(zone)
     fun instant(): Instant = picked?.atZone(zone)?.toInstant() ?: Instant.now()
+    /** Fija la hora del día [minuteOfDay] en la fecha [date] (la línea de tiempo del visor). */
+    fun setTime(date: LocalDate, minuteOfDay: Int) { picked = LocalDateTime.of(date, LocalTime.of(minuteOfDay.coerceIn(0, 1439) / 60, minuteOfDay.coerceIn(0, 1439) % 60)) }
     fun shiftMinutes(m: Long) { picked = localTime().plusMinutes(m) }
     fun shiftDays(d: Long) { picked = localTime().plusDays(d) }
     fun backToNow() { picked = null }
@@ -126,7 +152,13 @@ class SunState(private val prefs: SharedPreferences) {
 private val sunYellow = Color(0xFFFFC83D)
 
 /** Lo que el visor sabe de la cámara para dibujar y calcular el sol: orientación, campo visible en cada eje y mitad del encuadre actual. */
-internal data class SunView(val pose: OrientationMath.Pose?, val halfW: Double, val halfH: Double, val frameW: Double = 1.0, val frameH: Double = 1.0)
+internal data class SunView(
+    val pose: OrientationMath.Pose?, val halfW: Double, val halfH: Double, val frameW: Double = 1.0, val frameH: Double = 1.0,
+    /** Calidad del sensor magnético según Android (0..3) y error de rumbo estimado, si el teléfono lo informa. */
+    val compassAccuracy: Int = 3, val headingErrorDeg: Double? = null,
+) {
+    val compassUnreliable get() = compassAccuracy <= 1 || (headingErrorDeg ?: 0.0) > 15.0
+}
 
 /** Intervalo del día (local) en que el sol cruza el encuadre actual, según hacia dónde apunta la cámara; se recalcula al girar un grado. */
 @Composable
@@ -135,7 +167,7 @@ private fun rememberSunWindow(sun: SunState, v: SunView): Pair<Instant, Instant>
     if (lat == null || lon == null || pose == null) return null
     val date = sun.localTime().toLocalDate()
     val h = sun.corrected(pose.headingDeg).roundToInt()
-    val e = pose.elevationDeg.roundToInt()
+    val e = sun.correctedElev(pose.elevationDeg).roundToInt()
     val decl = remember(lat, lon) { sun.declination() }
     return remember(lat, lon, date, h, e, v.halfW, v.halfH, v.frameW, v.frameH, decl) {
         SunMath.frameWindow(lat, lon, date, sun.zone, decl, h.toDouble(), e.toDouble(), v.halfW, v.halfH, v.frameW, v.frameH)
@@ -194,6 +226,9 @@ internal fun SunSection(sun: SunState, onLocate: () -> Unit, view: SunView? = nu
         StepKey(stringResource(R.string.sun_now), sun.picked != null) { sun.backToNow() }
     }
 
+    Label(stringResource(R.string.sun_seasons))
+    Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (sun.seasons) 1 else 0) { sun.enableSeasons(it == 1) }
+
     val compass = stringArrayResource(R.array.compass_points)
     val pos = SunMath.position(lat, lon, sun.instant())
     val az = pos.azimuthDeg
@@ -226,17 +261,16 @@ internal fun SunSection(sun: SunState, onLocate: () -> Unit, view: SunView? = nu
             if (w == null) stringResource(R.string.sun_not_in_frame) else stringResource(R.string.sun_in_frame, t(w.first).orEmpty(), t(w.second).orEmpty()),
             style = mono(12, if (w == null) p.text else p.accent, true), modifier = Modifier.padding(top = 6.dp),
         )
-        // Calibrar la brújula con el sol real: solo con el sol alto y la hora en «ahora».
+        // Calibrar la brújula con el sol real: solo con el sol alto y la hora en «ahora». La tecla ◎ del visor inicia el toque.
         val canCalibrate = sun.picked == null && pos.elevationDeg > 3.0
         Label(stringResource(R.string.sun_calibrate_title))
         Text(stringResource(R.string.sun_calibrate_help), style = mono(10, p.text.copy(alpha = 0.7f)))
         if (!canCalibrate) Text(stringResource(R.string.sun_calibrate_need), style = mono(10, p.accent))
-        Seg(
-            listOfNotNull(stringResource(R.string.sun_calibrate), if (sun.headingOffset != 0.0) stringResource(R.string.sun_calibrate_clear) else null), -1,
-        ) { i ->
-            if (i == 0 && canCalibrate) sun.calibrate(SunMath.trueToMagnetic(az, decl), view.pose.headingDeg) else if (i == 1) sun.clearCalibration()
+        if (view.compassUnreliable) Text(stringResource(R.string.sun_compass_warn), style = mono(10, p.accent))
+        if (sun.headingOffset != 0.0 || sun.elevationOffset != 0.0) {
+            Text(stringResource(R.string.sun_calibrated, sun.headingOffset, sun.elevationOffset), style = mono(10, p.text))
+            Seg(listOf(stringResource(R.string.sun_calibrate_clear)), -1) { sun.clearCalibration() }
         }
-        if (sun.headingOffset != 0.0) Text(stringResource(R.string.sun_calibrated, sun.headingOffset), style = mono(10, p.text))
     }
     Text(stringResource(R.string.sun_accuracy), style = mono(10, p.text.copy(alpha = 0.6f)), modifier = Modifier.padding(top = 4.dp))
 }
@@ -259,6 +293,67 @@ private fun CoordField(current: Double?, stamp: Int, range: ClosedFloatingPointR
     )
 }
 
+/** Un punto del recorrido del sol sin proyectar (azimut verdadero y elevación) y el recorrido al que pertenece. */
+internal data class RawPt(val at: Instant, val az: Double, val el: Double, val hour: Int?)
+internal data class RawPath(val color: Int, val label: String?, val hours: Boolean, val samples: List<RawPt>)
+
+/** El recorrido de hoy (con horas) y, si se pide, los de los solsticios (21 jun, 21 dic) y el equinoccio (20 mar) del mismo año, en tonos apagados. */
+internal fun computeRawPaths(lat: Double, lon: Double, date: LocalDate, zone: ZoneId, seasons: Boolean): List<RawPath> {
+    fun raw(d: LocalDate) = SunMath.path(lat, lon, d, zone, 10).map { smp ->
+        val lt = smp.at.atZone(zone)
+        RawPt(smp.at, smp.azimuthDeg, smp.elevationDeg, if (lt.minute == 0) lt.hour else null)
+    }
+    val out = ArrayList<RawPath>()
+    if (seasons) {
+        val fmt = DateTimeFormatter.ofPattern("d MMM")
+        for ((m, d, c) in listOf(Triple(6, 21, 0xFFFF6B6B.toInt()), Triple(3, 20, 0xFF69C779.toInt()), Triple(12, 21, 0xFF3DD0E0.toInt()))) {
+            val day = LocalDate.of(date.year, m, d)
+            out.add(RawPath(c, day.format(fmt), false, raw(day)))
+        }
+    }
+    out.add(RawPath(0xFFFFC83D.toInt(), null, true, raw(date)))          // el de hoy al final: queda encima
+    return out
+}
+
+/** Proyecta los recorridos a la imagen: null donde el punto queda detrás de la cámara o demasiado lejos para dibujarse. */
+internal fun projectPaths(raw: List<RawPath>, decl: Double, heading: Double, elev: Double, halfW: Double, halfH: Double, fadeBefore: Instant?): List<SunArc> =
+    raw.map { rp ->
+        SunArc(rp.color, rp.samples.map { smp ->
+            val pr = SunMath.project(SunMath.trueToMagnetic(smp.az, decl), smp.el, heading, elev, halfW, halfH)
+            if (pr.inFront && abs(pr.x) < 8.0 && abs(pr.y) < 8.0) SunPoint(pr.x, pr.y, smp.hour, fadeBefore != null && rp.hours && smp.at < fadeBefore) else null
+        }, rp.label, rp.hours)
+    }
+
+/** Lo que va a las fotos guardadas: el sol dibujado ([note]) y sus datos para el registro ([meta]). */
+internal class SunShot(val note: SunNote, val meta: org.json.JSONObject)
+
+/**
+ * El sol en el instante de la toma, con la orientación de la cámara de ese momento ([pose]). Las plantillas de texto ya vienen traducidas:
+ * [windowTemplate] lleva \u0001 y \u0002 donde van la hora de entrada y la de salida.
+ */
+internal fun buildSunShot(sun: SunState, pose: OrientationMath.Pose, view: SunView, windowTemplate: String, notInFrame: String, hourFmt: String): SunShot? {
+    val lat = sun.lat ?: return null; val lon = sun.lon ?: return null
+    if (!sun.on) return null
+    val decl = sun.declination()
+    val heading = sun.corrected(pose.headingDeg); val elev = sun.correctedElev(pose.elevationDeg)
+    val instant = sun.instant(); val zone = sun.zone; val date = sun.localTime().toLocalDate()
+    val sp = SunMath.position(lat, lon, instant)
+    val pr = SunMath.project(SunMath.trueToMagnetic(sp.azimuthDeg, decl), sp.elevationDeg, heading, elev, view.halfW, view.halfH)
+    val marker = if (pr.inFront && abs(pr.x) <= 1.0 && abs(pr.y) <= 1.0) SunPoint(pr.x, pr.y) else null
+    val arcs = projectPaths(computeRawPaths(lat, lon, date, zone, sun.seasons), decl, heading, elev, view.halfW, view.halfH, if (sun.picked == null) instant else null)
+    val w = SunMath.frameWindow(lat, lon, date, zone, decl, heading, elev, view.halfW, view.halfH, view.frameW, view.frameH)
+    val hm = DateTimeFormatter.ofPattern("HH:mm")
+    val window = if (w == null) notInFrame
+        else windowTemplate.replace("\u0001", w.first.atZone(zone).format(hm)).replace("\u0002", w.second.atZone(zone).format(hm))
+    val badge = String.format(Locale.ROOT, "☀ %d° · %+d°", sp.azimuthDeg.roundToInt() % 360, sp.elevationDeg.roundToInt())
+    val meta = org.json.JSONObject()
+        .put("time", instant.toString()).put("azimuth_deg_true", sp.azimuthDeg).put("elevation_deg", sp.elevationDeg)
+        .put("declination_deg", decl).put("compass_offset_deg", sun.headingOffset).put("elevation_offset_deg", sun.elevationOffset)
+        .put("planned", sun.picked != null)
+        .put("frame_window_start", w?.first?.toString() ?: org.json.JSONObject.NULL).put("frame_window_end", w?.second?.toString() ?: org.json.JSONObject.NULL)
+    return SunShot(SunNote(badge, "☀ $window", marker, arcs, hourFmt), meta)
+}
+
 /**
  * El sol sobre la imagen: el arco de su recorrido del día con una marca por hora, un círculo con rayos si ahora cae dentro del campo
  * del teléfono (o una flecha en el borde hacia donde girar), y arriba la ventana horaria en que cruza el encuadre actual.
@@ -272,30 +367,28 @@ internal fun SunOverlay(sun: SunState, view: SunView, imageScale: Float) {
     val measurer = rememberTextMeasurer()
     val decl = remember(lat, lon) { sun.declination() }
     val heading = sun.corrected(pose.headingDeg)
+    val elev = sun.correctedElev(pose.elevationDeg)
     val instant = sun.instant()
     val sp = SunMath.position(lat, lon, instant)
     val azMag = SunMath.trueToMagnetic(sp.azimuthDeg, decl)
-    val proj = SunMath.project(azMag, sp.elevationDeg, heading, pose.elevationDeg, view.halfW, view.halfH)
-    val dist = SunMath.angularDistanceDeg(azMag, sp.elevationDeg, heading, pose.elevationDeg)
+    val proj = SunMath.project(azMag, sp.elevationDeg, heading, elev, view.halfW, view.halfH)
+    val dist = SunMath.angularDistanceDeg(azMag, sp.elevationDeg, heading, elev)
     val col = if (p.red) p.screenText else sunYellow
     val behindText = stringResource(R.string.sun_behind)
     val belowText = stringResource(R.string.sun_below)
     val below = sp.elevationDeg < 0
-    // Recorrido del día: se calcula una vez por lugar y fecha; las marcas por hora salen de los puntos en hora redonda.
+    // Recorridos (hoy y, si se piden, las estaciones): las posiciones se calculan una vez por lugar y fecha; la proyección, en cada cuadro.
     val date = sun.localTime().toLocalDate()
     val zone = sun.zone
-    val arc = remember(lat, lon, date) {
-        SunMath.path(lat, lon, date, zone, 10).map { smp ->
-            val lt = smp.at.atZone(zone)
-            ArcPoint(smp.at, smp.azimuthDeg, smp.elevationDeg, if (lt.minute == 0) lt.hour else null)
-        }
-    }
+    val raw = remember(lat, lon, date, sun.seasons) { computeRawPaths(lat, lon, date, zone, sun.seasons) }
+    val arcs = projectPaths(raw, decl, heading, elev, view.halfW, view.halfH, if (sun.picked == null) instant else null)
     val window = rememberSunWindow(sun, view)
     val hm = remember { DateTimeFormatter.ofPattern("HH:mm") }
     val windowText = if (window == null) stringResource(R.string.sun_not_in_frame)
         else stringResource(R.string.sun_in_frame, window.first.atZone(zone).format(hm), window.second.atZone(zone).format(hm))
     val hourFmt = stringResource(R.string.sun_hour_tick)
-    val past = sun.picked == null
+    val compassWarn = stringResource(R.string.sun_compass_warn)
+    val calibrateHint = stringResource(R.string.sun_calibrate_hint)
     Canvas(Modifier.fillMaxSize()) {
         val c = Offset(size.width / 2, size.height / 2)
         val iw = size.width * imageScale
@@ -303,32 +396,46 @@ internal fun SunOverlay(sun: SunState, view: SunView, imageScale: Float) {
         fun at(x: Double, y: Double) = Offset(c.x + (x * iw / 2).toFloat(), c.y - (y * ih / 2).toFloat())
         val style = TextStyle(fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = Color.Black)
         val tickStyle = TextStyle(fontSize = 11.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = col)
-        fun label(text: String, pos: Offset) {
-            val l = measurer.measure(text, style)
+        fun label(text: String, pos: Offset, bg: Color = col, fg: Color = Color.Black) {
+            val l = measurer.measure(text, style.copy(color = fg))
             val pad = 4.dp.toPx()
             val tl = Offset(pos.x.coerceIn(0f, maxOf(0f, size.width - l.size.width - 2 * pad)), pos.y.coerceIn(0f, maxOf(0f, size.height - l.size.height - pad)))
-            drawRect(col, tl, Size(l.size.width + 2 * pad, l.size.height + pad))
+            drawRect(bg, tl, Size(l.size.width + 2 * pad, l.size.height + pad))
             drawText(l, topLeft = Offset(tl.x + pad, tl.y + pad / 2))
         }
-        // Arco del recorrido: tramos entre puntos consecutivos que están delante de la cámara.
-        var prev: Offset? = null
-        for (pt in arc) {
-            val pr = SunMath.project(SunMath.trueToMagnetic(pt.az, decl), pt.el, heading, pose.elevationDeg, view.halfW, view.halfH)
-            val ok = pr.inFront && abs(pr.x) < 8.0 && abs(pr.y) < 8.0
-            val o = if (ok) at(pr.x, pr.y) else null
-            val faded = past && pt.at < instant
-            val a = if (faded) 0.4f else 0.95f
-            if (o != null && prev != null) drawLine(col.copy(alpha = a), prev, o, 2.5.dp.toPx())
-            if (o != null && pt.hour != null && abs(pr.x) <= 1.05 && abs(pr.y) <= 1.05) {
-                drawCircle(col.copy(alpha = a), 4.dp.toPx(), o)
-                val l = measurer.measure(String.format(Locale.ROOT, hourFmt, pt.hour), tickStyle)
-                drawText(l, topLeft = Offset(o.x + 7.dp.toPx(), o.y - l.size.height / 2f))
+        var markerPos: Offset? = null
+        if (proj.inside) markerPos = at(proj.x, proj.y)
+        // Recorridos: tramos entre puntos consecutivos visibles; el de hoy lleva una marca por hora y los de las estaciones, su fecha.
+        for (arc in arcs) {
+            val ac = if (arc.hours || p.red) col else Color(arc.color)
+            var prevO: Offset? = null
+            var labelled = false
+            for (pt in arc.points) {
+                val o = pt?.let { at(it.x, it.y) }
+                val a = (if (arc.hours) 0.95f else 0.7f) * (if (pt?.past == true) 0.45f else 1f)
+                if (o != null && prevO != null) drawLine(ac.copy(alpha = a), prevO, o, (if (arc.hours) 2.5f else 1.5f).dp.toPx())
+                if (pt != null && o != null && abs(pt.x) <= 1.05 && abs(pt.y) <= 1.05) {
+                    if (arc.hours && pt.hour != null) {
+                        // Si la marca de la hora cae encima del sol, se omite para no tapar su etiqueta.
+                        val nearSun = markerPos?.let { m -> (o - m).getDistance() < 40.dp.toPx() } == true
+                        if (!nearSun) {
+                            drawCircle(ac.copy(alpha = a), 4.dp.toPx(), o)
+                            val l = measurer.measure(String.format(Locale.ROOT, hourFmt, pt.hour), tickStyle)
+                            drawText(l, topLeft = Offset(o.x + 7.dp.toPx(), o.y - l.size.height / 2f))
+                        }
+                    } else if (!arc.hours && !labelled && arc.label != null) {
+                        labelled = true
+                        val l = measurer.measure(arc.label, tickStyle.copy(color = ac, fontSize = 10.sp))
+                        drawText(l, topLeft = Offset(o.x + 5.dp.toPx(), o.y - l.size.height - 3.dp.toPx()))
+                    }
+                }
+                prevO = o
             }
-            prev = o
         }
         // Dónde está el sol ahora.
         if (proj.inside) {
             val pos = at(proj.x, proj.y)
+            markerPos = pos
             val r = 12.dp.toPx()
             drawCircle(col, r, pos, style = Stroke(3.dp.toPx()))
             drawCircle(col, 3.5.dp.toPx(), pos)
@@ -359,9 +466,78 @@ internal fun SunOverlay(sun: SunState, view: SunView, imageScale: Float) {
             val txt = String.format(Locale.ROOT, "☀ %d°", dist.roundToInt()) + (if (!proj.inFront) " · $behindText" else "") + (if (below) " · $belowText" else "")
             label(txt, Offset(pos.x - 40.dp.toPx() - dir.x * 30.dp.toPx(), pos.y + 18.dp.toPx() * (if (dir.y >= 0) -1.6f else 1f)))
         }
-        // Ventana horaria en el encuadre actual, arriba a la izquierda.
-        label("☀ $windowText", Offset(8.dp.toPx(), 8.dp.toPx()))
+        // Ventana horaria en el encuadre actual, abajo a la izquierda (arriba chocaría con el reloj y la cabecera del visor).
+        label("☀ $windowText", Offset(8.dp.toPx(), size.height - 34.dp.toPx()))
+        if (view.compassUnreliable) label("⚠ $compassWarn", Offset(8.dp.toPx(), size.height - 64.dp.toPx()), bg = Color(0xFFFF5A1F), fg = Color.White)
+        if (sun.calibrating) {
+            val l = measurer.measure(calibrateHint, style.copy(fontSize = 15.sp, color = Color.Black))
+            val pad = 8.dp.toPx()
+            val tl = Offset(c.x - l.size.width / 2f - pad, c.y - l.size.height - 2 * pad - 40.dp.toPx())
+            drawRect(col, tl, Size(l.size.width + 2 * pad, l.size.height + 2 * pad))
+            drawText(l, topLeft = Offset(tl.x + pad, tl.y + pad))
+        }
     }
 }
 
-private data class ArcPoint(val at: Instant, val az: Double, val el: Double, val hour: Int?)
+
+/**
+ * Línea de tiempo del visor: se arrastra (o se toca) para mover la hora del día mostrado, de una hora antes del amanecer a una después
+ * del atardecer, y una tecla «ahora» vuelve a la hora real. Pinta las horas de luz y la hora dorada.
+ */
+@Composable
+internal fun SunTimeline(sun: SunState, modifier: Modifier = Modifier) {
+    val lat = sun.lat; val lon = sun.lon
+    if (!sun.on || lat == null || lon == null) return
+    val p = LocalPalette.current
+    val measurer = rememberTextMeasurer()
+    val zone = sun.zone
+    val local = sun.localTime()
+    val date = local.toLocalDate()
+    val day = remember(lat, lon, date) { SunMath.day(lat, lon, date, zone) }
+    fun minute(i: Instant?) = i?.atZone(zone)?.let { it.hour * 60 + it.minute }
+    val rise = minute(day.sunrise); val set = minute(day.sunset)
+    val startMin = if (rise != null) ((rise - 60) / 60 * 60).coerceAtLeast(0) else 0
+    val endMin = if (set != null) (((set + 60 + 59) / 60) * 60).coerceAtMost(1440) else 1440
+    val span = (endMin - startMin).coerceAtLeast(60)
+    var widthPx by remember { mutableFloatStateOf(1f) }
+    val setFromX: (Float) -> Unit = { x -> sun.setTime(date, (startMin + (x / widthPx).coerceIn(0f, 1f) * span).roundToInt() / 5 * 5) }
+    val nowMin = local.hour * 60 + local.minute
+    val col = if (p.red) p.screenText else sunYellow
+    val golden = Color(0xFFFF9A3D)
+    Row(modifier.height(52.dp).clip(RoundedCornerShape(14.dp)).background(Color.Black.copy(alpha = 0.62f)), verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            Modifier.weight(1f).fillMaxSize().onSizeChanged { widthPx = it.width.toFloat().coerceAtLeast(1f) }
+                .pointerInput(date, startMin, endMin) { detectTapGestures { setFromX(it.x) } }
+                .pointerInput(date, startMin, endMin) { detectHorizontalDragGestures(onDragStart = { setFromX(it.x) }) { change, _ -> change.consume(); setFromX(change.position.x) } },
+        ) {
+            Canvas(Modifier.fillMaxSize()) {
+                fun xOf(min: Int) = ((min - startMin).toFloat() / span * size.width).coerceIn(0f, size.width)
+                val y = size.height * 0.62f
+                drawLine(Color.White.copy(alpha = 0.25f), Offset(0f, y), Offset(size.width, y), 4.dp.toPx())
+                if (rise != null && set != null) drawLine(col.copy(alpha = 0.45f), Offset(xOf(rise), y), Offset(xOf(set), y), 4.dp.toPx())
+                minute(day.goldenMorningEnd)?.let { g -> if (rise != null) drawLine(golden, Offset(xOf(rise), y), Offset(xOf(g), y), 4.dp.toPx()) }
+                minute(day.goldenEveningStart)?.let { g -> if (set != null) drawLine(golden, Offset(xOf(g), y), Offset(xOf(set), y), 4.dp.toPx()) }
+                var h = startMin
+                while (h <= endMin) {
+                    val x = xOf(h)
+                    drawLine(Color.White.copy(alpha = 0.55f), Offset(x, y - 5.dp.toPx()), Offset(x, y + 5.dp.toPx()), 1.dp.toPx())
+                    if ((h / 60) % 2 == 0 || span <= 360) {
+                        val l = measurer.measure(String.format(Locale.ROOT, "%d", h / 60), TextStyle(fontSize = 10.sp, fontFamily = FontFamily.Monospace, color = Color.White.copy(alpha = 0.75f)))
+                        drawText(l, topLeft = Offset((x - l.size.width / 2f).coerceIn(0f, size.width - l.size.width), y + 8.dp.toPx()))
+                    }
+                    h += 60
+                }
+                val hx = xOf(nowMin.coerceIn(startMin, endMin))
+                drawCircle(Color.Black.copy(alpha = 0.7f), 9.dp.toPx(), Offset(hx, y))
+                drawCircle(col, 7.dp.toPx(), Offset(hx, y))
+                val tl = measurer.measure(local.format(DateTimeFormatter.ofPattern("HH:mm")), TextStyle(fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = col))
+                drawText(tl, topLeft = Offset((hx - tl.size.width / 2f).coerceIn(0f, size.width - tl.size.width), 2.dp.toPx()))
+            }
+        }
+        Text(
+            stringResource(R.string.sun_now), style = mono(12, if (sun.picked != null) Color.Black else p.text.copy(alpha = 0.5f), true),
+            modifier = Modifier.padding(end = 8.dp).clip(RoundedCornerShape(8.dp)).background(if (sun.picked != null) col else Color.Transparent)
+                .clickable(enabled = sun.picked != null) { sun.backToNow() }.padding(horizontal = 10.dp, vertical = 8.dp),
+        )
+    }
+}

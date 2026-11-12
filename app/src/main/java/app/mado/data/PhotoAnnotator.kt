@@ -26,6 +26,18 @@ data class BarInfo(
     val sceneTag: String? = null, val sceneColor: Int = 0,
 )
 
+/** Un punto del recorrido del sol en la imagen: x hacia la derecha e y hacia arriba en unidades de «mitad del campo» (1 = borde de la foto); [hour] solo en horas redondas. */
+data class SunPoint(val x: Double, val y: Double, val hour: Int? = null, val past: Boolean = false)
+
+/** Un recorrido del sol (el de hoy o el de un solsticio/equinoccio); un null entre puntos corta la línea. [label] va junto al primer punto visible. */
+data class SunArc(val color: Int, val points: List<SunPoint?>, val label: String? = null, val hours: Boolean = false)
+
+/**
+ * El sol para dibujarlo en las copias con datos, igual que en el visor: recorridos, círculo si cae dentro de la foto y, arriba a la derecha,
+ * sus grados ([badge]) y la ventana horaria en que cruza el encuadre ([window]).
+ */
+data class SunNote(val badge: String, val window: String?, val marker: SunPoint?, val arcs: List<SunArc>, val hourFmt: String = "%dh")
+
 /** Un recuadro por focal del kit; `current` = el que se está usando; `detail` = texto de su etiqueta (la actual lleva la medida). */
 data class AnnotFrame(val label: String, val frame: Framing.Frame, val current: Boolean, val detail: String = label)
 
@@ -45,7 +57,7 @@ object PhotoAnnotator {
     // ---------- Vista general: foto + todos los recuadros ----------
     fun overview(
         jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet(),
-        delivery: Double? = null, deliveryLabel: String = "",
+        delivery: Double? = null, deliveryLabel: String = "", sun: SunNote? = null,
     ): ByteArray {
         val photo = decodeRotated(jpeg, rotationDeg, sample = 2)
         val w = photo.width; val h = photo.height
@@ -87,6 +99,7 @@ object PhotoAnnotator {
             drawGuides(c, guides, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, unit / 12f)
             delivery?.let { drawDelivery(c, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, it, deliveryLabel, unit) }
         }
+        sun?.let { drawSun(c, it, w / 2f, h / 2f, iw / 2f, ih / 2f, w.toFloat(), h.toFloat(), unit) }
         info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, barUnit, info)
         photo.recycle()
@@ -96,9 +109,9 @@ object PhotoAnnotator {
     // ---------- Plano: la foto recortada al encuadre actual ----------
     fun plano(
         jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet(),
-        delivery: Double? = null, deliveryLabel: String = "",
+        delivery: Double? = null, deliveryLabel: String = "", sun: SunNote? = null,
     ): ByteArray {
-        val cur = frames.firstOrNull { it.current }?.frame ?: return overview(jpeg, rotationDeg, frames, info, guides, delivery, deliveryLabel)
+        val cur = frames.firstOrNull { it.current }?.frame ?: return overview(jpeg, rotationDeg, frames, info, guides, delivery, deliveryLabel, sun)
         val size = BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { BitmapFactory.decodeByteArray(jpeg, 0, jpeg.size, it) }
         val rotated90 = rotationDeg % 180 != 0
         val W = if (rotated90) size.outHeight else size.outWidth      // medidas de la foto ya girada
@@ -143,6 +156,8 @@ object PhotoAnnotator {
         c.drawBitmap(body, 0f, 0f, null)
         drawGuides(c, guides, 0f, 0f, w.toFloat(), h.toFloat(), unit / 8f)
         delivery?.let { drawDelivery(c, 0f, 0f, w.toFloat(), h.toFloat(), it, deliveryLabel, unit * 1.1f) }
+        // En el recorte el borde de la foto está a ±1/fracción del recuadro: la escala del sol cambia con el encuadre.
+        sun?.let { drawSun(c, it, w / 2f, h / 2f, w / 2f / fwFrac, h / 2f / fhFrac, w.toFloat(), h.toFloat(), unit * 1.1f) }
         info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit * 1.1f) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, unit, info)
         body.recycle()
@@ -196,6 +211,71 @@ object PhotoAnnotator {
         c.drawRoundRect(RectF(m, top, m + tw, top + th), th / 2f, th / 2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = Color.argb(185, 12, 12, 12) })
         if (hasDot) c.drawCircle(m + padX + dot, top + th / 2f, dot, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = color })
         c.drawText(text, m + padX + lead, top + th * 0.68f, p)
+    }
+
+    private const val SUN = 0xFFFFC83D.toInt()
+
+    /**
+     * El sol sobre la imagen. (cx, cy) es el centro de la foto y (hx, hy) la mitad de su tamaño en píxeles: un punto con x = 1 cae en el borde
+     * derecho de la foto. Líneas con un borde oscuro para que se vean sobre cualquier fondo; las insignias van arriba a la derecha.
+     */
+    private fun drawSun(c: Canvas, sun: SunNote, cx: Float, cy: Float, hx: Float, hy: Float, bw: Float, bh: Float, unit: Float) {
+        fun px(x: Double) = cx + (x * hx).toFloat()
+        fun py(y: Double) = cy - (y * hy).toFloat()
+        fun inside(pt: SunPoint, m: Double = 1.0) = kotlin.math.abs(pt.x) <= m && kotlin.math.abs(pt.y) <= m
+        val dark = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; color = Color.argb(150, 0, 0, 0) }
+        val bold = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+        val shadow = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 0.85f; style = Paint.Style.STROKE; strokeWidth = unit * 0.22f; color = Color.argb(190, 0, 0, 0) }
+        val tick = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 0.85f }
+        for (arc in sun.arcs) {
+            val line = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; color = arc.color }
+            dark.strokeWidth = unit * if (arc.hours) 0.34f else 0.26f
+            line.strokeWidth = unit * if (arc.hours) 0.17f else 0.12f
+            var prev: SunPoint? = null
+            var labelled = false
+            for (pt in arc.points) {
+                if (pt != null && prev != null && kotlin.math.abs(pt.x) < 8 && kotlin.math.abs(pt.y) < 8 && kotlin.math.abs(prev.x) < 8 && kotlin.math.abs(prev.y) < 8) {
+                    c.drawLine(px(prev.x), py(prev.y), px(pt.x), py(pt.y), dark); c.drawLine(px(prev.x), py(prev.y), px(pt.x), py(pt.y), line)
+                }
+                if (pt != null && inside(pt, 1.0)) {
+                    if (arc.hours && pt.hour != null) {
+                        c.drawCircle(px(pt.x), py(pt.y), unit * 0.3f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(150, 0, 0, 0) })
+                        c.drawCircle(px(pt.x), py(pt.y), unit * 0.2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = arc.color })
+                        val t = String.format(java.util.Locale.ROOT, sun.hourFmt, pt.hour)
+                        tick.color = arc.color
+                        c.drawText(t, px(pt.x) + unit * 0.5f, py(pt.y) + unit * 0.3f, shadow); c.drawText(t, px(pt.x) + unit * 0.5f, py(pt.y) + unit * 0.3f, tick)
+                    } else if (!arc.hours && !labelled && arc.label != null) {
+                        labelled = true
+                        tick.color = arc.color
+                        c.drawText(arc.label, px(pt.x) + unit * 0.4f, py(pt.y) - unit * 0.4f, shadow); c.drawText(arc.label, px(pt.x) + unit * 0.4f, py(pt.y) - unit * 0.4f, tick)
+                    }
+                }
+                prev = pt
+            }
+        }
+        sun.marker?.let { m ->
+            val x = px(m.x); val y = py(m.y); val r = unit * 0.85f
+            val ring = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
+            for ((col, wd) in listOf(Color.argb(170, 0, 0, 0) to unit * 0.42f, SUN to unit * 0.2f)) {
+                ring.color = col; ring.strokeWidth = wd
+                c.drawCircle(x, y, r, ring)
+                for (k in 0 until 8) {
+                    val a = Math.toRadians(k * 45.0)
+                    c.drawLine(x + (kotlin.math.cos(a) * (r + unit * 0.3f)).toFloat(), y + (kotlin.math.sin(a) * (r + unit * 0.3f)).toFloat(),
+                        x + (kotlin.math.cos(a) * (r + unit * 0.85f)).toFloat(), y + (kotlin.math.sin(a) * (r + unit * 0.85f)).toFloat(), ring)
+                }
+            }
+            c.drawCircle(x, y, unit * 0.22f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = SUN })
+        }
+        // Insignias arriba a la derecha: grados del sol y, debajo, la ventana horaria en el encuadre.
+        val lp = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 1.0f; color = Color.BLACK }
+        var top = unit * 0.7f
+        for (text in listOfNotNull(sun.badge, sun.window)) {
+            val tw = lp.measureText(text) + unit * 0.9f; val th = unit * 1.5f
+            c.drawRect(bw - unit * 0.7f - tw, top, bw - unit * 0.7f, top + th, Paint().apply { color = SUN })
+            c.drawText(text, bw - unit * 0.7f - tw + unit * 0.45f, top + th * 0.74f, lp)
+            top += th + unit * 0.25f
+        }
     }
 
     /** Guías de composición dentro del rectángulo (l, t, w, h): línea blanca con un borde oscuro para que se vea sobre cualquier fondo. */

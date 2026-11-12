@@ -188,6 +188,29 @@ object SunMath {
         return hw to hw / aspect
     }
 
+    /**
+     * Calibración tocando el sol: dado dónde debería estar el sol ([sunAzimuthDeg], [sunElevationDeg], con el mismo norte que el sensor) y el
+     * punto de la imagen donde el usuario lo vio ([tapX], [tapY] en unidades de «mitad del campo», y hacia arriba), devuelve el rumbo y la
+     * elevación del eje de la cámara con los que el sol caería justo ahí. Parte de lo que midió el sensor y corrige por aproximaciones.
+     */
+    fun solveCamera(
+        sunAzimuthDeg: Double, sunElevationDeg: Double, tapX: Double, tapY: Double,
+        halfWidthTan: Double, halfHeightTan: Double, startHeadingDeg: Double, startElevationDeg: Double,
+    ): Pair<Double, Double> {
+        var h = startHeadingDeg
+        var e = startElevationDeg
+        for (i in 0 until 60) {
+            val p = project(sunAzimuthDeg, sunElevationDeg, h, e, halfWidthTan, halfHeightTan)
+            if (!p.inFront) { h += 30.0; continue }
+            val dx = tapX - p.x
+            val dy = tapY - p.y
+            if (abs(dx) < 1e-10 && abs(dy) < 1e-10) break
+            h -= Math.toDegrees(kotlin.math.atan(dx * halfWidthTan)) / cos(Math.toRadians(e)).coerceAtLeast(0.2)
+            e -= Math.toDegrees(kotlin.math.atan(dy * halfHeightTan))
+        }
+        return ((h % 360.0) + 360.0) % 360.0 to e
+    }
+
     /** Una posición del recorrido del sol durante el día (azimut verdadero y elevación con refracción). */
     data class Sample(val at: Instant, val azimuthDeg: Double, val elevationDeg: Double)
 
