@@ -12,8 +12,16 @@ private val KNOWN = listOf(
 fun aspectLabel(aspect: Double): String {
     val near = KNOWN.minByOrNull { abs(it.first / aspect - 1.0) }
     if (near != null && abs(near.first / aspect - 1.0) < 0.015) return near.second
+    // Aspectos de pie (más altos que anchos): el nombre del aspecto inverso con los números cambiados («2:3», «1:2.39»).
+    if (aspect < 0.985) {
+        val inv = aspectLabel(1.0 / aspect)
+        if (inv.contains(':')) return inv.split(':').let { (a, b) -> "$b:$a" }
+    }
     return String.format(java.util.Locale.ROOT, "%.2f:1", aspect)
 }
+
+/** ¿El aspecto de entrega es el mismo del encuadre (dentro de 1 %)? Entonces la línea de entrega coincidiría con su borde y no se dibuja. */
+fun deliveryMatchesFrame(frameAspect: Double, delivery: Double): Boolean = abs(frameAspect / delivery - 1.0) < 0.01
 
 /**
  * Rectángulo (ancho, alto) del aspecto de entrega `delivery` centrado dentro de un encuadre de `w` x `h`:

@@ -49,7 +49,10 @@ class FramingState(val db: CameraDb) {
     /** Aspecto de entrega (línea sobre el encuadre, p. ej. 16:9 sobre un sensor 3:2); -1 = igual al sensor, sin línea. */
     val deliveryAspects = listOf(16.0 / 9.0 to "16:9", 2.39 to "2.39:1", 1.85 to "1.85:1", 4.0 / 3.0 to "4:3", 1.0 to "1:1", 9.0 / 16.0 to "9:16", 4.0 / 5.0 to "4:5")
     var deliveryIdx by mutableIntStateOf(-1)
-    val delivery: Double? get() = deliveryAspects.getOrNull(deliveryIdx)?.first
+    /** Aspecto de entrega elegido; con el encuadre vertical se invierte (16:9 pasa a 9:16): una entrega apaisada dentro de un recuadro de pie casi nunca es lo que se quiere. */
+    val delivery: Double? get() = deliveryAspects.getOrNull(deliveryIdx)?.first?.let { if (vertical) 1.0 / it else it }
+    /** Textos de las opciones de aspecto de entrega, ya girados si el encuadre es vertical. */
+    fun deliveryLabels(): List<String> = deliveryAspects.map { if (vertical) app.mado.optics.aspectLabel(1.0 / it.first) else it.second }
     /** Datos para el operador de la cámara (lo que decide el cinematógrafo): cuadros por segundo, obturación, ISO, balance de blancos y una nota (PP, LUT, ND…). */
     var opFps by mutableStateOf("")
     /** null = obturación automática por la regla de los 180° a partir de los fps. */

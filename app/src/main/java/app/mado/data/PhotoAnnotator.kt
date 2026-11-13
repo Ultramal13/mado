@@ -188,6 +188,7 @@ object PhotoAnnotator {
 
     /** Línea roja del aspecto de entrega centrada dentro del rectángulo (l, t, w, h), con su etiqueta («16:9»). */
     private fun drawDelivery(c: Canvas, l: Float, t: Float, w: Float, h: Float, aspect: Double, label: String, unit: Float) {
+        if (app.mado.optics.deliveryMatchesFrame((w / h).toDouble(), aspect)) return      // coincide con el borde del encuadre: no se dibuja
         val (dw, dh) = app.mado.optics.deliveryRect(w.toDouble(), h.toDouble(), aspect)
         val rl = l + (w - dw.toFloat()) / 2f; val rt = t + (h - dh.toFloat()) / 2f
         val red = 0xFFE53935.toInt()

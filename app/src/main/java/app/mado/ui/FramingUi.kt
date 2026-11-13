@@ -102,7 +102,7 @@ internal fun FrameOverlay(frames: List<FrameDraw>, imageScale: Float, showTags: 
             val gh = cur.frame.heightFrac.toFloat() * ih
             drawGuides(guides, Offset(c.x - gw / 2, c.y - gh / 2), Size(gw, gh), line.copy(alpha = 0.75f), 1.dp.toPx())
             // Aspecto de entrega: línea roja centrada en el encuadre, con su etiqueta.
-            delivery?.let { ar ->
+            delivery?.takeIf { !app.mado.optics.deliveryMatchesFrame((gw / gh).toDouble(), it) }?.let { ar ->
                 val (dw, dh) = app.mado.optics.deliveryRect(gw.toDouble(), gh.toDouble(), ar)
                 val tl = Offset(c.x - dw.toFloat() / 2, c.y - dh.toFloat() / 2)
                 val red = Color(0xFFE53935)
@@ -550,7 +550,7 @@ internal fun FramingControls(
         OperatorFields(framing)
 
         Label(stringResource(R.string.frm_delivery))
-        Seg(listOf(stringResource(R.string.frm_delivery_same)) + framing.deliveryAspects.map { it.second }, framing.deliveryIdx + 1) { framing.deliveryIdx = it - 1 }
+        Seg(listOf(stringResource(R.string.frm_delivery_same)) + framing.deliveryLabels(), framing.deliveryIdx + 1) { framing.deliveryIdx = it - 1 }
 
         if (!framing.isFixedLens) {
             Label(stringResource(R.string.frm_lens_set))

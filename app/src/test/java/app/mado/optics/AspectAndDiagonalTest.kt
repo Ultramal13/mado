@@ -35,4 +35,16 @@ class AspectAndDiagonalTest {
         assertEquals("1/50", Shutter.suggest180(25.0)); assertEquals("1/120", Shutter.suggest180(59.94))
         assertEquals("1/240", Shutter.suggest180(119.88)); assertEquals("", Shutter.suggest180(null)); assertEquals("", Shutter.suggest180(0.0))
     }
+
+    @Test
+    fun verticalAspectsAreWrittenWithTheNumbersSwapped() {
+        assertEquals("9:16", aspectLabel(9.0 / 16.0)); assertEquals("2:3", aspectLabel(2.0 / 3.0)); assertEquals("3:4", aspectLabel(0.75))
+        assertEquals("1:2.39", aspectLabel(1.0 / 2.39)); assertEquals("1:1.85", aspectLabel(1.0 / 1.85)); assertEquals("4:5", aspectLabel(0.8))
+    }
+
+    @Test
+    fun deliveryLineIsSkippedWhenItMatchesTheFrame() {
+        assertEquals(true, deliveryMatchesFrame(16.0 / 9.0, 1.78)); assertEquals(false, deliveryMatchesFrame(1.5, 16.0 / 9.0))
+        assertEquals(true, deliveryMatchesFrame(9.0 / 16.0, 1.0 / (16.0 / 9.0)))
+    }
 }

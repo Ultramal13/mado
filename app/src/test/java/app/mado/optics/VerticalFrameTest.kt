@@ -45,4 +45,13 @@ class VerticalFrameTest {
         val b = FramingState(db); b.restore(s.snapshot())
         assertTrue(b.vertical)
     }
+
+    @Test fun deliveryAspectFlipsWithTheFrame() {
+        val s = FramingState(db)
+        s.deliveryIdx = 0                                              // 16:9
+        assertEquals(16.0 / 9.0, s.delivery!!, 1e-9); assertEquals("16:9", s.deliveryLabels()[0])
+        s.vertical = true
+        assertEquals(9.0 / 16.0, s.delivery!!, 1e-9)
+        assertEquals("9:16", s.deliveryLabels()[0]); assertEquals("1:2.39", s.deliveryLabels()[1]); assertEquals("1:1", s.deliveryLabels()[4])
+    }
 }
