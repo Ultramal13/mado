@@ -360,7 +360,7 @@ internal fun buildSunShot(sun: SunState, pose: OrientationMath.Pose, view: SunVi
  * Usa el rumbo magnético del sensor, con el ajuste de calibración y la declinación del lugar; supone el teléfono derecho.
  */
 @Composable
-internal fun SunOverlay(sun: SunState, view: SunView, imageScale: Float) {
+internal fun SunOverlay(sun: SunState, view: SunView, scaleX: Float, scaleY: Float, liftBottom: androidx.compose.ui.unit.Dp = 0.dp) {
     val lat = sun.lat; val lon = sun.lon; val pose = view.pose
     if (!sun.on || lat == null || lon == null || pose == null) return
     val p = LocalPalette.current
@@ -391,8 +391,9 @@ internal fun SunOverlay(sun: SunState, view: SunView, imageScale: Float) {
     val calibrateHint = stringResource(R.string.sun_calibrate_hint)
     Canvas(Modifier.fillMaxSize()) {
         val c = Offset(size.width / 2, size.height / 2)
-        val iw = size.width * imageScale
-        val ih = size.height * imageScale
+        // Ancho y alto de la imagen completa en la pantalla: en la vista recortada solo se ve el encuadre, así que la imagen es más grande que el visor.
+        val iw = size.width * scaleX
+        val ih = size.height * scaleY
         fun at(x: Double, y: Double) = Offset(c.x + (x * iw / 2).toFloat(), c.y - (y * ih / 2).toFloat())
         val style = TextStyle(fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = Color.Black)
         val tickStyle = TextStyle(fontSize = 11.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = col)
@@ -467,8 +468,10 @@ internal fun SunOverlay(sun: SunState, view: SunView, imageScale: Float) {
             label(txt, Offset(pos.x - 40.dp.toPx() - dir.x * 30.dp.toPx(), pos.y + 18.dp.toPx() * (if (dir.y >= 0) -1.6f else 1f)))
         }
         // Ventana horaria en el encuadre actual, abajo a la izquierda (arriba chocaría con el reloj y la cabecera del visor).
-        label("☀ $windowText", Offset(8.dp.toPx(), size.height - 34.dp.toPx()))
-        if (view.compassUnreliable) label("⚠ $compassWarn", Offset(8.dp.toPx(), size.height - 64.dp.toPx()), bg = Color(0xFFFF5A1F), fg = Color.White)
+        // La línea de tiempo ocupa el borde de abajo: los rótulos suben por encima de ella ([liftBottom]).
+        val lift = liftBottom.toPx()
+        label("☀ $windowText", Offset(8.dp.toPx(), size.height - 34.dp.toPx() - lift))
+        if (view.compassUnreliable) label("⚠ $compassWarn", Offset(8.dp.toPx(), size.height - 64.dp.toPx() - lift), bg = Color(0xFFFF5A1F), fg = Color.White)
         if (sun.calibrating) {
             val l = measurer.measure(calibrateHint, style.copy(fontSize = 15.sp, color = Color.Black))
             val pad = 8.dp.toPx()

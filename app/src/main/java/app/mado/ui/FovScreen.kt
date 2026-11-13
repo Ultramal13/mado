@@ -316,8 +316,9 @@ fun FovScreen(
             // Calibrar con el sol real: el toque dice dónde está el sol en la imagen; de ahí salen los ajustes de rumbo y elevación.
             sun.calibrating = false
             val pose = tracker.pose; val la = sun.lat; val lo = sun.lon
-            if (pose != null && la != null && lo != null && !cropOn) {
-                val tx = (bu - 0.5) * 2.0 / imageScale; val ty = -(bv - 0.5) * 2.0 / imageScale
+            if (pose != null && la != null && lo != null) {
+                // En la vista recortada el visor muestra solo el encuadre: el toque se traduce a unidades de «mitad de la imagen completa».
+                val tx = (bu - 0.5) * 2.0 * (if (cropOn) cropFw.toDouble() else 1.0 / imageScale); val ty = -(bv - 0.5) * 2.0 * (if (cropOn) cropFh.toDouble() else 1.0 / imageScale)
                 val sp = SunMath.position(la, lo, Instant.now())
                 val az = SunMath.trueToMagnetic(sp.azimuthDeg, sun.declination())
                 val (h, e) = SunMath.solveCamera(az, sp.elevationDeg, tx, ty, sunHalfW, sunHalfH, sun.corrected(pose.headingDeg), sun.correctedElev(pose.elevationDeg))
@@ -347,11 +348,11 @@ fun FovScreen(
             overlay = {
                 if (framing != null) Box(Modifier.fillMaxSize()) {
                     FrameOverlay(cropDraws, if (cropOn) 1f else imageScale, showTags = !cropOn, guides = framing.guides, delivery = framing.delivery)
-                    if (!cropOn) SunOverlay(sun, sunView, imageScale)
+                    SunOverlay(sun, sunView, if (cropOn) 1f / cropFw else imageScale, if (cropOn) 1f / cropFh else imageScale, if (sun.on && sun.located) 64.dp else 0.dp)
                     if (cropOn) {
                         val hDeg = target?.let { Math.toDegrees(it.hFovRad) }
                         val vDeg = target?.let { Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(it.hFovRad / 2.0) / it.aspect)) }
-                        CropInfo(framing, hDeg, vDeg, Modifier.align(Alignment.BottomStart), dDeg = target?.let { Math.toDegrees(Framing.diagonalFovRad(it.hFovRad, it.aspect)) })
+                        CropInfo(framing, hDeg, vDeg, Modifier.align(Alignment.BottomStart).padding(bottom = if (sun.on && sun.located) 64.dp else 0.dp), dDeg = target?.let { Math.toDegrees(Framing.diagonalFovRad(it.hFovRad, it.aspect)) })
                     }
                 }
                 else Overlay(theory, distCm.toDoubleOrNull(), landscape)
