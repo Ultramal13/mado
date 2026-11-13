@@ -145,4 +145,35 @@ class SunMathTest {
         val (h, e) = SunMath.solveCamera(120.0, 50.0, seen.x, seen.y, hw, hh, 130.0, 30.0)
         assertEquals(100.0, h, 0.1); assertEquals(35.0, e, 0.1)
     }
+
+    /** Matriz del sensor (mundo = R · dispositivo, columnas = ejes del teléfono en este/norte/arriba) para un rumbo, elevación y balanceo dados. */
+    private fun sensorMatrix(headingDeg: Double, elevDeg: Double, rollDeg: Double): Array<DoubleArray> {
+        val h = Math.toRadians(headingDeg); val e = Math.toRadians(elevDeg); val r = Math.toRadians(rollDeg)
+        val f = doubleArrayOf(Math.sin(h) * Math.cos(e), Math.cos(h) * Math.cos(e), Math.sin(e))
+        val z = doubleArrayOf(-f[0], -f[1], -f[2])                                     // sale de la pantalla
+        val x0 = doubleArrayOf(Math.cos(h), -Math.sin(h), 0.0)                          // derecha, horizontal
+        fun cross(a: DoubleArray, b: DoubleArray) = doubleArrayOf(a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0])
+        val y0 = cross(z, x0)
+        val x = DoubleArray(3) { Math.cos(r) * x0[it] + Math.sin(r) * y0[it] }
+        val y = DoubleArray(3) { -Math.sin(r) * x0[it] + Math.cos(r) * y0[it] }
+        return arrayOf(x, y, z)                                                          // filas = ejes del teléfono; la matriz R tiene estos como columnas
+    }
+
+    @Test fun rollIsTheSameAsTheSensorsRotationMatrix() {
+        val (hw, hh) = SunMath.halfTans(60.0, 1.5)
+        for (roll in listOf(-20.0, -5.0, 0.0, 16.0, 30.0)) {
+            val axes = sensorMatrix(40.0, 35.0, roll)
+            // El balanceo que calcula la app a partir de esa matriz (OrientationMath) debe ser el mismo que se le puso.
+            val r = FloatArray(9) { i -> axes[i % 3][i / 3].toFloat() }                  // fila i de R = componente i de cada eje
+            assertEquals(roll, OrientationMath.fromMatrix(r).levelDeg, 0.01)
+            // Proyección con la matriz completa: dirección del sol en ejes del teléfono, a lo largo de −z.
+            val sunAz = 55.0; val sunEl = 42.0
+            val sa = Math.toRadians(sunAz); val se = Math.toRadians(sunEl)
+            val sun = doubleArrayOf(Math.sin(sa) * Math.cos(se), Math.cos(sa) * Math.cos(se), Math.sin(se))
+            val dx = axes[0].indices.sumOf { sun[it] * axes[0][it] }; val dy = axes[0].indices.sumOf { sun[it] * axes[1][it] }; val dz = axes[0].indices.sumOf { sun[it] * axes[2][it] }
+            val expX = dx / -dz / hw; val expY = dy / -dz / hh
+            val got = SunMath.project(sunAz, sunEl, 40.0, 35.0, hw, hh, roll)
+            assertEquals("x con balanceo $roll", expX, got.x, 1e-6); assertEquals("y con balanceo $roll", expY, got.y, 1e-6)
+        }
+    }
 }

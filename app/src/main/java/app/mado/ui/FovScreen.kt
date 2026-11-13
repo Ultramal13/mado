@@ -321,7 +321,7 @@ fun FovScreen(
                 val tx = (bu - 0.5) * 2.0 * (if (cropOn) cropFw.toDouble() else 1.0 / imageScale); val ty = -(bv - 0.5) * 2.0 * (if (cropOn) cropFh.toDouble() else 1.0 / imageScale)
                 val sp = SunMath.position(la, lo, Instant.now())
                 val az = SunMath.trueToMagnetic(sp.azimuthDeg, sun.declination())
-                val (h, e) = SunMath.solveCamera(az, sp.elevationDeg, tx, ty, sunHalfW, sunHalfH, sun.corrected(pose.headingDeg), sun.correctedElev(pose.elevationDeg))
+                val (h, e) = SunMath.solveCamera(az, sp.elevationDeg, tx, ty, sunHalfW, sunHalfH, sun.corrected(pose.headingDeg), sun.correctedElev(pose.elevationDeg), pose.levelDeg)
                 sun.calibrateTo(pose.headingDeg, pose.elevationDeg, h, e)
             }
         } else {
@@ -431,7 +431,7 @@ fun FovScreen(
     val verifiedText = stringResource(R.string.bar_verified)
     val unverifiedText = stringResource(R.string.bar_unverified)
     val shotWordText = stringResource(R.string.frm_shot_word)
-    val sunWindowTemplate = stringResource(R.string.sun_in_frame, "\u0001", "\u0002")
+    val sunWindowTemplate = stringResource(R.string.sun_in_frame_short, "\u0001", "\u0002")
     val sunNotInFrameText = stringResource(R.string.sun_not_in_frame)
     val sunHourFormat = stringResource(R.string.sun_hour_tick)
     val takeShot: () -> Unit = takeShot@{

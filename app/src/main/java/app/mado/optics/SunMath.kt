@@ -154,7 +154,8 @@ object SunMath {
      * Dónde cae el sol en la imagen: [x] hacia la derecha y [y] hacia arriba, en unidades de «mitad del campo visible»
      * (1 = borde derecho/superior de la imagen). [inFront] es falso si el sol queda detrás de la cámara.
      * [camHeadingDeg] y [camElevationDeg] son el rumbo (mismo norte que [sunAzimuthDeg]) y la elevación del eje de la cámara.
-     * El balanceo (inclinación lateral) se supone cero.
+     * [rollDeg] es el balanceo de la imagen respecto del horizonte (positivo: el «arriba» del mundo se ve inclinado hacia la derecha, como
+     * [OrientationMath.Pose.levelDeg]); con 0 se proyecta como si la cámara estuviera a nivel.
      */
     data class Projection(val x: Double, val y: Double, val inFront: Boolean) {
         val inside get() = inFront && abs(x) <= 1.0 && abs(y) <= 1.0
@@ -162,7 +163,7 @@ object SunMath {
 
     fun project(
         sunAzimuthDeg: Double, sunElevationDeg: Double, camHeadingDeg: Double, camElevationDeg: Double,
-        halfWidthTan: Double, halfHeightTan: Double,
+        halfWidthTan: Double, halfHeightTan: Double, rollDeg: Double = 0.0,
     ): Projection {
         fun vec(az: Double, el: Double): DoubleArray {
             val a = Math.toRadians(az); val e = Math.toRadians(el)
@@ -179,7 +180,12 @@ object SunMath {
         val sy = s[0] * ux + s[1] * uy + s[2] * uz
         val sz = s[0] * f[0] + s[1] * f[1] + s[2] * f[2]
         if (sz <= 1e-6) return Projection(sx, sy, false)
-        return Projection(sx / sz / halfWidthTan, sy / sz / halfHeightTan, true)
+        // Con la cámara a nivel el punto cae en (x0, y0); si la imagen está inclinada, todo gira alrededor del centro.
+        val x0 = sx / sz; val y0 = sy / sz
+        val phi = Math.toRadians(rollDeg)
+        val x = x0 * cos(phi) + y0 * sin(phi)
+        val y = -x0 * sin(phi) + y0 * cos(phi)
+        return Projection(x / halfWidthTan, y / halfHeightTan, true)
     }
 
     /** Campo visible de la imagen en cada eje a partir del horizontal del teléfono y la proporción ancho/alto. */
@@ -195,12 +201,12 @@ object SunMath {
      */
     fun solveCamera(
         sunAzimuthDeg: Double, sunElevationDeg: Double, tapX: Double, tapY: Double,
-        halfWidthTan: Double, halfHeightTan: Double, startHeadingDeg: Double, startElevationDeg: Double,
+        halfWidthTan: Double, halfHeightTan: Double, startHeadingDeg: Double, startElevationDeg: Double, rollDeg: Double = 0.0,
     ): Pair<Double, Double> {
         var h = startHeadingDeg
         var e = startElevationDeg
         for (i in 0 until 60) {
-            val p = project(sunAzimuthDeg, sunElevationDeg, h, e, halfWidthTan, halfHeightTan)
+            val p = project(sunAzimuthDeg, sunElevationDeg, h, e, halfWidthTan, halfHeightTan, rollDeg)
             if (!p.inFront) { h += 30.0; continue }
             val dx = tapX - p.x
             val dy = tapY - p.y

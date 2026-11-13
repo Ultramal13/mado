@@ -316,10 +316,10 @@ internal fun computeRawPaths(lat: Double, lon: Double, date: LocalDate, zone: Zo
 }
 
 /** Proyecta los recorridos a la imagen: null donde el punto queda detrás de la cámara o demasiado lejos para dibujarse. */
-internal fun projectPaths(raw: List<RawPath>, decl: Double, heading: Double, elev: Double, halfW: Double, halfH: Double, fadeBefore: Instant?): List<SunArc> =
+internal fun projectPaths(raw: List<RawPath>, decl: Double, heading: Double, elev: Double, halfW: Double, halfH: Double, fadeBefore: Instant?, rollDeg: Double = 0.0): List<SunArc> =
     raw.map { rp ->
         SunArc(rp.color, rp.samples.map { smp ->
-            val pr = SunMath.project(SunMath.trueToMagnetic(smp.az, decl), smp.el, heading, elev, halfW, halfH)
+            val pr = SunMath.project(SunMath.trueToMagnetic(smp.az, decl), smp.el, heading, elev, halfW, halfH, rollDeg)
             if (pr.inFront && abs(pr.x) < 8.0 && abs(pr.y) < 8.0) SunPoint(pr.x, pr.y, smp.hour, fadeBefore != null && rp.hours && smp.at < fadeBefore) else null
         }, rp.label, rp.hours)
     }
@@ -338,9 +338,9 @@ internal fun buildSunShot(sun: SunState, pose: OrientationMath.Pose, view: SunVi
     val heading = sun.corrected(pose.headingDeg); val elev = sun.correctedElev(pose.elevationDeg)
     val instant = sun.instant(); val zone = sun.zone; val date = sun.localTime().toLocalDate()
     val sp = SunMath.position(lat, lon, instant)
-    val pr = SunMath.project(SunMath.trueToMagnetic(sp.azimuthDeg, decl), sp.elevationDeg, heading, elev, view.halfW, view.halfH)
+    val pr = SunMath.project(SunMath.trueToMagnetic(sp.azimuthDeg, decl), sp.elevationDeg, heading, elev, view.halfW, view.halfH, pose.levelDeg)
     val marker = if (pr.inFront && abs(pr.x) <= 1.0 && abs(pr.y) <= 1.0) SunPoint(pr.x, pr.y) else null
-    val arcs = projectPaths(computeRawPaths(lat, lon, date, zone, sun.seasons), decl, heading, elev, view.halfW, view.halfH, if (sun.picked == null) instant else null)
+    val arcs = projectPaths(computeRawPaths(lat, lon, date, zone, sun.seasons), decl, heading, elev, view.halfW, view.halfH, if (sun.picked == null) instant else null, pose.levelDeg)
     val w = SunMath.frameWindow(lat, lon, date, zone, decl, heading, elev, view.halfW, view.halfH, view.frameW, view.frameH)
     val hm = DateTimeFormatter.ofPattern("HH:mm")
     val window = if (w == null) notInFrame
@@ -371,7 +371,7 @@ internal fun SunOverlay(sun: SunState, view: SunView, scaleX: Float, scaleY: Flo
     val instant = sun.instant()
     val sp = SunMath.position(lat, lon, instant)
     val azMag = SunMath.trueToMagnetic(sp.azimuthDeg, decl)
-    val proj = SunMath.project(azMag, sp.elevationDeg, heading, elev, view.halfW, view.halfH)
+    val proj = SunMath.project(azMag, sp.elevationDeg, heading, elev, view.halfW, view.halfH, pose.levelDeg)
     val dist = SunMath.angularDistanceDeg(azMag, sp.elevationDeg, heading, elev)
     val col = if (p.red) p.screenText else sunYellow
     val behindText = stringResource(R.string.sun_behind)
@@ -381,7 +381,7 @@ internal fun SunOverlay(sun: SunState, view: SunView, scaleX: Float, scaleY: Flo
     val date = sun.localTime().toLocalDate()
     val zone = sun.zone
     val raw = remember(lat, lon, date, sun.seasons) { computeRawPaths(lat, lon, date, zone, sun.seasons) }
-    val arcs = projectPaths(raw, decl, heading, elev, view.halfW, view.halfH, if (sun.picked == null) instant else null)
+    val arcs = projectPaths(raw, decl, heading, elev, view.halfW, view.halfH, if (sun.picked == null) instant else null, pose.levelDeg)
     val window = rememberSunWindow(sun, view)
     val hm = remember { DateTimeFormatter.ofPattern("HH:mm") }
     val windowText = if (window == null) stringResource(R.string.sun_not_in_frame)
@@ -409,10 +409,13 @@ internal fun SunOverlay(sun: SunState, view: SunView, scaleX: Float, scaleY: Flo
         // Recorridos: tramos entre puntos consecutivos visibles; el de hoy lleva una marca por hora y los de las estaciones, su fecha.
         for (arc in arcs) {
             val ac = if (arc.hours || p.red) col else Color(arc.color)
-            var prevO: Offset? = null
             var labelled = false
-            for (pt in arc.points) {
+            val pts = arc.points
+            for (i in pts.indices) {
+                val pt = pts[i]
                 val o = pt?.let { at(it.x, it.y) }
+                val prevO = pts.getOrNull(i - 1)?.let { at(it.x, it.y) }
+                val nextO = pts.getOrNull(i + 1)?.let { at(it.x, it.y) }
                 val a = (if (arc.hours) 0.95f else 0.7f) * (if (pt?.past == true) 0.45f else 1f)
                 if (o != null && prevO != null) drawLine(ac.copy(alpha = a), prevO, o, (if (arc.hours) 2.5f else 1.5f).dp.toPx())
                 if (pt != null && o != null && abs(pt.x) <= 1.05 && abs(pt.y) <= 1.05) {
@@ -422,7 +425,13 @@ internal fun SunOverlay(sun: SunState, view: SunView, scaleX: Float, scaleY: Flo
                         if (!nearSun) {
                             drawCircle(ac.copy(alpha = a), 4.dp.toPx(), o)
                             val l = measurer.measure(String.format(Locale.ROOT, hourFmt, pt.hour), tickStyle)
-                            drawText(l, topLeft = Offset(o.x + 7.dp.toPx(), o.y - l.size.height / 2f))
+                            // La etiqueta va al costado de la línea (perpendicular, hacia abajo), no encima de ella.
+                            val tx = (nextO ?: o).x - (prevO ?: o).x; val ty = (nextO ?: o).y - (prevO ?: o).y
+                            val len = kotlin.math.sqrt(tx * tx + ty * ty).takeIf { it > 1e-3f } ?: 1f
+                            var nx = -ty / len; var ny = tx / len
+                            if (ny < 0f || (abs(ny) < 0.3f && nx < 0f)) { nx = -nx; ny = -ny }
+                            val reach = 7.dp.toPx() + abs(nx) * l.size.width / 2f + abs(ny) * l.size.height / 2f
+                            drawText(l, topLeft = Offset(o.x + nx * reach - l.size.width / 2f, o.y + ny * reach - l.size.height / 2f))
                         }
                     } else if (!arc.hours && !labelled && arc.label != null) {
                         labelled = true
@@ -430,7 +439,6 @@ internal fun SunOverlay(sun: SunState, view: SunView, scaleX: Float, scaleY: Flo
                         drawText(l, topLeft = Offset(o.x + 5.dp.toPx(), o.y - l.size.height - 3.dp.toPx()))
                     }
                 }
-                prevO = o
             }
         }
         // Dónde está el sol ahora.

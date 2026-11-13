@@ -259,4 +259,5 @@
     <string name="sun_calibrate_hint">tap the real sun on the image</string>
     <string name="sun_compass_warn">compass unreliable: move the phone in a figure 8</string>
     <string name="sun_seasons">also draw the solstice and equinox paths</string>
+    <string name="sun_in_frame_short">sun in frame: %1$s–%2$s</string>
 </resources>

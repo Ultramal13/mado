@@ -259,4 +259,5 @@
     <string name="sun_calibrate_hint">画面の実際の太陽をタップ</string>
     <string name="sun_compass_warn">コンパスの精度が低い：8の字に動かしてください</string>
     <string name="sun_seasons">夏至・冬至・春分の軌跡も描く</string>
+    <string name="sun_in_frame_short">この枠に太陽が入る時間：%1$s〜%2$s</string>
 </resources>

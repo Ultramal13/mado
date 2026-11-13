@@ -76,6 +76,7 @@ object PhotoAnnotator {
 
         // Un recuadro por focal, sin oscurecer lo de afuera; la actual en naranja con su medida.
         val tagText = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD); textSize = unit * 0.8f }
+        var curTag: RectF? = null
         frames.sortedBy { it.current }.forEach { af ->
             val fr = af.frame
             val fw = fr.widthFrac.toFloat() * iw                 // fracciones en los ejes de la foto ya girada
@@ -89,6 +90,7 @@ object PhotoAnnotator {
             val text = if (af.current) af.detail else af.label
             val tw = tagText.measureText(text) + unit * 0.7f
             val th = unit * 1.1f
+            if (af.current) curTag = RectF(l, t, l + tw, t + th)
             c.drawRect(l, t, l + tw, t + th, Paint().apply { color = if (af.current) ORANGE else Color.argb(170, 0, 0, 0) })
             tagText.color = if (af.current) Color.BLACK else Color.WHITE
             c.drawText(text, l + unit * 0.35f, t + th * 0.78f, tagText)
@@ -99,7 +101,7 @@ object PhotoAnnotator {
             drawGuides(c, guides, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, unit / 12f)
             delivery?.let { drawDelivery(c, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, it, deliveryLabel, unit) }
         }
-        sun?.let { drawSun(c, it, w / 2f, h / 2f, iw / 2f, ih / 2f, w.toFloat(), h.toFloat(), unit, listOfNotNull(info.sceneTag?.let { t -> scenePillRect(t, info.sceneColor != 0, h.toFloat(), unit) })) }
+        sun?.let { drawSun(c, it, w / 2f, h / 2f, iw / 2f, ih / 2f, w.toFloat(), h.toFloat(), unit, listOfNotNull(info.sceneTag?.let { t -> scenePillRect(t, info.sceneColor != 0, h.toFloat(), unit) }), listOfNotNull(curTag)) }
         info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, barUnit, info)
         photo.recycle()
@@ -228,7 +230,10 @@ object PhotoAnnotator {
      * El sol sobre la imagen. (cx, cy) es el centro de la foto y (hx, hy) la mitad de su tamaño en píxeles: un punto con x = 1 cae en el borde
      * derecho de la foto. Líneas con un borde oscuro para que se vean sobre cualquier fondo; las insignias van arriba a la derecha.
      */
-    private fun drawSun(c: Canvas, sun: SunNote, cx: Float, cy: Float, hx: Float, hy: Float, bw: Float, bh: Float, unit: Float, avoid: List<RectF> = emptyList()) {
+    private fun drawSun(
+        c: Canvas, sun: SunNote, cx: Float, cy: Float, hx: Float, hy: Float, bw: Float, bh: Float, unit: Float,
+        avoid: List<RectF> = emptyList(), tagRects: List<RectF> = emptyList(),
+    ) {
         fun px(x: Double) = cx + (x * hx).toFloat()
         fun py(y: Double) = cy - (y * hy).toFloat()
         fun inside(pt: SunPoint, m: Double = 1.0) = kotlin.math.abs(pt.x) <= m && kotlin.math.abs(pt.y) <= m
@@ -236,46 +241,66 @@ object PhotoAnnotator {
         val bold = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
         val shadow = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 0.85f; style = Paint.Style.STROKE; strokeWidth = unit * 0.22f; color = Color.argb(190, 0, 0, 0) }
         val tick = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 0.85f }
-        // Insignias de arriba a la derecha: se calculan antes para que las marcas de hora no se dibujen debajo de ellas ni de la píldora de escena.
+        // Insignias de arriba a la derecha: se calculan antes para que las marcas de hora no se dibujen debajo de ellas ni de la píldora de escena,
+        // y bajan si taparían la etiqueta del recuadro actual.
         val lp = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 1.0f; color = Color.BLACK }
         val badges = ArrayList<Pair<RectF, String>>()
         var bTop = unit * 0.7f
         for (text in listOfNotNull(sun.badge, sun.window)) {
             val tw = lp.measureText(text) + unit * 0.9f; val th = unit * 1.5f
-            badges.add(RectF(bw - unit * 0.7f - tw, bTop, bw - unit * 0.7f, bTop + th) to text)
-            bTop += th + unit * 0.25f
+            var r = RectF(bw - unit * 0.7f - tw, bTop, bw - unit * 0.7f, bTop + th)
+            while (true) {
+                val hit = tagRects.firstOrNull { RectF.intersects(it, r) } ?: break
+                bTop = hit.bottom + unit * 0.2f
+                r = RectF(r.left, bTop, r.right, bTop + th)
+            }
+            badges.add(r to text)
+            bTop = r.bottom + unit * 0.25f
         }
-        val blocked = avoid + badges.map { it.first }
-        fun free(r: RectF) = blocked.none { RectF.intersects(it, r) } && r.left >= 0f && r.right <= bw
+        val pad = unit * 0.3f
+        val blocked = (avoid + badges.map { it.first } + tagRects).map { RectF(it).apply { inset(-pad, -pad) } }
+        fun free(r: RectF) = blocked.none { RectF.intersects(it, r) } && r.left >= 0f && r.right <= bw && r.top >= 0f && r.bottom <= bh
         for (arc in sun.arcs) {
             val line = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; color = arc.color }
             dark.strokeWidth = unit * if (arc.hours) 0.34f else 0.26f
             line.strokeWidth = unit * if (arc.hours) 0.17f else 0.12f
-            var prev: SunPoint? = null
             var labelled = false
-            for (pt in arc.points) {
+            val pts = arc.points
+            for (i in pts.indices) {
+                val pt = pts[i]
+                val prev = pts.getOrNull(i - 1)
                 if (pt != null && prev != null && kotlin.math.abs(pt.x) < 8 && kotlin.math.abs(pt.y) < 8 && kotlin.math.abs(prev.x) < 8 && kotlin.math.abs(prev.y) < 8) {
                     c.drawLine(px(prev.x), py(prev.y), px(pt.x), py(pt.y), dark); c.drawLine(px(prev.x), py(prev.y), px(pt.x), py(pt.y), line)
                 }
                 if (pt != null && inside(pt, 1.0)) {
+                    val x = px(pt.x); val y = py(pt.y)
                     if (arc.hours && pt.hour != null) {
-                        c.drawCircle(px(pt.x), py(pt.y), unit * 0.3f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(150, 0, 0, 0) })
-                        c.drawCircle(px(pt.x), py(pt.y), unit * 0.2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = arc.color })
+                        c.drawCircle(x, y, unit * 0.3f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(150, 0, 0, 0) })
+                        c.drawCircle(x, y, unit * 0.2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = arc.color })
                         val t = String.format(java.util.Locale.ROOT, sun.hourFmt, pt.hour)
                         tick.color = arc.color
-                        // La etiqueta va a la derecha del punto; si ahí tapa una insignia o la píldora, se prueba a la izquierda y, si tampoco, se omite.
-                        val tw = tick.measureText(t); val ty = py(pt.y) + unit * 0.3f
-                        val right = RectF(px(pt.x) + unit * 0.5f - 2f, ty - unit * 0.9f, px(pt.x) + unit * 0.5f + tw + 2f, ty + unit * 0.25f)
-                        val left = RectF(px(pt.x) - unit * 0.5f - tw - 2f, ty - unit * 0.9f, px(pt.x) - unit * 0.5f + 2f, ty + unit * 0.25f)
-                        val tx = when { free(right) -> right.left + 2f; free(left) -> left.left + 2f; else -> null }
-                        if (tx != null) { c.drawText(t, tx, ty, shadow); c.drawText(t, tx, ty, tick) }
+                        // La etiqueta va a un lado de la línea (perpendicular a ella, hacia abajo); si ahí tapa algo, se prueba el otro lado y, si tampoco cabe, se omite.
+                        val next = pts.getOrNull(i + 1)
+                        val tx = (if (next != null) px(next.x) else x) - (if (prev != null) px(prev.x) else x)
+                        val ty = (if (next != null) py(next.y) else y) - (if (prev != null) py(prev.y) else y)
+                        val len = kotlin.math.sqrt(tx * tx + ty * ty).takeIf { it > 1e-3f } ?: 1f
+                        var nx = -ty / len; var ny = tx / len
+                        if (ny < 0f || (kotlin.math.abs(ny) < 0.3f && nx < 0f)) { nx = -nx; ny = -ny }
+                        val tw = tick.measureText(t); val th = unit * 0.95f
+                        fun place(sx: Float, sy: Float): RectF {
+                            val reach = unit * 0.55f + kotlin.math.abs(sx) * tw / 2f + kotlin.math.abs(sy) * th / 2f
+                            val mx = x + sx * reach; val my = y + sy * reach
+                            return RectF(mx - tw / 2f, my - th / 2f, mx + tw / 2f, my + th / 2f)
+                        }
+                        val r1 = place(nx, ny); val r2 = place(-nx, -ny)
+                        val r = when { free(r1) -> r1; free(r2) -> r2; else -> null }
+                        if (r != null) { val baseline = r.bottom - th * 0.18f; c.drawText(t, r.left, baseline, shadow); c.drawText(t, r.left, baseline, tick) }
                     } else if (!arc.hours && !labelled && arc.label != null) {
                         labelled = true
                         tick.color = arc.color
-                        c.drawText(arc.label, px(pt.x) + unit * 0.4f, py(pt.y) - unit * 0.4f, shadow); c.drawText(arc.label, px(pt.x) + unit * 0.4f, py(pt.y) - unit * 0.4f, tick)
+                        c.drawText(arc.label, x + unit * 0.4f, y - unit * 0.4f, shadow); c.drawText(arc.label, x + unit * 0.4f, y - unit * 0.4f, tick)
                     }
                 }
-                prev = pt
             }
         }
         sun.marker?.let { m ->
