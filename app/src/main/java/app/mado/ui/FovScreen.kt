@@ -434,6 +434,7 @@ fun FovScreen(
     val sunWindowTemplate = stringResource(R.string.sun_in_frame_short, "\u0001", "\u0002")
     val sunNotInFrameText = stringResource(R.string.sun_not_in_frame)
     val sunHourFormat = stringResource(R.string.sun_hour_tick)
+    val dofBadgeTemplate = stringResource(R.string.dof_badge, "\u0001", "\u0002", "\u0003", "\u0004")
     val takeShot: () -> Unit = takeShot@{
         if (framing == null || !running || shot is ShotUi.Working || shot is ShotUi.Exposed) return@takeShot
         shot = ShotUi.Working
@@ -460,6 +461,13 @@ fun FovScreen(
         }
         // Profundidad de campo de lo que se simula, a la distancia que enfocaba el teléfono (o la escrita a mano).
         val focusAtShot = camera.focusDiopters?.let { d -> if (d > 0.05f) (1f / d).toDouble() else null }
+        val dofDistNow = framing.dofDistance(focusAtShot)
+        // Insignia para las fotos: apertura, distancia de enfoque y rango nítido.
+        val dofBadge = framing.dof(dofDistNow)?.let { r ->
+            val d = app.mado.optics.Dof
+            dofBadgeTemplate.replace("\u0001", framing.aperture.removeSuffix(".0")).replace("\u0002", d.format(dofDistNow ?: 0.0))
+                .replace("\u0003", d.format(r.nearM).removeSuffix(" m")).replace("\u0004", d.format(r.farM))
+        }
         framing.dof(framing.dofDistance(focusAtShot))?.let { r ->
             meta.put("dof", JSONObject().put("aperture", framing.aperture.toDoubleOrNull()).put("focus_m", framing.dofDistance(focusAtShot))
                 .put("near_m", r.nearM).put("far_m", if (r.farIsInfinity) JSONObject.NULL else r.farM).put("hyperfocal_m", r.hyperfocalM).put("coc_mm", r.cocMm)
@@ -533,9 +541,9 @@ fun FovScreen(
                             val saved = withContext(Dispatchers.IO) {
                                 // Dos archivos con la barra de datos: la foto con los recuadros del kit y el plano recortado al encuadre.
                                 // (No se guarda la foto sin gráficos: es la misma imagen que la primera.)
-                                val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel, sunShot?.note)
+                                val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel, sunShot?.note, dofBadge)
                                 val marco = PhotoSaver.save(ctx, overview, 0, meta, now, suffix = "_marco", location = loc, headingDeg = posePhoto?.headingDeg)
-                                val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel, sunShot?.note)
+                                val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel, sunShot?.note, dofBadge)
                                 PhotoSaver.save(ctx, plano, 0, meta, now, suffix = "_plano", location = loc, headingDeg = posePhoto?.headingDeg)
                                 marco
                             }
@@ -687,11 +695,23 @@ private fun ViewerLayout(
                 drawCircle(Accent, 4.dp.toPx(), m)
             }
             focusLabel?.let { t ->
-                Text(
-                    t, style = mono(13, Color.White, true),
-                    modifier = Modifier.offset { androidx.compose.ui.unit.IntOffset(m.x.toInt() + 44.dp.roundToPx(), m.y.toInt() - 10.dp.roundToPx()) }
-                        .background(Color.Black.copy(alpha = 0.55f), androidx.compose.foundation.shape.RoundedCornerShape(5.dp)).padding(horizontal = 6.dp, vertical = 2.dp),
-                )
+                // La etiqueta va a la derecha de la marca; si no cabe en la pantalla (con el rango de profundidad de campo es larga), pasa a la izquierda.
+                androidx.compose.ui.layout.Layout(
+                    content = {
+                        Text(
+                            t, style = mono(13, Color.White, true),
+                            modifier = Modifier.background(Color.Black.copy(alpha = 0.55f), androidx.compose.foundation.shape.RoundedCornerShape(5.dp)).padding(horizontal = 6.dp, vertical = 2.dp),
+                        )
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                ) { measurables, constraints ->
+                    val margin = 8.dp.roundToPx(); val gap = 44.dp.roundToPx()
+                    val placeable = measurables.first().measure(constraints.copy(minWidth = 0, minHeight = 0, maxWidth = (constraints.maxWidth - 2 * margin).coerceAtLeast(0)))
+                    val right = m.x.toInt() + gap
+                    val x = if (right + placeable.width <= constraints.maxWidth - margin) right else (m.x.toInt() - gap - placeable.width).coerceAtLeast(margin)
+                    val y = (m.y.toInt() - 10.dp.roundToPx()).coerceIn(0, (constraints.maxHeight - placeable.height).coerceAtLeast(0))
+                    layout(constraints.maxWidth, constraints.maxHeight) { placeable.place(x, y) }
+                }
             }
         }
 

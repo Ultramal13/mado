@@ -57,7 +57,7 @@ object PhotoAnnotator {
     // ---------- Vista general: foto + todos los recuadros ----------
     fun overview(
         jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet(),
-        delivery: Double? = null, deliveryLabel: String = "", sun: SunNote? = null,
+        delivery: Double? = null, deliveryLabel: String = "", sun: SunNote? = null, dofText: String? = null,
     ): ByteArray {
         val photo = decodeRotated(jpeg, rotationDeg, sample = 2)
         val w = photo.width; val h = photo.height
@@ -101,7 +101,7 @@ object PhotoAnnotator {
             drawGuides(c, guides, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, unit / 12f)
             delivery?.let { drawDelivery(c, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, it, deliveryLabel, unit) }
         }
-        sun?.let { drawSun(c, it, w / 2f, h / 2f, iw / 2f, ih / 2f, w.toFloat(), h.toFloat(), unit, listOfNotNull(info.sceneTag?.let { t -> scenePillRect(t, info.sceneColor != 0, h.toFloat(), unit) }), listOfNotNull(curTag)) }
+        if (sun != null || dofText != null) drawSun(c, sun, listOfNotNull(dofText?.let { it to DOF }), w / 2f, h / 2f, iw / 2f, ih / 2f, w.toFloat(), h.toFloat(), unit, listOfNotNull(info.sceneTag?.let { t -> scenePillRect(t, info.sceneColor != 0, h.toFloat(), unit) }), listOfNotNull(curTag))
         info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, barUnit, info)
         photo.recycle()
@@ -111,9 +111,9 @@ object PhotoAnnotator {
     // ---------- Plano: la foto recortada al encuadre actual ----------
     fun plano(
         jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet(),
-        delivery: Double? = null, deliveryLabel: String = "", sun: SunNote? = null,
+        delivery: Double? = null, deliveryLabel: String = "", sun: SunNote? = null, dofText: String? = null,
     ): ByteArray {
-        val cur = frames.firstOrNull { it.current }?.frame ?: return overview(jpeg, rotationDeg, frames, info, guides, delivery, deliveryLabel, sun)
+        val cur = frames.firstOrNull { it.current }?.frame ?: return overview(jpeg, rotationDeg, frames, info, guides, delivery, deliveryLabel, sun, dofText)
         val size = BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { BitmapFactory.decodeByteArray(jpeg, 0, jpeg.size, it) }
         val rotated90 = rotationDeg % 180 != 0
         val W = if (rotated90) size.outHeight else size.outWidth      // medidas de la foto ya girada
@@ -159,7 +159,7 @@ object PhotoAnnotator {
         drawGuides(c, guides, 0f, 0f, w.toFloat(), h.toFloat(), unit / 8f)
         delivery?.let { drawDelivery(c, 0f, 0f, w.toFloat(), h.toFloat(), it, deliveryLabel, unit * 1.1f) }
         // En el recorte el borde de la foto está a ±1/fracción del recuadro: la escala del sol cambia con el encuadre.
-        sun?.let { drawSun(c, it, w / 2f, h / 2f, w / 2f / fwFrac, h / 2f / fhFrac, w.toFloat(), h.toFloat(), unit * 1.1f, listOfNotNull(info.sceneTag?.let { t -> scenePillRect(t, info.sceneColor != 0, h.toFloat(), unit * 1.1f) })) }
+        if (sun != null || dofText != null) drawSun(c, sun, listOfNotNull(dofText?.let { it to DOF }), w / 2f, h / 2f, w / 2f / fwFrac, h / 2f / fhFrac, w.toFloat(), h.toFloat(), unit * 1.1f, listOfNotNull(info.sceneTag?.let { t -> scenePillRect(t, info.sceneColor != 0, h.toFloat(), unit * 1.1f) }))
         info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit * 1.1f) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, unit, info)
         body.recycle()
@@ -226,13 +226,14 @@ object PhotoAnnotator {
     }
 
     private const val SUN = 0xFFFFC83D.toInt()
+    private const val DOF = 0xFF9ADCF2.toInt()
 
     /**
      * El sol sobre la imagen. (cx, cy) es el centro de la foto y (hx, hy) la mitad de su tamaño en píxeles: un punto con x = 1 cae en el borde
      * derecho de la foto. Líneas con un borde oscuro para que se vean sobre cualquier fondo; las insignias van arriba a la derecha.
      */
     private fun drawSun(
-        c: Canvas, sun: SunNote, cx: Float, cy: Float, hx: Float, hy: Float, bw: Float, bh: Float, unit: Float,
+        c: Canvas, sun: SunNote?, extra: List<Pair<String, Int>>, cx: Float, cy: Float, hx: Float, hy: Float, bw: Float, bh: Float, unit: Float,
         avoid: List<RectF> = emptyList(), tagRects: List<RectF> = emptyList(),
     ) {
         fun px(x: Double) = cx + (x * hx).toFloat()
@@ -245,9 +246,9 @@ object PhotoAnnotator {
         // Insignias de arriba a la derecha: se calculan antes para que las marcas de hora no se dibujen debajo de ellas ni de la píldora de escena,
         // y bajan si taparían la etiqueta del recuadro actual.
         val lp = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 1.0f; color = Color.BLACK }
-        val badges = ArrayList<Pair<RectF, String>>()
+        val badges = ArrayList<Triple<RectF, String, Int>>()
         var bTop = unit * 0.7f
-        for (text in listOfNotNull(sun.badge, sun.window)) {
+        for ((text, color) in listOfNotNull(sun?.badge?.let { it to SUN }, sun?.window?.let { it to SUN }) + extra) {
             val tw = lp.measureText(text) + unit * 0.9f; val th = unit * 1.5f
             var r = RectF(bw - unit * 0.7f - tw, bTop, bw - unit * 0.7f, bTop + th)
             while (true) {
@@ -255,13 +256,13 @@ object PhotoAnnotator {
                 bTop = hit.bottom + unit * 0.2f
                 r = RectF(r.left, bTop, r.right, bTop + th)
             }
-            badges.add(r to text)
+            badges.add(Triple(r, text, color))
             bTop = r.bottom + unit * 0.25f
         }
         val pad = unit * 0.3f
         val blocked = (avoid + badges.map { it.first } + tagRects).map { RectF(it).apply { inset(-pad, -pad) } }
         fun free(r: RectF) = blocked.none { RectF.intersects(it, r) } && r.left >= 0f && r.right <= bw && r.top >= 0f && r.bottom <= bh
-        for (arc in sun.arcs) {
+        for (arc in sun?.arcs.orEmpty()) {
             val line = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; color = arc.color }
             dark.strokeWidth = unit * if (arc.hours) 0.34f else 0.26f
             line.strokeWidth = unit * if (arc.hours) 0.17f else 0.12f
@@ -278,7 +279,7 @@ object PhotoAnnotator {
                     if (arc.hours && pt.hour != null) {
                         c.drawCircle(x, y, unit * 0.3f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(150, 0, 0, 0) })
                         c.drawCircle(x, y, unit * 0.2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = arc.color })
-                        val t = String.format(java.util.Locale.ROOT, sun.hourFmt, pt.hour)
+                        val t = String.format(java.util.Locale.ROOT, sun?.hourFmt ?: "%dh", pt.hour)
                         tick.color = arc.color
                         // La etiqueta va a un lado de la línea (perpendicular a ella, hacia abajo); si ahí tapa algo, se prueba el otro lado y, si tampoco cabe, se omite.
                         val next = pts.getOrNull(i + 1)
@@ -304,7 +305,7 @@ object PhotoAnnotator {
                 }
             }
         }
-        sun.marker?.let { m ->
+        sun?.marker?.let { m ->
             val x = px(m.x); val y = py(m.y); val r = unit * 0.85f
             val ring = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
             for ((col, wd) in listOf(Color.argb(170, 0, 0, 0) to unit * 0.42f, SUN to unit * 0.2f)) {
@@ -319,8 +320,8 @@ object PhotoAnnotator {
             c.drawCircle(x, y, unit * 0.22f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = SUN })
         }
         // Insignias arriba a la derecha: grados del sol y, debajo, la ventana horaria en el encuadre.
-        for ((r, text) in badges) {
-            c.drawRect(r, Paint().apply { color = SUN })
+        for ((r, text, color) in badges) {
+            c.drawRect(r, Paint().apply { this.color = color })
             c.drawText(text, r.left + unit * 0.45f, r.top + r.height() * 0.74f, lp)
         }
     }

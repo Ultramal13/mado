@@ -273,4 +273,5 @@
     <string name="dof_range">nítido de %1$s a %2$s (enfocado a %3$s)</string>
     <string name="dof_hyperfocal_line">hiperfocal %1$s: enfoca ahí y todo desde %2$s hasta el infinito queda nítido</string>
     <string name="dof_note">aproximado: círculo de confusión = diagonal del sensor / 1500</string>
+    <string name="dof_badge">f/%1$s · enfocado a %2$s · nítido %3$s–%4$s</string>
 </resources>
