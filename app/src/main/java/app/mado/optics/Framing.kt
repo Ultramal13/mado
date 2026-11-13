@@ -24,6 +24,12 @@ object Framing {
         return Target(Fov.fovRad(effectiveWidth, focalMm), effectiveWidth / activeHeightMm)
     }
 
+    /**
+     * La misma cámara girada 90° (encuadre vertical): el campo que era vertical pasa a ser el horizontal y el aspecto se invierte.
+     * tan(nuevo H/2) = tan(H/2) / aspecto, y nuevo aspecto = 1 / aspecto.
+     */
+    fun rotated(t: Target): Target = Target(2.0 * atan(tan(t.hFovRad / 2.0) / t.aspect), 1.0 / t.aspect)
+
     /** `phoneAspect` = ancho/alto del preview del teléfono (p. ej. 4/3). */
     fun frame(target: Target, phoneHFovRad: Double, phoneAspect: Double): Frame {
         val w = Fov.frameFactor(target.hFovRad, phoneHFovRad)

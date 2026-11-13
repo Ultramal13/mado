@@ -260,4 +260,7 @@
     <string name="sun_compass_warn">コンパスの精度が低い：8の字に動かしてください</string>
     <string name="sun_seasons">夏至・冬至・春分の軌跡も描く</string>
     <string name="sun_in_frame_short">この枠に太陽が入る時間：%1$s〜%2$s</string>
+    <string name="frm_orientation">枠の向き</string>
+    <string name="frm_horizontal">横</string>
+    <string name="frm_vertical">縦</string>
 </resources>

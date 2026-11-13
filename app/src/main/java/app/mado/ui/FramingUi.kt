@@ -193,6 +193,7 @@ internal fun ViewerBar(
     framing: FramingState, running: Boolean, working: Boolean,
     onToggle: () -> Unit, onShot: () -> Unit, vertical: Boolean = false, onMenu: (() -> Unit)? = null, modifier: Modifier = Modifier,
     onSun: (() -> Unit)? = null, sunOn: Boolean = false, onSunCal: (() -> Unit)? = null, sunCalOn: Boolean = false,
+    onOrient: (() -> Unit)? = null, frameVertical: Boolean = false,
 ) {
     val shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
     val focal: @Composable () -> Unit = {
@@ -205,6 +206,7 @@ internal fun ViewerBar(
         horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         onMenu?.let { BarKey("☰", it) }
+        onOrient?.let { OrientKey(frameVertical, it) }
         onSun?.let { BarKey("☀", it, accent = sunOn) }
         onSunCal?.let { BarKey("◎", it, accent = sunCalOn) }
         if (running) BarKey("■", onToggle)
@@ -222,6 +224,21 @@ internal fun ViewerBar(
             ) { focal() }
         }
         ShutterKey(working, running && !working, onShot)
+    }
+}
+
+/** Tecla de la orientación del encuadre: un rectángulo apaisado (horizontal) o de pie (vertical), dibujado para no depender de la tipografía. */
+@Composable
+internal fun OrientKey(vertical: Boolean, onClick: () -> Unit) {
+    val p = LocalPalette.current
+    Box(
+        Modifier.size(width = 40.dp, height = 36.dp).clip(androidx.compose.foundation.shape.RoundedCornerShape(9.dp)).background(p.keyBg).clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        androidx.compose.foundation.Canvas(Modifier.size(22.dp)) {
+            val w = if (vertical) 11.dp.toPx() else 19.dp.toPx(); val h = if (vertical) 19.dp.toPx() else 11.dp.toPx()
+            drawRoundRect(p.keyText, Offset((size.width - w) / 2, (size.height - h) / 2), Size(w, h), CornerRadius(2.dp.toPx()), style = Stroke(2.dp.toPx()))
+        }
     }
 }
 
@@ -525,6 +542,9 @@ internal fun FramingControls(
                 StepKey("0", ev != 0) { onEv(0) }
             }
         }
+
+        Label(stringResource(R.string.frm_orientation))
+        Seg(listOf(stringResource(R.string.frm_horizontal), stringResource(R.string.frm_vertical)), if (framing.vertical) 1 else 0) { framing.vertical = it == 1 }
 
         Label(stringResource(R.string.guides_label))
         val guideNames = listOf(R.string.guide_thirds, R.string.guide_golden, R.string.guide_cross, R.string.guide_grid, R.string.guide_safe).map { stringResource(it) }

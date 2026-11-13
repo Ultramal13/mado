@@ -260,4 +260,7 @@
     <string name="sun_compass_warn">brújula poco fiable: mueve el teléfono en forma de 8</string>
     <string name="sun_seasons">dibujar también los recorridos de los solsticios y el equinoccio</string>
     <string name="sun_in_frame_short">sol en el encuadre: %1$s–%2$s</string>
+    <string name="frm_orientation">orientación del encuadre</string>
+    <string name="frm_horizontal">horizontal</string>
+    <string name="frm_vertical">vertical</string>
 </resources>

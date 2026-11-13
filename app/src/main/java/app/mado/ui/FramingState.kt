@@ -38,6 +38,8 @@ class FramingState(val db: CameraDb) {
     var builtInIdx by mutableIntStateOf(0)
     /** Focales del kit que se dibujan a la vez (la actual va resaltada); se suman o quitan desde el panel. */
     var kit by mutableStateOf(listOf(24.0, 35.0, 50.0, 85.0))
+    /** Encuadre vertical (la cámara girada 90°, como se dispara una foto de retrato); false = horizontal. */
+    var vertical by mutableStateOf(false)
     /** Guías de composición activas (se recuerdan entre usos). */
     var guides by mutableStateOf(setOf<Guide>())
     /** Aspecto de entrega (línea sobre el encuadre, p. ej. 16:9 sobre un sensor 3:2); -1 = igual al sensor, sin línea. */
@@ -91,6 +93,7 @@ class FramingState(val db: CameraDb) {
         put("builtIn", camera?.builtInLenses?.getOrNull(builtInIdx)?.id)
         put("aspect", fixedAspectIdx)
         put("delivery", deliveryIdx)
+        put("vertical", vertical)
         put("scene", scene); put("shotNo", shotNo)
         put("opFps", opFps); put("opShutter", opShutter ?: org.json.JSONObject.NULL); put("opIso", opIso); put("opWb", opWb); put("opNote", opNote)
         put("opPP", opPP); put("opExternal", opExternal)
@@ -116,6 +119,7 @@ class FramingState(val db: CameraDb) {
             o.optString("customH").takeIf { it.toDoubleOrNull() != null }?.let { customH = it }
             o.optInt("aspect", -1).takeIf { it in fixedAspects.indices }?.let { fixedAspectIdx = it }
             deliveryIdx = o.optInt("delivery", -1).takeIf { it in deliveryAspects.indices } ?: -1
+            vertical = o.optBoolean("vertical", false)
             scene = o.optString("scene", "").take(40)
             shotNo = o.optInt("shotNo", 1).coerceIn(1, 999)
             opFps = o.optString("opFps", "").take(8); opIso = o.optString("opIso", "").take(8); opWb = o.optString("opWb", "").take(8)
@@ -214,11 +218,16 @@ class FramingState(val db: CameraDb) {
         val eq = camera?.builtInLenses?.getOrNull(i)?.equivalentFocalMm ?: return null
         val mode = modes.getOrNull(modeIdx)
         // Lente fija: focal equivalente full frame → FOV horizontal de un sensor de 36 mm de ancho.
-        return Framing.Target(Fov.fovRad(Fov.FULL_FRAME_WIDTH_MM, eq), mode?.aspect ?: fixedAspects[fixedAspectIdx].first)
+        return orient(Framing.Target(Fov.fovRad(Fov.FULL_FRAME_WIDTH_MM, eq), mode?.aspect ?: fixedAspects[fixedAspectIdx].first))
     }
 
+    /** Aplica la orientación elegida: en vertical el objetivo se gira 90°. */
+    private fun orient(t: Framing.Target?): Framing.Target? = if (vertical && t != null) Framing.rotated(t) else t
+
     /** Objetivo para una focal dada (cámara intercambiable o personalizada), o null si faltan datos. */
-    fun targetFor(f: Double): Framing.Target? = when {
+    fun targetFor(f: Double): Framing.Target? = orient(baseTargetFor(f))
+
+    private fun baseTargetFor(f: Double): Framing.Target? = when {
         f <= 0 -> null
         isCustom -> {
             val w = customW.toDoubleOrNull(); val h = customH.toDoubleOrNull()

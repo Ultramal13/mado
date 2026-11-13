@@ -449,7 +449,7 @@ fun FovScreen(
             put("phone_lens", JSONObject().put("camera2_id", lens.id).put("hfov_deg_used", phoneDeg).put("hfov_deg_theory", theory)
                 .put("hfov_deg_internal", intrinsicDeg).put("hfov_source", if (profileDeg != null) "measured" else if (intrinsicDeg != null) "internal" else "theory")
                 .put("calibrated", profileDeg != null).put("distortion_correction", if (distortionOff) "off" else "default"))
-            put("target", JSONObject().put("label", framing.label()).put("kit_focals", org.json.JSONArray(frameDraws.map { it.label })).put("hfov_deg", target?.let { Math.toDegrees(it.hFovRad) })
+            put("target", JSONObject().put("label", framing.label()).put("orientation", if (framing.vertical) "vertical" else "horizontal").put("kit_focals", org.json.JSONArray(frameDraws.map { it.label })).put("hfov_deg", target?.let { Math.toDegrees(it.hFovRad) })
                 .put("aspect", target?.aspect).put("squeeze", framing.squeeze)
                 // Lente fija: la focal es la equivalente full frame del lente integrado elegido; si no, la que se escribió en el panel.
                 .put("focal_mm", if (framing.isFixedLens) framing.camera?.builtInLenses?.getOrNull(framing.builtInIdx)?.equivalentFocalMm else framing.focal.toDoubleOrNull())
@@ -593,6 +593,7 @@ fun FovScreen(
                 onSunCal = if (sun.on && sun.located && sun.picked == null && (sun.position()?.elevationDeg ?: 0.0) > 3.0) ({ sun.calibrating = !sun.calibrating }) else null,
                 sunCalOn = sun.calibrating,
                 sunTimeline = if (sun.on && sun.located) ({ m -> SunTimeline(sun, m) }) else null,
+                onOrient = { framing.vertical = !framing.vertical }, frameVertical = framing.vertical,
             )
         } else if (landscape) {
             // El preview ocupa el alto; los controles van en un panel desplazable a la derecha.
@@ -631,6 +632,8 @@ private fun ViewerLayout(
     sunOn: Boolean = false, onSun: () -> Unit = {}, onSunCal: (() -> Unit)? = null, sunCalOn: Boolean = false,
     /** Línea de tiempo del sol (arrastrar para mover la hora): se dibuja abajo, sobre la imagen. */
     sunTimeline: (@Composable (Modifier) -> Unit)? = null,
+    /** Tecla de la orientación del encuadre (horizontal/vertical). */
+    onOrient: (() -> Unit)? = null, frameVertical: Boolean = false,
 ) {
     val p = LocalPalette.current
     var optionsOpen by rememberSaveable { mutableStateOf(false) }
@@ -779,7 +782,7 @@ private fun ViewerLayout(
 
         if (landscape) {
             ViewerBar(
-                framing, running, working, onToggle, onShot, vertical = true, onMenu = onMenu, onSun = onSun, sunOn = sunOn, onSunCal = onSunCal, sunCalOn = sunCalOn,
+                framing, running, working, onToggle, onShot, vertical = true, onMenu = onMenu, onSun = onSun, sunOn = sunOn, onSunCal = onSunCal, sunCalOn = sunCalOn, onOrient = onOrient, frameVertical = frameVertical,
                 modifier = Modifier.align(Alignment.CenterEnd)
                     .windowInsetsPadding(safe.only(WindowInsetsSides.End + WindowInsetsSides.Vertical)).padding(6.dp),
             )
@@ -799,6 +802,7 @@ private fun ViewerLayout(
                 Modifier.align(Alignment.TopEnd).windowInsetsPadding(safe.only(WindowInsetsSides.Top + WindowInsetsSides.End)).padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
+                onOrient?.let { OrientKey(frameVertical, it) }
                 BarKey("☀", onSun, accent = sunOn)
                 onSunCal?.let { BarKey("◎", it, accent = sunCalOn) }
                 if (running) BarKey("■", onToggle)
