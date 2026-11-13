@@ -263,4 +263,14 @@
     <string name="frm_orientation">orientación del encuadre</string>
     <string name="frm_horizontal">horizontal</string>
     <string name="frm_vertical">vertical</string>
+    <string name="dof_label">profundidad de campo e hiperfocal</string>
+    <string name="dof_aperture">apertura</string>
+    <string name="dof_distance">distancia de enfoque</string>
+    <string name="dof_auto">la que enfoca el teléfono</string>
+    <string name="dof_manual">escribirla</string>
+    <string name="dof_hint">toca la imagen para enfocar el sujeto con el teléfono, o escribe la distancia</string>
+    <string name="dof_fixed_lens">no disponible para esta cámara: no trae el tamaño del sensor</string>
+    <string name="dof_range">nítido de %1$s a %2$s (enfocado a %3$s)</string>
+    <string name="dof_hyperfocal_line">hiperfocal %1$s: enfoca ahí y todo desde %2$s hasta el infinito queda nítido</string>
+    <string name="dof_note">aproximado: círculo de confusión = diagonal del sensor / 1500</string>
 </resources>

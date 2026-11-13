@@ -263,4 +263,14 @@
     <string name="frm_orientation">frame orientation</string>
     <string name="frm_horizontal">horizontal</string>
     <string name="frm_vertical">vertical</string>
+    <string name="dof_label">depth of field and hyperfocal</string>
+    <string name="dof_aperture">aperture</string>
+    <string name="dof_distance">focus distance</string>
+    <string name="dof_auto">the phone\'s focus</string>
+    <string name="dof_manual">type it</string>
+    <string name="dof_hint">tap the image to focus the phone on the subject, or type the distance</string>
+    <string name="dof_fixed_lens">not available for this camera: it has no sensor size</string>
+    <string name="dof_range">sharp from %1$s to %2$s (focused at %3$s)</string>
+    <string name="dof_hyperfocal_line">hyperfocal %1$s: focus there and everything from %2$s to ∞ is sharp</string>
+    <string name="dof_note">approximate: circle of confusion = sensor diagonal / 1500</string>
 </resources>

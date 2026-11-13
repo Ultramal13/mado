@@ -458,6 +458,13 @@ fun FovScreen(
                 .put("padding", frame?.padding))
             pose?.let { put("orientation", JSONObject().put("heading_deg_magnetic", it.headingDeg).put("elevation_deg", it.elevationDeg).put("level_deg", it.levelDeg)) }
         }
+        // Profundidad de campo de lo que se simula, a la distancia que enfocaba el teléfono (o la escrita a mano).
+        val focusAtShot = camera.focusDiopters?.let { d -> if (d > 0.05f) (1f / d).toDouble() else null }
+        framing.dof(framing.dofDistance(focusAtShot))?.let { r ->
+            meta.put("dof", JSONObject().put("aperture", framing.aperture.toDoubleOrNull()).put("focus_m", framing.dofDistance(focusAtShot))
+                .put("near_m", r.nearM).put("far_m", if (r.farIsInfinity) JSONObject.NULL else r.farM).put("hyperfocal_m", r.hyperfocalM).put("coc_mm", r.cocMm)
+                .put("distance_source", if (framing.dofDistM.isNotEmpty()) "manual" else "phone_focus"))
+        }
         book.project?.let { meta.put("project", JSONObject().put("id", it.id).put("name", it.name)) }
         book.place?.let { meta.put("place", JSONObject().put("id", it.id).put("name", it.name).put("address", it.address).put("notes", it.notes)) }
         val guidesNow = framing.guides                              // las guías elegidas van también en las fotos
@@ -556,6 +563,7 @@ fun FovScreen(
             running = running, hasPermission = hasPermission, reason = reason, error = error, guard = guard,
             onToggle = onToggle, shot = shot, onShot = takeShot,
             orientation = orientationText(tracker.pose), gpsOn = gpsOn, onGps = onGps, gpsDenied = gpsDenied,
+            focusMeters = camera.focusDiopters?.let { d -> if (d > 0.05f) (1f / d).toDouble() else null },
             sun = sun, onSunLocate = onSunLocate, sunView = sunView,
             ev = ev, evInfo = evInfo, onEv = { ev = it },
             book = book, shots = shots, onBook = onBook, onManage = onProjects,
@@ -587,7 +595,7 @@ fun FovScreen(
                 onToggle = onToggle, onShot = takeShot, onMenu = onMenu, onDoubleTap = { cropView = !cropView }, shot = shot, flashTick = flashTick, hint = showHint, cropped = cropOn,
                 evLabel = evInfo?.takeIf { ev != 0 }?.let { evText(ev, it.second) }, onFocus = onFocus,
                 calibNotice = profileDeg == null, onShareDiagnostics = onShareDiagnostics, onCalibrate = onCalibrate,
-                focusReadout = { camera.focusDiopters?.let { d -> if (d > 0.05f) String.format(Locale.ROOT, "%.2f m", 1f / d) else "∞" } },
+                focusReadout = { camera.focusDiopters?.let { d -> if (d > 0.05f) String.format(Locale.ROOT, "%.2f m", 1f / d) + (framing.dofSummary((1f / d).toDouble())?.let { " · $it" } ?: "") else "∞" } },
                 sunOn = sun.on, onSun = { sun.enable(!sun.on); if (!sun.on) sun.calibrating = false; if (sun.on && !sun.located && !sun.locating) onSunLocate() },
                 // ◎: tocar el sol real en la imagen para corregir la brújula; solo con el sol alto y la hora en «ahora».
                 onSunCal = if (sun.on && sun.located && sun.picked == null && (sun.position()?.elevationDeg ?: 0.0) > 3.0) ({ sun.calibrating = !sun.calibrating }) else null,

@@ -263,4 +263,14 @@
     <string name="frm_orientation">枠の向き</string>
     <string name="frm_horizontal">横</string>
     <string name="frm_vertical">縦</string>
+    <string name="dof_label">被写界深度と過焦点距離</string>
+    <string name="dof_aperture">絞り</string>
+    <string name="dof_distance">ピント距離</string>
+    <string name="dof_auto">スマホのピント</string>
+    <string name="dof_manual">手入力</string>
+    <string name="dof_hint">画像をタップして被写体にピントを合わせるか、距離を入力してください</string>
+    <string name="dof_fixed_lens">このカメラはセンサーサイズが不明なため使えません</string>
+    <string name="dof_range">ピントが合う範囲：%1$s〜%2$s（ピント距離 %3$s）</string>
+    <string name="dof_hyperfocal_line">過焦点距離 %1$s：そこにピントを合わせると %2$s から無限遠までシャープ</string>
+    <string name="dof_note">概算：許容錯乱円＝センサー対角線÷1500</string>
 </resources>

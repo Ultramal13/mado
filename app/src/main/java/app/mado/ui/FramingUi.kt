@@ -227,6 +227,36 @@ internal fun ViewerBar(
     }
 }
 
+/**
+ * Profundidad de campo e hiperfocal de lo que se simula (cámara + focal), a la distancia que enfoca el teléfono o a una escrita a mano.
+ * Con el sensor activo sale el círculo de confusión; las cámaras de lente fija no traen esas medidas.
+ */
+@Composable
+private fun DofSection(framing: FramingState, phoneFocusM: Double?) {
+    val p = LocalPalette.current
+    Label(stringResource(R.string.dof_label))
+    Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (framing.dofOn) 1 else 0) { framing.dofOn = it == 1 }
+    if (!framing.dofOn) return
+    if (framing.sensorMm() == null) { Text(stringResource(R.string.dof_fixed_lens), style = mono(10, p.accent)); return }
+    fun fmtF(v: Double) = if (v % 1.0 == 0.0) v.toInt().toString() else v.toString()
+    val current = framing.aperture.toDoubleOrNull()
+    Label(stringResource(R.string.dof_aperture))
+    Seg(app.mado.optics.Dof.apertures.map { "f/" + fmtF(it) }, app.mado.optics.Dof.apertures.indexOfFirst { current != null && kotlin.math.abs(it - current) < 1e-6 }) { framing.aperture = fmtF(app.mado.optics.Dof.apertures[it]) }
+    Label(stringResource(R.string.dof_distance))
+    Seg(listOf(stringResource(R.string.dof_auto), stringResource(R.string.dof_manual)), if (framing.dofDistM.isEmpty()) 0 else 1) {
+        if (it == 0) framing.dofDistM = "" else if (framing.dofDistM.isEmpty()) framing.dofDistM = phoneFocusM?.let { m -> String.format(java.util.Locale.ROOT, "%.1f", m) } ?: "3"
+    }
+    if (framing.dofDistM.isNotEmpty()) NumField(framing.dofDistM) { framing.dofDistM = it }
+    val r = framing.dof(framing.dofDistance(phoneFocusM))
+    if (r == null) Text(stringResource(R.string.dof_hint), style = mono(10, p.accent))
+    else {
+        val d = app.mado.optics.Dof
+        Text(stringResource(R.string.dof_range, d.format(r.nearM), d.format(r.farM), d.format(framing.dofDistance(phoneFocusM) ?: 0.0)), style = mono(12, p.text, true), modifier = Modifier.padding(top = 4.dp))
+        Text(stringResource(R.string.dof_hyperfocal_line, d.format(r.hyperfocalM), d.format(r.nearAtHyperfocalM)), style = mono(10, p.text.copy(alpha = 0.8f)))
+    }
+    Text(stringResource(R.string.dof_note), style = mono(10, p.text.copy(alpha = 0.6f)))
+}
+
 /** Tecla de la orientación del encuadre: un rectángulo apaisado (horizontal) o de pie (vertical), dibujado para no depender de la tipografía. */
 @Composable
 internal fun OrientKey(vertical: Boolean, onClick: () -> Unit) {
@@ -438,6 +468,7 @@ internal fun FramingControls(
     gpsOn: Boolean,
     onGps: (Boolean) -> Unit,
     gpsDenied: Boolean,
+    focusMeters: Double? = null,
     sun: SunState? = null,
     onSunLocate: () -> Unit = {},
     sunView: SunView? = null,
@@ -545,6 +576,8 @@ internal fun FramingControls(
 
         Label(stringResource(R.string.frm_orientation))
         Seg(listOf(stringResource(R.string.frm_horizontal), stringResource(R.string.frm_vertical)), if (framing.vertical) 1 else 0) { framing.vertical = it == 1 }
+
+        DofSection(framing, focusMeters)
 
         Label(stringResource(R.string.guides_label))
         val guideNames = listOf(R.string.guide_thirds, R.string.guide_golden, R.string.guide_cross, R.string.guide_grid, R.string.guide_safe).map { stringResource(it) }

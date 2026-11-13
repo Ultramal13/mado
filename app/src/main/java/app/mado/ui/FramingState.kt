@@ -40,6 +40,10 @@ class FramingState(val db: CameraDb) {
     var kit by mutableStateOf(listOf(24.0, 35.0, 50.0, 85.0))
     /** Encuadre vertical (la cámara girada 90°, como se dispara una foto de retrato); false = horizontal. */
     var vertical by mutableStateOf(false)
+    /** Profundidad de campo e hiperfocal: activada, apertura (f/) y distancia de enfoque escrita a mano en metros (vacío = la que enfoca el teléfono). */
+    var dofOn by mutableStateOf(false)
+    var aperture by mutableStateOf("5.6")
+    var dofDistM by mutableStateOf("")
     /** Guías de composición activas (se recuerdan entre usos). */
     var guides by mutableStateOf(setOf<Guide>())
     /** Aspecto de entrega (línea sobre el encuadre, p. ej. 16:9 sobre un sensor 3:2); -1 = igual al sensor, sin línea. */
@@ -94,6 +98,7 @@ class FramingState(val db: CameraDb) {
         put("aspect", fixedAspectIdx)
         put("delivery", deliveryIdx)
         put("vertical", vertical)
+        put("dofOn", dofOn); put("aperture", aperture); put("dofDist", dofDistM)
         put("scene", scene); put("shotNo", shotNo)
         put("opFps", opFps); put("opShutter", opShutter ?: org.json.JSONObject.NULL); put("opIso", opIso); put("opWb", opWb); put("opNote", opNote)
         put("opPP", opPP); put("opExternal", opExternal)
@@ -120,6 +125,9 @@ class FramingState(val db: CameraDb) {
             o.optInt("aspect", -1).takeIf { it in fixedAspects.indices }?.let { fixedAspectIdx = it }
             deliveryIdx = o.optInt("delivery", -1).takeIf { it in deliveryAspects.indices } ?: -1
             vertical = o.optBoolean("vertical", false)
+            dofOn = o.optBoolean("dofOn", false)
+            o.optString("aperture").takeIf { (it.toDoubleOrNull() ?: 0.0) > 0 }?.let { aperture = it }
+            dofDistM = o.optString("dofDist", "").takeIf { (it.toDoubleOrNull() ?: 0.0) > 0 } ?: ""
             scene = o.optString("scene", "").take(40)
             shotNo = o.optInt("shotNo", 1).coerceIn(1, 999)
             opFps = o.optString("opFps", "").take(8); opIso = o.optString("opIso", "").take(8); opWb = o.optString("opWb", "").take(8)
@@ -248,6 +256,29 @@ class FramingState(val db: CameraDb) {
         val cur = currentFocal
         val focals = (kit + listOfNotNull(cur)).distinct().sorted()
         return focals.mapNotNull { f -> targetFor(f)?.let { Option(fmtF(f), it, cur != null && kotlin.math.abs(f - cur) < 1e-6) } }
+    }
+
+    /** Medidas (mm) del sensor activo de lo que se simula, o null si no se conocen (lente fija sin sensor, modo sin medidas). */
+    fun sensorMm(): Pair<Double, Double>? = when {
+        isCustom -> customW.toDoubleOrNull()?.let { w -> customH.toDoubleOrNull()?.let { h -> if (w > 0 && h > 0) w to h else null } }
+        isFixedLens -> null
+        else -> modes.getOrNull(modeIdx)?.takeIf { it.hasArea }?.let { it.widthMm!! to it.heightMm!! }
+    }
+
+    /** Distancia de enfoque para la profundidad de campo: la escrita a mano o, si no hay, la que enfoca el teléfono ([phoneFocusM]). */
+    fun dofDistance(phoneFocusM: Double?): Double? = dofDistM.toDoubleOrNull()?.takeIf { it > 0 } ?: phoneFocusM?.takeIf { it > 0 }
+
+    /** Profundidad de campo del objetivo actual a [distanceM]; null si está apagada o faltan datos. */
+    fun dof(distanceM: Double?): app.mado.optics.Dof.Result? {
+        if (!dofOn) return null
+        val f = currentFocal ?: return null
+        val (w, h) = sensorMm() ?: return null
+        return app.mado.optics.Dof.compute(f, aperture.toDoubleOrNull() ?: return null, distanceM ?: return null, app.mado.optics.Dof.cocMm(w, h))
+    }
+
+    /** «f/5.6 · 2.4–4.1 m» para mostrar junto a la distancia de enfoque; null si no hay. */
+    fun dofSummary(phoneFocusM: Double?): String? = dof(dofDistance(phoneFocusM))?.let { r ->
+        "f/${aperture.removeSuffix(".0")} · ${app.mado.optics.Dof.format(r.nearM).removeSuffix(" m")}–${app.mado.optics.Dof.format(r.farM)}"
     }
 
     /** Pasa a la focal siguiente (+1) o anterior (−1) del kit. */
