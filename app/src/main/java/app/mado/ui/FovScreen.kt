@@ -348,7 +348,7 @@ fun FovScreen(
             overlay = {
                 if (framing != null) Box(Modifier.fillMaxSize()) {
                     FrameOverlay(cropDraws, if (cropOn) 1f else imageScale, showTags = !cropOn, guides = framing.guides, delivery = framing.delivery)
-                    SunOverlay(sun, sunView, if (cropOn) 1f / cropFw else imageScale, if (cropOn) 1f / cropFh else imageScale, if (sun.on && sun.located) 64.dp else 0.dp)
+                    SunOverlay(sun, sunView, if (cropOn) 1f / cropFw else imageScale, if (cropOn) 1f / cropFh else imageScale, (if (sun.on && sun.located) 64.dp else 0.dp) + (if (cropOn) 84.dp else 0.dp))
                     if (cropOn) {
                         val hDeg = target?.let { Math.toDegrees(it.hFovRad) }
                         val vDeg = target?.let { Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(it.hFovRad / 2.0) / it.aspect)) }
@@ -656,6 +656,11 @@ private fun ViewerLayout(
     val safe = androidx.compose.foundation.layout.WindowInsets.safeDrawing
     // Rectángulo del visor (donde se dibuja la imagen) y última marca de enfoque, ambos en px del contenedor.
     var previewRect by remember { mutableStateOf(androidx.compose.ui.geometry.Rect.Zero) }
+    // El detector de toques arranca una sola vez: sin esto conservaría los valores de «running», del enfoque y del doble toque de ese primer momento
+    // (con la cámara apagada) y los toques dejarían de enfocar aunque la cámara ya estuviera en marcha.
+    val runningNow by androidx.compose.runtime.rememberUpdatedState(running)
+    val onFocusNow by androidx.compose.runtime.rememberUpdatedState(onFocus)
+    val onDoubleTapNow by androidx.compose.runtime.rememberUpdatedState(onDoubleTap)
     var focusMark by remember { mutableStateOf<Offset?>(null) }
     var focusLabel by remember { mutableStateOf<String?>(null) }
     androidx.compose.runtime.LaunchedEffect(focusMark) {
@@ -678,12 +683,12 @@ private fun ViewerLayout(
                 detectTapGestures(
                     onTap = { pt ->
                         if (optionsOpen) optionsOpen = false
-                        else if (running && previewRect.width > 0f && previewRect.contains(pt)) {
+                        else if (runningNow && previewRect.width > 0f && previewRect.contains(pt)) {
                             focusMark = pt
-                            onFocus((pt.x - previewRect.left) / previewRect.width, (pt.y - previewRect.top) / previewRect.height)
+                            onFocusNow((pt.x - previewRect.left) / previewRect.width, (pt.y - previewRect.top) / previewRect.height)
                         }
                     },
-                    onDoubleTap = { onDoubleTap() },
+                    onDoubleTap = { onDoubleTapNow() },
                 )
             },
         )
