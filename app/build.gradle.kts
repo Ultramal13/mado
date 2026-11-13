@@ -21,8 +21,8 @@ android {
         // API 29: getCameraCharacteristics acepta IDs de cámaras físicas.
         minSdk = 29
         targetSdk = 36
-        versionCode = 39
-        versionName = "0.2.37-beta"
+        versionCode = 40
+        versionName = "0.2.38-beta"
     }
 
     signingConfigs {
