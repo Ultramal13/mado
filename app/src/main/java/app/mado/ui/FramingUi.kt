@@ -201,17 +201,25 @@ internal fun ViewerBar(
         Text(framing.currentLabel(), style = mono(14, Color.White, true), maxLines = 1, modifier = Modifier.widthIn(min = if (vertical) 0.dp else 64.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
         BarKey("▶", { framing.step(1) })
     }
-    if (vertical) Column(
+    // En horizontal la altura de la pantalla no alcanza para todas las teclas en una sola columna (el obturador quedaba cortado):
+    // las de encuadre y sol van en una columna aparte, a la izquierda de la principal (☰, ■, focal y obturador).
+    if (vertical) Row(
         modifier.background(Color.Black.copy(alpha = 0.6f), shape).padding(6.dp),
-        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically,
     ) {
-        onMenu?.let { BarKey("☰", it) }
-        onOrient?.let { OrientKey(frameVertical, it) }
-        onSun?.let { BarKey("☀", it, accent = sunOn) }
-        onSunCal?.let { BarKey("◎", it, accent = sunCalOn) }
-        if (running) BarKey("■", onToggle)
-        focal()
-        ShutterKey(working, running && !working, onShot, 52.dp)
+        if (onOrient != null || onSun != null || onSunCal != null) Column(
+            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            onOrient?.let { OrientKey(frameVertical, it) }
+            onSun?.let { BarKey("☀", it, accent = sunOn) }
+            onSunCal?.let { BarKey("◎", it, accent = sunCalOn) }
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(5.dp)) {
+            onMenu?.let { BarKey("☰", it) }
+            if (running) BarKey("■", onToggle)
+            focal()
+            ShutterKey(working, running && !working, onShot, 52.dp)
+        }
     }
     else Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Spacer(Modifier.size(60.dp))

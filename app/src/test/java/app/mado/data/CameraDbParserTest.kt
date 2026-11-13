@@ -82,6 +82,46 @@ class BundledCamerasTest {
         val s26 = db.phoneProfiles.first { it.buildModel == "SM-S948B" }
         assertEquals(71.8, s26.lenses.first { it.camera2Id == "5" }.measuredHFovDeg!!, 1e-9)
     }
+
+    /** Cámaras de foto agregadas el 2026-11-13: cada una con su modo nativo publicado y todos los modos con URL de la fuente. */
+    @Test
+    fun photoCamerasCarryTheirPublishedSensor() {
+        val db = CameraDbParser.parse(java.io.File("src/main/assets/camaras.json").readText())
+        val native = mapOf(
+            "sony_a7r_v" to (35.7 to 23.8), "sony_a6700" to (23.3 to 15.5),
+            "canon_eos_r6_mark_ii" to (36.0 to 24.0), "canon_eos_r7" to (22.3 to 14.8),
+            "nikon_z8" to (35.9 to 23.9), "nikon_z50ii" to (23.5 to 15.7),
+            "fujifilm_x_t5" to (23.5 to 15.7), "fujifilm_gfx100s_ii" to (43.8 to 32.9),
+            "om_system_om1_ii" to (17.3 to 13.0), "panasonic_lumix_g9_ii" to (17.3 to 13.0), "panasonic_lumix_s5_ii" to (35.6 to 23.8),
+            "canon_eos_r5_mark_ii" to (36.0 to 24.0),
+        )
+        native.forEach { (id, wh) ->
+            val cam = db.cameras.first { it.id == id }
+            assertEquals("$id modos incompletos", 0, cam.incompleteModes)
+            val published = cam.modes.filter { !it.derived }
+            assertEquals("$id debe tener un solo modo publicado", 1, published.size)
+            assertEquals(wh.first, published.first().widthMm!!, 1e-9)
+            assertEquals(wh.second, published.first().heightMm!!, 1e-9)
+            cam.modes.forEach { org.junit.Assert.assertNotNull("$id ${it.id} sin URL", it.source?.url) }
+            // Ningún modo derivado puede ser mayor que el sensor publicado.
+            cam.modes.forEach { org.junit.Assert.assertTrue("$id ${it.id}", it.widthMm!! <= wh.first + 0.05 && it.heightMm!! <= wh.second + 0.05) }
+        }
+        // Los dos zooms de ejemplo del kit.
+        assertEquals(listOf(24.0, 28.0, 35.0, 50.0, 70.0), db.lensSets.first { it.id == "zoom_24_70_ejemplo" }.focalsMm)
+        assertEquals(listOf(70.0, 85.0, 100.0, 135.0, 200.0), db.lensSets.first { it.id == "zoom_70_200_ejemplo" }.focalsMm)
+        // Lentes Canon RF L: cada uno con su ficha oficial y sus focales dentro del rango del zoom.
+        mapOf("canon_rf_15_35_f2_8l" to (15.0 to 35.0), "canon_rf_24_105_f4l" to (24.0 to 105.0), "canon_rf_70_200_f2_8l" to (70.0 to 200.0), "canon_rf_50_f1_2l" to (50.0 to 50.0)).forEach { (id, range) ->
+            val set = db.lensSets.first { it.id == id }
+            org.junit.Assert.assertNotNull("$id sin URL", set.source?.url)
+            assertEquals(range.first, set.focalsMm.first(), 1e-9)
+            assertEquals(range.second, set.focalsMm.last(), 1e-9)
+        }
+        // La R5 Mark II trae video: 8K DCI usa todo el ancho del sensor y el recorte de 1.6x queda en 22.5 mm.
+        val r5ii = db.cameras.first { it.id == "canon_eos_r5_mark_ii" }
+        assertEquals(36.0, r5ii.modes.first { it.id == "video_8k_dci" }.widthMm!!, 1e-9)
+        assertEquals(22.5, r5ii.modes.first { it.id == "video_4k_dci_crop" }.widthMm!!, 1e-9)
+        assertEquals(listOf("c_log2", "c_log3", "hdr_pq", "hlg"), r5ii.colorProfiles.map { it.id })
+    }
 }
 
 class PhotoSaverTest {

@@ -1,6 +1,6 @@
 # Ficha de la tienda (borrador) / Store listing (draft)
 
-*Borrador del 2026-11-04 para Google Play. Los textos no prometen gratuidad ni funciones que aún no existen. El japonés no está revisado por un hablante nativo. Falta: capturas, imagen destacada, correo de contacto y URL de la política de privacidad ([`politica-privacidad.md`](politica-privacidad.md)).*
+*Borrador del 2026-11-04 para Google Play, actualizado el 2026-11-13 con el sol y la fotografía. Los textos no prometen gratuidad ni funciones que aún no existen. El japonés no está revisado por un hablante nativo. Falta: capturas, imagen destacada, correo de contacto y URL de la política de privacidad ([`politica-privacidad.md`](politica-privacidad.md)).*
 
 ## Título (28/30 caracteres)
 `Mado · Director's Viewfinder`
@@ -21,6 +21,8 @@ Mado turns your phone camera into a director's viewfinder. Pick a camera, a reco
 • Information for the camera operator: every photo carries the camera, mode, lens, colour profile or log, frame rate, shutter (suggested by the 180° rule), ISO, white balance, Picture Profile and external HDMI recording.
 • Scout organisation: projects, locations and scenes, with address and logistics notes. Each photo is tied to its scene and shot number.
 • Two images per shot: the frame inside the scene, and the image cropped as it would be recorded.
+• Sun on the frame: where the sun is at any time of day, its path across your shot and the hours when it enters the frame. If the phone compass is off, correct it by tapping the real sun.
+• For photographers too: stills modes, vertical frame, depth of field and hyperfocal distance for the camera and aperture you choose, and the focus point marked on the saved photo.
 • Private by design: no ads, no internet permission, no tracking. Your photos and data stay on your phone.
 • Spanish, English and Japanese.
 
@@ -33,6 +35,8 @@ Mado convierte la cámara de tu teléfono en un visor de director. Elige una cá
 • Información para quien opera la cámara: cada foto lleva cámara, modo, lente, perfil de color o log, cuadros por segundo, obturación (propuesta con la regla de 180°), ISO, balance de blancos, Picture Profile y grabación externa por HDMI.
 • Orden del scout: proyectos, locaciones y escenas, con dirección y notas de logística. Cada foto queda asociada a su escena y número de plano.
 • Dos imágenes por plano: el recuadro dentro de la escena y la imagen recortada tal como se grabaría.
+• El sol sobre el encuadre: dónde está el sol a cualquier hora del día, su recorrido por el plano y las horas en que entra al encuadre. Si la brújula del teléfono falla, se corrige tocando el sol real.
+• También para fotografía: modos de foto, encuadre vertical, profundidad de campo e hiperfocal para la cámara y la apertura que elijas, y el punto de enfoque marcado en la foto guardada.
 • Privada por diseño: sin anuncios, sin permiso de internet, sin seguimiento. Tus fotos y datos se quedan en tu teléfono.
 • Español, inglés y japonés.
 
@@ -45,6 +49,8 @@ Mado は、スマホのカメラをディレクターズビューファインダ
 • カメラマン向けの情報：各写真に、カメラ、モード、レンズ、カラープロファイル／ログ、フレームレート、シャッター（180°ルールで提案）、ISO、ホワイトバランス、ピクチャープロファイル、HDMI外部収録を記載。
 • ロケハンの整理：プロジェクト、ロケ地、シーンごとに住所と運用メモを管理。写真はシーンとショット番号に紐づきます。
 • 1ショットにつき2枚：シーン内の枠を示す画像と、収録される範囲に切り抜いた画像。
+• 枠の上に太陽：一日の任意の時刻の太陽の位置、画面を横切る軌跡、枠に太陽が入る時間を表示。端末のコンパスがずれているときは、実際の太陽をタップして補正できます。
+• 写真撮影にも：写真モード、縦位置の枠、選んだカメラと絞りでの被写界深度と過焦点距離、保存した写真へのピント位置の表示。
 • プライバシー重視：広告なし、インターネット権限なし、トラッキングなし。写真とデータは端末内に保存されます。
 • 日本語・英語・スペイン語に対応。
 

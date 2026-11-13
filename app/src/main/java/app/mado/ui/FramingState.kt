@@ -25,7 +25,8 @@ class FramingState(val db: CameraDb) {
         return if (principalCount == 0) cameras.indices.toList()
         else if (cameraIdx in cameras.indices && cameraIdx >= principalCount) principals + cameraIdx else principals
     }
-    val otherCameras: List<Int> get() = (principalCount until cameras.size).toList()
+    /** El resto del catálogo, por orden alfabético de marca y modelo: con muchas cámaras, el orden del archivo no ayuda a encontrarlas. */
+    val otherCameras: List<Int> get() = (principalCount until cameras.size).sortedBy { cameras[it].displayName.lowercase() }
 
     var cameraIdx by mutableIntStateOf(if (principalCount > 0) 0 else cameras.size)      // arranca en la primera principal
     var modeIdx by mutableIntStateOf(0)

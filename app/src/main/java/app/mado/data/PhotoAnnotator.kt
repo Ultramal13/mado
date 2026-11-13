@@ -36,7 +36,8 @@ data class SunArc(val color: Int, val points: List<SunPoint?>, val label: String
  * El sol para dibujarlo en las copias con datos, igual que en el visor: recorridos, círculo si cae dentro de la foto y, arriba a la derecha,
  * sus grados ([badge]) y la ventana horaria en que cruza el encuadre ([window]).
  */
-data class SunNote(val badge: String, val window: String?, val marker: SunPoint?, val arcs: List<SunArc>, val hourFmt: String = "%dh")
+/** [warn]: aviso que va en la foto cuando la brújula estaba alterada (el sol dibujado puede estar corrido). */
+data class SunNote(val badge: String, val window: String?, val marker: SunPoint?, val arcs: List<SunArc>, val hourFmt: String = "%dh", val warn: String? = null)
 
 /**
  * Dónde se enfocó: (x, y) en fracciones de la foto (0..1, de izquierda a derecha y de arriba abajo), [afState] el estado del autofoco de Android
@@ -291,7 +292,7 @@ object PhotoAnnotator {
         val lp = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 1.0f; color = Color.BLACK }
         val badges = ArrayList<Triple<RectF, String, Int>>()
         var bTop = unit * 0.7f
-        for ((text, color) in listOfNotNull(sun?.badge?.let { it to SUN }, sun?.window?.let { it to SUN }) + extra) {
+        for ((text, color) in listOfNotNull(sun?.badge?.let { it to SUN }, sun?.window?.let { it to SUN }, sun?.warn?.let { it to ORANGE }) + extra) {
             val tw = lp.measureText(text) + unit * 0.9f; val th = unit * 1.5f
             var r = RectF(bw - unit * 0.7f - tw, bTop, bw - unit * 0.7f, bTop + th)
             while (true) {

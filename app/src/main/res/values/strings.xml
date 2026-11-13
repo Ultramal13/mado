@@ -258,6 +258,8 @@
     <string name="sun_hour_tick">%1$dh</string>
     <string name="sun_calibrate_hint">tap the real sun on the image</string>
     <string name="sun_compass_warn">compass unreliable: move the phone in a figure 8</string>
+    <string name="sun_compass_disturbed">compass disturbed: move away from cables, magnets and metal</string>
+    <string name="sun_compass_disturbed_short">compass disturbed (cable, magnet)</string>
     <string name="sun_seasons">also draw the solstice and equinox paths</string>
     <string name="sun_in_frame_short">sun in frame: %1$s–%2$s</string>
     <string name="frm_orientation">frame orientation</string>
@@ -275,4 +277,19 @@
     <string name="dof_note">approximate: circle of confusion = sensor diagonal / 1500</string>
     <string name="dof_badge">f/%1$s · focused at %2$s · sharp %3$s–%4$s</string>
     <string name="frm_focus_mark">focus point on the photo (if you tapped to focus)</string>
+    <string name="sun_magcal_title">calibrate the compass by rotating the phone</string>
+    <string name="sun_magcal_help">turn the phone slowly in every direction (flat, upright, on its side, upside down) for about 15 seconds, away from cables, magnets and metal. Mado measures the magnet and iron in the phone itself and subtracts them. It lasts 24 hours.</string>
+    <string name="sun_magcal_start">start</string>
+    <string name="sun_magcal_clear">remove calibration</string>
+    <string name="sun_magcal_progress">turn the phone in every direction: %1$d%%</string>
+    <string name="sun_magcal_done">compass calibrated: phone offset %1$.0f µT</string>
+    <string name="sun_magcal_active">compass calibration active (24 h)</string>
+    <string name="sun_magcal_fail">could not calibrate: turn the phone through more positions and try again</string>
+    <string name="sun_magcal_need_location">set your location first (use my location)</string>
+    <string name="sun_magcal_unsupported">this phone does not give the raw magnetic sensor</string>
+    <string name="action_cancel">cancel</string>
+    <string name="sun_compass_imprecise">the compass may be off by 10–15° here: steel, cars or concrete nearby bend the magnetic field. For this shot, use ◎ on the real sun</string>
+    <string name="sun_compass_imprecise_short">compass ±15° (steel nearby)</string>
+    <string name="sun_magcal_overlay_help">turn the phone slowly in every direction: flat, upright, on its side, upside down</string>
+    <string name="sun_magcal_tap_cancel">tap to cancel</string>
 </resources>

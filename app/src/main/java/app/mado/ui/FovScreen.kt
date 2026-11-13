@@ -308,6 +308,14 @@ fun FovScreen(
     // Sol: posición y horas clave para el lugar y el momento elegidos. Campo visible en cada eje de la pantalla (el horizontal del
     // teléfono es el del sensor; en vertical el ancho de pantalla corresponde al lado corto).
     val sun = remember { SunState(ctx.getSharedPreferences("mado", Context.MODE_PRIVATE)) }
+    // Campo magnético esperado en este lugar (para saber si algo cercano altera la brújula); sin lugar conocido solo vale la prueba del salto de rumbo.
+    LaunchedEffect(sun.lat, sun.lon) {
+        val la = sun.lat; val lo = sun.lon
+        tracker.expectedField = if (la != null && lo != null) {
+            val g = android.hardware.GeomagneticField(la.toFloat(), lo.toFloat(), 0f, System.currentTimeMillis())
+            (g.fieldStrength / 1000.0) to g.inclination.toDouble()
+        } else null
+    }
     val (sunHwL, sunHhL) = SunMath.halfTans(phoneDeg, size.width.toDouble() / size.height)
     val sunHalfW = if (landscape) sunHwL else sunHhL
     val sunHalfH = if (landscape) sunHhL else sunHwL
@@ -326,7 +334,7 @@ fun FovScreen(
                 val sp = SunMath.position(la, lo, Instant.now())
                 val az = SunMath.trueToMagnetic(sp.azimuthDeg, sun.declination())
                 val (h, e) = SunMath.solveCamera(az, sp.elevationDeg, tx, ty, sunHalfW, sunHalfH, sun.corrected(pose.headingDeg), sun.correctedElev(pose.elevationDeg), pose.levelDeg)
-                sun.calibrateTo(pose.headingDeg, pose.elevationDeg, h, e)
+                sun.calibrateTo(pose.headingDeg, pose.elevationDeg, h, e, remember = !tracker.disturbed)
             }
         } else {
         val su = 0.5f + (bu - 0.5f) / surfFracX; val sv = 0.5f + (bv - 0.5f) / surfFracY
@@ -337,7 +345,7 @@ fun FovScreen(
 
     // Mitad del encuadre actual en unidades de «mitad de la imagen»: la ventana del sol se calcula para ese recuadro, no para toda la imagen.
     val sunFrame = frameDraws.firstOrNull { it.current }?.frame
-    val sunView = SunView(tracker.pose, sunHalfW, sunHalfH, sunFrame?.widthFrac ?: 1.0, sunFrame?.heightFrac ?: 1.0, tracker.accuracy, tracker.headingErrorDeg)
+    val sunView = SunView(tracker.pose, sunHalfW, sunHalfH, sunFrame?.widthFrac ?: 1.0, sunFrame?.heightFrac ?: 1.0, tracker.accuracy, tracker.headingErrorDeg, tracker.disturbed, tracker.imprecise, tracker)
 
     val preview: @Composable (Modifier) -> Unit = { mod ->
         Preview(
@@ -438,6 +446,17 @@ fun FovScreen(
     val sunWindowTemplate = stringResource(R.string.sun_in_frame_short, "\u0001", "\u0002")
     val sunNotInFrameText = stringResource(R.string.sun_not_in_frame)
     val sunHourFormat = stringResource(R.string.sun_hour_tick)
+    val magCalDone = stringResource(R.string.sun_magcal_done, tracker.calBiasUt ?: 0.0)
+    val magCalFail = stringResource(R.string.sun_magcal_fail)
+    LaunchedEffect(tracker.calState) {
+        when (tracker.calState) {
+            app.mado.camera.MagCalState.DONE -> android.widget.Toast.makeText(ctx, magCalDone, android.widget.Toast.LENGTH_LONG).show()
+            app.mado.camera.MagCalState.FAILED -> android.widget.Toast.makeText(ctx, magCalFail, android.widget.Toast.LENGTH_LONG).show()
+            else -> {}
+        }
+    }
+    val sunCompassDisturbedText = "⚠ " + stringResource(R.string.sun_compass_disturbed_short)
+    val sunCompassImpreciseText = "⚠ " + stringResource(R.string.sun_compass_imprecise_short)
     val dofBadgeTemplate = stringResource(R.string.dof_badge, "\u0001", "\u0002", "\u0003", "\u0004")
     val takeShot: () -> Unit = takeShot@{
         if (framing == null || !running || shot is ShotUi.Working || shot is ShotUi.Exposed) return@takeShot
@@ -461,7 +480,10 @@ fun FovScreen(
                 .put("focal_equivalent", framing.isFixedLens).put("lens_set", if (framing.isFixedLens) null else framing.lensSet?.name?.substringBefore(" ("))
                 .put("frame_width_pct", frame?.let { it.widthFrac * 100 }).put("frame_height_pct", frame?.let { it.heightFrac * 100 })
                 .put("padding", frame?.padding))
-            pose?.let { put("orientation", JSONObject().put("heading_deg_magnetic", it.headingDeg).put("elevation_deg", it.elevationDeg).put("level_deg", it.levelDeg)) }
+            pose?.let {
+                put("orientation", JSONObject().put("heading_deg_magnetic", it.headingDeg).put("elevation_deg", it.elevationDeg).put("level_deg", it.levelDeg)
+                    .put("compass_accuracy", tracker.accuracy).put("compass_disturbed", tracker.disturbedNow).put("compass_imprecise", tracker.impreciseNow).put("field_ut", tracker.fieldUt).put("compass_bias_applied", tracker.biasActive))
+            }
         }
         val focusPointNow = focusPoint.takeIf { framing.focusMarkOn }
         // Profundidad de campo de lo que se simula, a la distancia que enfocaba el teléfono (o la escrita a mano).
@@ -535,7 +557,7 @@ fun FovScreen(
                         val posePhoto = poseExp ?: pose                  // la del instante de la toma; si no hubo, la del toque
                         val headText = headingText(posePhoto); val attText = attitudeText(posePhoto)
                         // El sol en la foto: lo mismo que se ve en el visor, con la orientación del instante de la toma.
-                        val sunShot = posePhoto?.let { buildSunShot(sun, it, sunView, sunWindowTemplate, sunNotInFrameText, sunHourFormat) }
+                        val sunShot = posePhoto?.let { buildSunShot(sun, it, sunView, sunWindowTemplate, sunNotInFrameText, sunHourFormat, if (tracker.disturbedNow) sunCompassDisturbedText else if (tracker.impreciseNow) sunCompassImpreciseText else null) }
                         sunShot?.let { meta.put("sun", it.meta) }
                         val loc = try { locJob?.await() } catch (e: Exception) { null }
                         meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms).put("delay_to_exposure_ms", result.exposedMs).put("moved_deg", movedDeg).put("focus", camera.lastStillFocus))
@@ -619,6 +641,7 @@ fun FovScreen(
                 sunCalOn = sun.calibrating,
                 sunTimeline = if (sun.on && sun.located) ({ m -> SunTimeline(sun, m) }) else null,
                 onOrient = { framing.vertical = !framing.vertical }, frameVertical = framing.vertical,
+                calActive = tracker.calState == app.mado.camera.MagCalState.COLLECTING, calOverlay = { MagCalOverlay(tracker) },
             )
         } else if (landscape) {
             // El preview ocupa el alto; los controles van en un panel desplazable a la derecha.
@@ -659,9 +682,12 @@ private fun ViewerLayout(
     sunTimeline: (@Composable (Modifier) -> Unit)? = null,
     /** Tecla de la orientación del encuadre (horizontal/vertical). */
     onOrient: (() -> Unit)? = null, frameVertical: Boolean = false,
+    /** Calibración de la brújula en curso: se cierra el panel y se dibuja [calOverlay] a pantalla completa. */
+    calActive: Boolean = false, calOverlay: (@Composable () -> Unit)? = null,
 ) {
     val p = LocalPalette.current
     var optionsOpen by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(calActive) { if (calActive) optionsOpen = false }
     val safe = androidx.compose.foundation.layout.WindowInsets.safeDrawing
     // Rectángulo del visor (donde se dibuja la imagen) y última marca de enfoque, ambos en px del contenedor.
     var previewRect by remember { mutableStateOf(androidx.compose.ui.geometry.Rect.Zero) }
@@ -829,12 +855,12 @@ private fun ViewerLayout(
                     .windowInsetsPadding(safe.only(WindowInsetsSides.End + WindowInsetsSides.Vertical)).padding(6.dp),
             )
             sunTimeline?.let {
-                if (!optionsOpen) it(Modifier.align(Alignment.BottomCenter).padding(bottom = 10.dp, end = 80.dp).fillMaxWidth(0.5f))
+                if (!optionsOpen) it(Modifier.align(Alignment.BottomCenter).padding(bottom = 10.dp, end = 130.dp).fillMaxWidth(0.5f))
             }
             if (optionsOpen) optionsPanel(
                 Modifier.align(Alignment.CenterEnd)
                     .windowInsetsPadding(safe.only(WindowInsetsSides.End + WindowInsetsSides.Vertical))
-                    .padding(end = 72.dp, top = 6.dp, bottom = 6.dp)
+                    .padding(end = 124.dp, top = 6.dp, bottom = 6.dp)
                     .width(minOf(screenW * 0.5f, 380.dp)).fillMaxHeight()
                     .clip(RoundedCornerShape(16.dp)).background(p.body),
             )
@@ -862,6 +888,7 @@ private fun ViewerLayout(
                 ViewerBar(framing, running, working, onToggle, onShot, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
             }
         }
+        calOverlay?.invoke()
     }
 }
 

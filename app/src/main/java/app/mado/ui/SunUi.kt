@@ -2,6 +2,7 @@ package app.mado.ui
 
 import android.content.SharedPreferences
 import android.hardware.GeomagneticField
+import app.mado.optics.CalibrationMemory
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -96,11 +97,17 @@ class SunState(private val prefs: SharedPreferences) {
         private set
     fun enableSeasons(v: Boolean) { seasons = v; prefs.edit().putBoolean("sun_seasons", v).apply() }
 
-    /** Ajustes de rumbo y elevación (grados) medidos tocando el sol real; valen solo para esta sesión y este lugar. */
+    /** Ajustes de rumbo y elevación (grados) medidos tocando el sol real. Se recuerdan hasta 24 h y en el mismo lugar (el sesgo de la brújula es del teléfono). */
     var headingOffset by mutableStateOf(0.0)
         private set
     var elevationOffset by mutableStateOf(0.0)
         private set
+    init {
+        val savedAt = prefs.getLong("sun_cal_at", 0L)
+        if (CalibrationMemory.shouldRestore(savedAt, System.currentTimeMillis(), prefs.getString("sun_cal_lat", null)?.toDoubleOrNull(), prefs.getString("sun_cal_lon", null)?.toDoubleOrNull(), lat, lon)) {
+            headingOffset = prefs.getFloat("sun_cal_h", 0f).toDouble(); elevationOffset = prefs.getFloat("sun_cal_e", 0f).toDouble()
+        } else if (savedAt != 0L) prefs.edit().remove("sun_cal_at").apply()
+    }
     /** Esperando que el usuario toque el sol real en la imagen. */
     var calibrating by mutableStateOf(false)
 
@@ -111,11 +118,17 @@ class SunState(private val prefs: SharedPreferences) {
     fun corrected(headingDeg: Double) = ((headingDeg + headingOffset) % 360.0 + 360.0) % 360.0
     fun correctedElev(elevationDeg: Double) = elevationDeg + elevationOffset
     /** Tras tocar el sol real: el eje de la cámara era ([newHeading], [newElev]) y el sensor leyó ([sensorHeading], [sensorElev]). */
-    fun calibrateTo(sensorHeading: Double, sensorElev: Double, newHeading: Double, newElev: Double) {
+    fun calibrateTo(sensorHeading: Double, sensorElev: Double, newHeading: Double, newElev: Double, remember: Boolean = true) {
         headingOffset = ((newHeading - sensorHeading + 540.0) % 360.0) - 180.0
         elevationOffset = newElev - sensorElev
+        // Con la brújula alterada el ajuste sirve para esta toma (hacia donde apuntas) pero no se recuerda: el error cambia con la dirección.
+        if (remember) prefs.edit().putFloat("sun_cal_h", headingOffset.toFloat()).putFloat("sun_cal_e", elevationOffset.toFloat()).putLong("sun_cal_at", System.currentTimeMillis())
+            .putString("sun_cal_lat", lat?.toString()).putString("sun_cal_lon", lon?.toString()).apply()
     }
-    fun clearCalibration() { headingOffset = 0.0; elevationOffset = 0.0; calibrating = false }
+    fun clearCalibration() {
+        headingOffset = 0.0; elevationOffset = 0.0; calibrating = false
+        prefs.edit().remove("sun_cal_at").remove("sun_cal_h").remove("sun_cal_e").apply()
+    }
 
     fun enable(v: Boolean) { on = v; prefs.edit().putBoolean("sun_on", v).apply() }
 
@@ -156,8 +169,14 @@ internal data class SunView(
     val pose: OrientationMath.Pose?, val halfW: Double, val halfH: Double, val frameW: Double = 1.0, val frameH: Double = 1.0,
     /** Calidad del sensor magnético según Android (0..3) y error de rumbo estimado, si el teléfono lo informa. */
     val compassAccuracy: Int = 3, val headingErrorDeg: Double? = null,
+    /** El campo medido no es el de la Tierra en este lugar, o el rumbo saltó sin que el teléfono girara (cable, imán, metal). */
+    val compassDisturbed: Boolean = false,
+    /** El campo se aparta de lo normal (acero, autos, hormigón): el rumbo puede estar 10–15° corrido. */
+    val compassImprecise: Boolean = false,
+    /** Para la calibración propia de la brújula (girar el teléfono): estado, progreso y botones. */
+    val tracker: app.mado.camera.OrientationTracker? = null,
 ) {
-    val compassUnreliable get() = compassAccuracy <= 1 || (headingErrorDeg ?: 0.0) > 15.0
+    val compassUnreliable get() = compassDisturbed || compassImprecise || compassAccuracy <= 1 || (headingErrorDeg ?: 0.0) > 15.0
 }
 
 /** Intervalo del día (local) en que el sol cruza el encuadre actual, según hacia dónde apunta la cámara; se recalcula al girar un grado. */
@@ -266,7 +285,8 @@ internal fun SunSection(sun: SunState, onLocate: () -> Unit, view: SunView? = nu
         Label(stringResource(R.string.sun_calibrate_title))
         Text(stringResource(R.string.sun_calibrate_help), style = mono(10, p.text.copy(alpha = 0.7f)))
         if (!canCalibrate) Text(stringResource(R.string.sun_calibrate_need), style = mono(10, p.accent))
-        if (view.compassUnreliable) Text(stringResource(R.string.sun_compass_warn), style = mono(10, p.accent))
+        if (view.compassUnreliable) Text(stringResource(if (view.compassDisturbed) R.string.sun_compass_disturbed else if (view.compassImprecise) R.string.sun_compass_imprecise else R.string.sun_compass_warn), style = mono(10, p.accent))
+        view.tracker?.let { MagCalibrationControls(it) }
         if (sun.headingOffset != 0.0 || sun.elevationOffset != 0.0) {
             Text(stringResource(R.string.sun_calibrated, sun.headingOffset, sun.elevationOffset), style = mono(10, p.text))
             Seg(listOf(stringResource(R.string.sun_calibrate_clear)), -1) { sun.clearCalibration() }
@@ -331,7 +351,7 @@ internal class SunShot(val note: SunNote, val meta: org.json.JSONObject)
  * El sol en el instante de la toma, con la orientación de la cámara de ese momento ([pose]). Las plantillas de texto ya vienen traducidas:
  * [windowTemplate] lleva \u0001 y \u0002 donde van la hora de entrada y la de salida.
  */
-internal fun buildSunShot(sun: SunState, pose: OrientationMath.Pose, view: SunView, windowTemplate: String, notInFrame: String, hourFmt: String): SunShot? {
+internal fun buildSunShot(sun: SunState, pose: OrientationMath.Pose, view: SunView, windowTemplate: String, notInFrame: String, hourFmt: String, compassWarn: String? = null): SunShot? {
     val lat = sun.lat ?: return null; val lon = sun.lon ?: return null
     if (!sun.on) return null
     val decl = sun.declination()
@@ -349,9 +369,9 @@ internal fun buildSunShot(sun: SunState, pose: OrientationMath.Pose, view: SunVi
     val meta = org.json.JSONObject()
         .put("time", instant.toString()).put("azimuth_deg_true", sp.azimuthDeg).put("elevation_deg", sp.elevationDeg)
         .put("declination_deg", decl).put("compass_offset_deg", sun.headingOffset).put("elevation_offset_deg", sun.elevationOffset)
-        .put("planned", sun.picked != null)
+        .put("planned", sun.picked != null).put("compass_warning", compassWarn != null)
         .put("frame_window_start", w?.first?.toString() ?: org.json.JSONObject.NULL).put("frame_window_end", w?.second?.toString() ?: org.json.JSONObject.NULL)
-    return SunShot(SunNote(badge, "☀ $window", marker, arcs, hourFmt), meta)
+    return SunShot(SunNote(badge, "☀ $window", marker, arcs, hourFmt, warn = compassWarn), meta)
 }
 
 /**
@@ -387,8 +407,9 @@ internal fun SunOverlay(sun: SunState, view: SunView, scaleX: Float, scaleY: Flo
     val windowText = if (window == null) stringResource(R.string.sun_not_in_frame)
         else stringResource(R.string.sun_in_frame, window.first.atZone(zone).format(hm), window.second.atZone(zone).format(hm))
     val hourFmt = stringResource(R.string.sun_hour_tick)
-    val compassWarn = stringResource(R.string.sun_compass_warn)
+    val compassWarn = stringResource(if (view.compassDisturbed) R.string.sun_compass_disturbed_short else if (view.compassImprecise) R.string.sun_compass_imprecise_short else R.string.sun_compass_warn)
     val calibrateHint = stringResource(R.string.sun_calibrate_hint)
+    val magCalText = view.tracker?.takeIf { it.calState == app.mado.camera.MagCalState.COLLECTING }?.let { stringResource(R.string.sun_magcal_progress, (it.calProgress * 100).toInt()) }
     Canvas(Modifier.fillMaxSize()) {
         val c = Offset(size.width / 2, size.height / 2)
         // Ancho y alto de la imagen completa en la pantalla: en la vista recortada solo se ve el encuadre, así que la imagen es más grande que el visor.
@@ -480,6 +501,7 @@ internal fun SunOverlay(sun: SunState, view: SunView, scaleX: Float, scaleY: Flo
         val lift = liftBottom.toPx()
         label("☀ $windowText", Offset(8.dp.toPx(), size.height - 34.dp.toPx() - lift))
         if (view.compassUnreliable) label("⚠ $compassWarn", Offset(8.dp.toPx(), size.height - 64.dp.toPx() - lift), bg = Color(0xFFFF5A1F), fg = Color.White)
+        magCalText?.let { label(it, Offset(8.dp.toPx(), size.height * 0.45f), bg = Color(0xFFFF5A1F), fg = Color.White) }
         if (sun.calibrating) {
             val l = measurer.measure(calibrateHint, style.copy(fontSize = 15.sp, color = Color.Black))
             val pad = 8.dp.toPx()
@@ -550,5 +572,52 @@ internal fun SunTimeline(sun: SunState, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(end = 8.dp).clip(RoundedCornerShape(8.dp)).background(if (sun.picked != null) col else Color.Transparent)
                 .clickable(enabled = sun.picked != null) { sun.backToNow() }.padding(horizontal = 10.dp, vertical = 8.dp),
         )
+    }
+}
+
+
+/** Calibración propia de la brújula: el usuario gira el teléfono en todas direcciones y Mado mide y resta el sesgo magnético del propio aparato. */
+@Composable
+private fun MagCalibrationControls(t: app.mado.camera.OrientationTracker) {
+    val p = LocalPalette.current
+    Label(stringResource(R.string.sun_magcal_title))
+    Text(stringResource(R.string.sun_magcal_help), style = mono(10, p.text.copy(alpha = 0.7f)))
+    when (t.calState) {
+        app.mado.camera.MagCalState.COLLECTING -> {
+            Text(stringResource(R.string.sun_magcal_progress, (t.calProgress * 100).toInt()), style = mono(12, p.accent, true), modifier = Modifier.padding(top = 4.dp))
+            Seg(listOf(stringResource(R.string.action_cancel)), -1) { t.cancelMagCal() }
+        }
+        else -> {
+            when (t.calState) {
+                app.mado.camera.MagCalState.DONE -> Text(stringResource(R.string.sun_magcal_done, t.calBiasUt ?: 0.0), style = mono(10, p.text))
+                app.mado.camera.MagCalState.FAILED -> Text(stringResource(R.string.sun_magcal_fail), style = mono(10, p.accent))
+                app.mado.camera.MagCalState.NEED_LOCATION -> Text(stringResource(R.string.sun_magcal_need_location), style = mono(10, p.accent))
+                app.mado.camera.MagCalState.UNSUPPORTED -> Text(stringResource(R.string.sun_magcal_unsupported), style = mono(10, p.accent))
+                else -> if (t.hasBias) Text(stringResource(R.string.sun_magcal_active), style = mono(10, p.text))
+            }
+            Seg(listOf(stringResource(R.string.sun_magcal_start)) + (if (t.hasBias) listOf(stringResource(R.string.sun_magcal_clear)) else emptyList()), -1) { i ->
+                if (i == 0) t.startMagCal() else t.clearMagBias()
+            }
+        }
+    }
+}
+
+
+/** Pantalla completa mientras se calibra la brújula: porcentaje grande y barra, para verlo aunque el teléfono gire y el menú cambie de lugar. */
+@Composable
+internal fun MagCalOverlay(t: app.mado.camera.OrientationTracker) {
+    val frac = t.calProgress.coerceIn(0f, 1f)
+    Box(
+        Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.78f)).pointerInput(Unit) { detectTapGestures { t.cancelMagCal() } },
+        contentAlignment = androidx.compose.ui.Alignment.Center,
+    ) {
+        Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally, modifier = Modifier.padding(24.dp)) {
+            Text("${(frac * 100).toInt()}%", style = mono(72, Color.White, true))
+            Box(Modifier.padding(top = 14.dp).fillMaxWidth(0.7f).height(12.dp).clip(RoundedCornerShape(6.dp)).background(Color.White.copy(alpha = 0.25f))) {
+                Box(Modifier.fillMaxWidth(frac).height(12.dp).background(Accent))
+            }
+            Text(stringResource(R.string.sun_magcal_overlay_help), style = mono(15, Color.White), textAlign = androidx.compose.ui.text.style.TextAlign.Center, modifier = Modifier.padding(top = 18.dp))
+            Text(stringResource(R.string.sun_magcal_tap_cancel), style = mono(12, Color.White.copy(alpha = 0.6f)), modifier = Modifier.padding(top = 12.dp))
+        }
     }
 }

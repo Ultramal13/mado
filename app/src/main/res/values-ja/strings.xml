@@ -258,6 +258,8 @@
     <string name="sun_hour_tick">%1$d時</string>
     <string name="sun_calibrate_hint">画面の実際の太陽をタップ</string>
     <string name="sun_compass_warn">コンパスの精度が低い：8の字に動かしてください</string>
+    <string name="sun_compass_disturbed">コンパスが乱れています：ケーブル、磁石、金属から離れてください</string>
+    <string name="sun_compass_disturbed_short">コンパス乱れ（ケーブル・磁石）</string>
     <string name="sun_seasons">夏至・冬至・春分の軌跡も描く</string>
     <string name="sun_in_frame_short">この枠に太陽が入る時間：%1$s〜%2$s</string>
     <string name="frm_orientation">枠の向き</string>
@@ -275,4 +277,19 @@
     <string name="dof_note">概算：許容錯乱円＝センサー対角線÷1500</string>
     <string name="dof_badge">f/%1$s ・ピント %2$s ・シャープ %3$s〜%4$s</string>
     <string name="frm_focus_mark">写真にピント位置を表示（タップでピントを合わせた場合）</string>
+    <string name="sun_magcal_title">スマホを回してコンパスを校正</string>
+    <string name="sun_magcal_help">ケーブル、磁石、金属から離れて、スマホをゆっくりあらゆる向き（水平、立てる、横、裏返し）に約15秒回します。Mado が本体内の磁石や鉄の影響を測って差し引きます。効果は24時間です。</string>
+    <string name="sun_magcal_start">開始</string>
+    <string name="sun_magcal_clear">校正を解除</string>
+    <string name="sun_magcal_progress">あらゆる向きに回してください：%1$d%%</string>
+    <string name="sun_magcal_done">コンパスを校正しました（本体の偏り %1$.0f µT）</string>
+    <string name="sun_magcal_active">コンパス校正が有効（24時間）</string>
+    <string name="sun_magcal_fail">校正できませんでした。もっといろいろな向きに回してやり直してください</string>
+    <string name="sun_magcal_need_location">先に位置情報を設定してください（現在地を使う）</string>
+    <string name="sun_magcal_unsupported">この端末は未処理の磁気センサーを提供しません</string>
+    <string name="action_cancel">キャンセル</string>
+    <string name="sun_compass_imprecise">ここではコンパスが10〜15°ずれる可能性があります。近くの鉄、車、コンクリートが磁場を曲げます。この撮影では実際の太陽に ◎ を使ってください</string>
+    <string name="sun_compass_imprecise_short">コンパス±15°（近くに鉄）</string>
+    <string name="sun_magcal_overlay_help">スマホをゆっくりあらゆる向きに回してください：水平、立てる、横、裏返し</string>
+    <string name="sun_magcal_tap_cancel">タップでキャンセル</string>
 </resources>

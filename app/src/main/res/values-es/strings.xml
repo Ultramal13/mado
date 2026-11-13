@@ -258,6 +258,8 @@
     <string name="sun_hour_tick">%1$dh</string>
     <string name="sun_calibrate_hint">toca el sol real en la imagen</string>
     <string name="sun_compass_warn">brújula poco fiable: mueve el teléfono en forma de 8</string>
+    <string name="sun_compass_disturbed">brújula alterada: aléjate de cables, imanes y metal</string>
+    <string name="sun_compass_disturbed_short">brújula alterada (cable, imán)</string>
     <string name="sun_seasons">dibujar también los recorridos de los solsticios y el equinoccio</string>
     <string name="sun_in_frame_short">sol en el encuadre: %1$s–%2$s</string>
     <string name="frm_orientation">orientación del encuadre</string>
@@ -275,4 +277,19 @@
     <string name="dof_note">aproximado: círculo de confusión = diagonal del sensor / 1500</string>
     <string name="dof_badge">f/%1$s · enfocado a %2$s · nítido %3$s–%4$s</string>
     <string name="frm_focus_mark">punto de enfoque en la foto (si tocaste para enfocar)</string>
+    <string name="sun_magcal_title">calibrar la brújula girando el teléfono</string>
+    <string name="sun_magcal_help">gira el teléfono despacio en todas direcciones (plano, de pie, de lado, boca abajo) durante unos 15 segundos, lejos de cables, imanes y metal. Mado mide el imán y el hierro del propio teléfono y los resta. Dura 24 horas.</string>
+    <string name="sun_magcal_start">empezar</string>
+    <string name="sun_magcal_clear">quitar calibración</string>
+    <string name="sun_magcal_progress">gira el teléfono en todas direcciones: %1$d%%</string>
+    <string name="sun_magcal_done">brújula calibrada: sesgo del teléfono %1$.0f µT</string>
+    <string name="sun_magcal_active">calibración de la brújula activa (24 h)</string>
+    <string name="sun_magcal_fail">no se pudo calibrar: gira el teléfono por más posiciones y vuelve a intentar</string>
+    <string name="sun_magcal_need_location">primero indica tu ubicación (usar mi ubicación)</string>
+    <string name="sun_magcal_unsupported">este teléfono no entrega el sensor magnético sin procesar</string>
+    <string name="action_cancel">cancelar</string>
+    <string name="sun_compass_imprecise">la brújula puede estar 10–15° corrida aquí: acero, autos u hormigón cerca doblan el campo magnético. Para esta toma, usa ◎ sobre el sol real</string>
+    <string name="sun_compass_imprecise_short">brújula ±15° (acero cerca)</string>
+    <string name="sun_magcal_overlay_help">gira el teléfono despacio en todas direcciones: plano, de pie, de lado, boca abajo</string>
+    <string name="sun_magcal_tap_cancel">toca para cancelar</string>
 </resources>

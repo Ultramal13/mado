@@ -1,7 +1,7 @@
 {
- "_nota": "Datos de cámaras investigados el 2026-10-21 con fuentes oficiales (ver cada modo). derivado=true: valor calculado, no publicado por el fabricante. Pendiente revisión visual puntual: ARRI Alexa 35 (leído de imagen) y de-squeeze del Venice 2. Insta360 Luna Ultra: sin mm de sensor, la focal equivalente se asume horizontal. Cámaras principales (principal_orden): Canon EOS R5, Insta360 Luna Ultra y Sony FX3; el resto va bajo «más cámaras». 2026-10-21: agregadas RED V-RAPTOR (VV y S35), RED KOMODO y KOMODO-X, Sony Burano, ARRI Alexa Mini, ARRI Alexa original (Classic y XT). Sony FX6 pendiente de fuente oficial (sin mm).",
+ "_nota": "Datos de cámaras investigados el 2026-10-21 con fuentes oficiales (ver cada modo). derivado=true: valor calculado, no publicado por el fabricante. Pendiente revisión visual puntual: ARRI Alexa 35 (leído de imagen) y de-squeeze del Venice 2. Insta360 Luna Ultra: sin mm de sensor, la focal equivalente se asume horizontal. Cámaras principales (principal_orden): Canon EOS R5, Insta360 Luna Ultra y Sony FX3; el resto va bajo «más cámaras». 2026-10-21: agregadas RED V-RAPTOR (VV y S35), RED KOMODO y KOMODO-X, Sony Burano, ARRI Alexa Mini, ARRI Alexa original (Classic y XT). Sony FX6 pendiente de fuente oficial (sin mm). 2026-11-13: agregadas 11 camaras de foto (Sony A7R V y A6700, Canon EOS R6 Mark II y R7, Nikon Z 8 y Z50II, Fujifilm X-T5 y GFX100S II, OM SYSTEM OM-1 Mark II, Panasonic LUMIX G9II y S5II), solo con modos de foto (tamano L), cada uno con la pagina oficial del fabricante; los modos que no son el nativo se derivan por pixeles. Sin modos de video ni historial de firmware todavia. Agregados dos juegos de ejemplo para zooms (24-70 y 70-200 mm). Mismo dia: agregada la Canon EOS R5 Mark II (foto y video, manual oficial C017) y cuatro lentes Canon RF L como juegos de lentes (15-35 F2.8, 24-105 F4, 70-200 F2.8 y 50 F1.2), con la ficha oficial de Canon.",
  "schema_version": 1,
- "actualizado": "2026-10-21",
+ "actualizado": "2026-11-13",
  "camaras": [
   {
    "id": "sony_a7_iv",
@@ -3944,6 +3944,1204 @@
     }
    ],
    "nota": "Sensor y recorte estimados a partir de la FX3 (ver cada modo). El modo Super 35 (solo FHD) no se incluye: Sony no da su tamaño ni su factor. Cuando haya una guía técnica oficial con mm, reemplazar estos valores."
+  },
+  {
+   "id": "sony_a7r_v",
+   "marca": "Sony",
+   "modelo": "A7R V (ILCE-7RM5)",
+   "tipo": "mirrorless full frame foto/video",
+   "montura": "Sony E (fuente: Help Guide ILCE-7RM5 > Specifications > Lens: 'Sony E-mount lens')",
+   "notas": "Solo modos de foto, revisados el 2026-11-13 contra el Help Guide oficial de Sony. Sensor CMOS 35 mm full frame 35.7 x 23.8 mm, ~61.0 MP efectivos (L 3:2 = 9504x6336). Sony solo publica los mm del sensor completo: los modos 4:3, 16:9 y 1:1 son derivados por pixeles. APS-C: Sony dice 'aprox. 1.5x' y que el tamano L no esta disponible en APS-C (pasa a M, 6240x4160, y M/S no cambian de pixeles entre full frame y APS-C); el area APS-C se derivo suponiendo que 6240x4160 es la lectura APS-C completa sin reescalar. Las dimensiones de sensor son nominales, pero coherentes con los pixeles (35.7/9504 y 23.8/6336 dan el mismo pitch, 3.756 um). No se investigaron modos de video.",
+   "modos": [
+    {
+     "id": "foto_ff_3_2_L",
+     "nombre": "Foto FF 3:2 (L, 60 MP)",
+     "ancho_activo_mm": 35.7,
+     "alto_activo_mm": 23.8,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "9504x6336",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7RM5, 'Specifications > [Image sensor]': 35 mm full frame (35.7 mm x 23.8 mm), approx. 61 000 000 effective pixels (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP1000669431.html); cuadro 'Image Quality Settings: JPEG Image Size/HEIF Image Size' (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP0003057051.html)",
+      "url": "https://helpguide.sony.net/ilc/2230/v1/en/print.pdf"
+     }
+    },
+    {
+     "id": "foto_ff_4_3_L",
+     "nombre": "Foto FF 4:3 (L, 54 MP)",
+     "ancho_activo_mm": 31.73,
+     "alto_activo_mm": 23.8,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.13,
+     "resolucion_px": "8448x6336",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7RM5, 'Specifications > [Image sensor]': 35 mm full frame (35.7 mm x 23.8 mm), approx. 61 000 000 effective pixels (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP1000669431.html); cuadro 'Image Quality Settings: JPEG Image Size/HEIF Image Size' (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP0003057051.html)",
+      "url": "https://helpguide.sony.net/ilc/2230/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 8448 px x (35.7 mm / 9504 px) = 31.73 mm; alto = 23.8 mm (altura completa, 6336 px)"
+    },
+    {
+     "id": "foto_ff_16_9_L",
+     "nombre": "Foto FF 16:9 (L, 51 MP)",
+     "ancho_activo_mm": 35.7,
+     "alto_activo_mm": 20.07,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "9504x5344",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7RM5, 'Specifications > [Image sensor]': 35 mm full frame (35.7 mm x 23.8 mm), approx. 61 000 000 effective pixels (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP1000669431.html); cuadro 'Image Quality Settings: JPEG Image Size/HEIF Image Size' (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP0003057051.html)",
+      "url": "https://helpguide.sony.net/ilc/2230/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 35.7 mm (ancho completo, 9504 px); alto = 5344 px x (23.8 mm / 6336 px) = 20.07 mm"
+    },
+    {
+     "id": "foto_ff_1_1_L",
+     "nombre": "Foto FF 1:1 (L, 40 MP)",
+     "ancho_activo_mm": 23.8,
+     "alto_activo_mm": 23.8,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.51,
+     "resolucion_px": "6336x6336",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7RM5, 'Specifications > [Image sensor]': 35 mm full frame (35.7 mm x 23.8 mm), approx. 61 000 000 effective pixels (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP1000669431.html); cuadro 'Image Quality Settings: JPEG Image Size/HEIF Image Size' (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP0003057051.html)",
+      "url": "https://helpguide.sony.net/ilc/2230/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 6336 px x (35.7 mm / 9504 px) = 23.80 mm; alto = 23.8 mm (altura completa, 6336 px)"
+    },
+    {
+     "id": "foto_aps_c_3_2_M",
+     "nombre": "Foto APS-C/S35 3:2 (M, 26 MP)",
+     "ancho_activo_mm": 23.44,
+     "alto_activo_mm": 15.63,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.54,
+     "resolucion_px": "6240x4160",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-7RM5, 'Specifications > [Image sensor]': 35 mm full frame (35.7 mm x 23.8 mm), approx. 61 000 000 effective pixels (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP1000669431.html); cuadro 'Image Quality Settings: JPEG Image Size/HEIF Image Size' (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP0003057051.html); 'APS-C S35 (Super 35mm) Shooting': 'approximately 1.5 times' (HTML: https://helpguide.sony.net/ilc/2230/v1/en/contents/TP0002887784.html)",
+      "url": "https://helpguide.sony.net/ilc/2230/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 6240 px x (35.7 mm / 9504 px) = 23.44 mm; alto = 4160 px x (23.8 mm / 6336 px) = 15.63 mm (supone que 6240x4160 es la lectura APS-C completa; Sony solo dice 'aprox. 1.5x' y que en APS-C el tamano L pasa a M)",
+     "nota": "Factor por pixeles = 35.7/23.44 = 1.523; Sony declara 'approximately 1.5 times'."
+    }
+   ]
+  },
+  {
+   "id": "sony_a6700",
+   "marca": "Sony",
+   "modelo": "A6700 (ILCE-6700)",
+   "tipo": "mirrorless APS-C foto/video",
+   "montura": "Sony E (fuente: Help Guide ILCE-6700 > Specifications > Lens: 'Sony E-mount lens')",
+   "notas": "Solo modos de foto, revisados el 2026-11-13 contra el Help Guide oficial de Sony. Sensor CMOS APS-C 23.3 x 15.5 mm, ~26.0 MP efectivos (L 3:2 = 6192x4128; RAW corresponde a L). Sony solo publica los mm del sensor completo: los modos 4:3, 16:9 y 1:1 son derivados por pixeles. Las dimensiones de sensor son nominales (23.3/6192 = 3.763 um vs 15.5/4128 = 3.755 um), error esperado <=0.1 mm. No se investigaron modos de video.",
+   "modos": [
+    {
+     "id": "foto_aps_c_3_2_L",
+     "nombre": "Foto APS-C 3:2 (L, 26 MP)",
+     "ancho_activo_mm": 23.3,
+     "alto_activo_mm": 15.5,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.55,
+     "resolucion_px": "6192x4128",
+     "derivado": false,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-6700, 'Specifications > Image sensor': APS-C size (23.3 mm x 15.5 mm), approx. 26 000 000 effective pixels (HTML: https://helpguide.sony.net/ilc/2320/v1/en/contents/221h_specifications_ilc2320.html); cuadro 'JPEG Image Size/HEIF Image Size' (HTML: https://helpguide.sony.net/ilc/2320/v1/en/contents/0404M_jpeg_image_size.html)",
+      "url": "https://helpguide.sony.net/ilc/2320/v1/en/print.pdf"
+     }
+    },
+    {
+     "id": "foto_aps_c_4_3_L",
+     "nombre": "Foto APS-C 4:3 (L, 23 MP)",
+     "ancho_activo_mm": 20.71,
+     "alto_activo_mm": 15.5,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.74,
+     "resolucion_px": "5504x4128",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-6700, 'Specifications > Image sensor': APS-C size (23.3 mm x 15.5 mm), approx. 26 000 000 effective pixels (HTML: https://helpguide.sony.net/ilc/2320/v1/en/contents/221h_specifications_ilc2320.html); cuadro 'JPEG Image Size/HEIF Image Size' (HTML: https://helpguide.sony.net/ilc/2320/v1/en/contents/0404M_jpeg_image_size.html)",
+      "url": "https://helpguide.sony.net/ilc/2320/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 5504 px x (23.3 mm / 6192 px) = 20.71 mm; alto = 15.5 mm (altura completa, 4128 px)"
+    },
+    {
+     "id": "foto_aps_c_16_9_L",
+     "nombre": "Foto APS-C 16:9 (L, 22 MP)",
+     "ancho_activo_mm": 23.3,
+     "alto_activo_mm": 13.07,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.55,
+     "resolucion_px": "6192x3480",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-6700, 'Specifications > Image sensor': APS-C size (23.3 mm x 15.5 mm), approx. 26 000 000 effective pixels (HTML: https://helpguide.sony.net/ilc/2320/v1/en/contents/221h_specifications_ilc2320.html); cuadro 'JPEG Image Size/HEIF Image Size' (HTML: https://helpguide.sony.net/ilc/2320/v1/en/contents/0404M_jpeg_image_size.html)",
+      "url": "https://helpguide.sony.net/ilc/2320/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 23.3 mm (ancho completo, 6192 px); alto = 3480 px x (15.5 mm / 4128 px) = 13.07 mm"
+    },
+    {
+     "id": "foto_aps_c_1_1_L",
+     "nombre": "Foto APS-C 1:1 (L, 17 MP)",
+     "ancho_activo_mm": 15.53,
+     "alto_activo_mm": 15.5,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.32,
+     "resolucion_px": "4128x4128",
+     "derivado": true,
+     "fuente": {
+      "texto": "Sony Help Guide ILCE-6700, 'Specifications > Image sensor': APS-C size (23.3 mm x 15.5 mm), approx. 26 000 000 effective pixels (HTML: https://helpguide.sony.net/ilc/2320/v1/en/contents/221h_specifications_ilc2320.html); cuadro 'JPEG Image Size/HEIF Image Size' (HTML: https://helpguide.sony.net/ilc/2320/v1/en/contents/0404M_jpeg_image_size.html)",
+      "url": "https://helpguide.sony.net/ilc/2320/v1/en/print.pdf"
+     },
+     "calculo_derivado": "ancho = 4128 px x (23.3 mm / 6192 px) = 15.53 mm; alto = 15.5 mm (altura completa, 4128 px)"
+    }
+   ]
+  },
+  {
+   "id": "canon_eos_r6_mark_ii",
+   "marca": "Canon",
+   "modelo": "EOS R6 Mark II",
+   "tipo": "mirrorless full frame foto/video",
+   "montura": "Canon RF (fuente: manual Canon > Specifications: 'Lens mount: Canon RF mount')",
+   "notas": "Solo modos de foto, revisados el 2026-11-13 contra el manual oficial de Canon (cam.start.canon). Sensor CMOS full frame 'Approx. 36.0x24.0 mm', max. ~24.2 MP efectivos (L 3:2 = 6000x4000). Canon solo publica los mm del sensor completo: 4:3, 16:9, 1:1 y el recorte 1.6x son derivados por pixeles. Canon avisa que en 4:3 (5328x4000) y 16:9 (6000x3368) la relacion de aspecto es ligeramente distinta de la nominal. Recorte 1.6x: Canon dice 'approx. 1.6 times' (tambien se aplica con lentes RF-S/EF-S). No se investigaron modos de video.",
+   "modos": [
+    {
+     "id": "foto_3_2",
+     "nombre": "Foto 3:2 full frame (24.0 MP)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 24.0,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "6000x4000",
+     "derivado": false,
+     "fuente": {
+      "texto": "Canon EOS R6 Mark II Product Manual > Specifications: Image sensor 'Screen size Approx. 36.0x24.0 mm', max. approx. 24.2 MP efectivos; cuadro 'Still photo pixel count' (L: 3:2 6000x4000; 1.6x crop 3744x2496; 1:1 4000x4000; 4:3 5328x4000; 16:9 6000x3368)",
+      "url": "https://cam.start.canon/en/C012/manual/html/UG-10_Reference_0100.html"
+     }
+    },
+    {
+     "id": "foto_crop_1_6",
+     "nombre": "Foto 1.6x crop (9.3 MP)",
+     "ancho_activo_mm": 22.46,
+     "alto_activo_mm": 14.98,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.6,
+     "resolucion_px": "3744x2496",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R6 Mark II Product Manual > Specifications: Image sensor 'Screen size Approx. 36.0x24.0 mm', max. approx. 24.2 MP efectivos; cuadro 'Still photo pixel count' (L: 3:2 6000x4000; 1.6x crop 3744x2496; 1:1 4000x4000; 4:3 5328x4000; 16:9 6000x3368)",
+      "url": "https://cam.start.canon/en/C012/manual/html/UG-10_Reference_0100.html"
+     },
+     "calculo_derivado": "ancho = 3744 px x (36.0 mm / 6000 px) = 22.46 mm; alto = 2496 px x (24.0 mm / 4000 px) = 14.98 mm (Canon: 'approx. 1.6 times'; alternativa por factor: 36.0/1.6 = 22.50 mm, 24.0/1.6 = 15.00 mm)"
+    },
+    {
+     "id": "foto_4_3",
+     "nombre": "Foto 4:3 (L, 21.3 MP)",
+     "ancho_activo_mm": 31.97,
+     "alto_activo_mm": 24.0,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.13,
+     "resolucion_px": "5328x4000",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R6 Mark II Product Manual > Specifications: Image sensor 'Screen size Approx. 36.0x24.0 mm', max. approx. 24.2 MP efectivos; cuadro 'Still photo pixel count' (L: 3:2 6000x4000; 1.6x crop 3744x2496; 1:1 4000x4000; 4:3 5328x4000; 16:9 6000x3368)",
+      "url": "https://cam.start.canon/en/C012/manual/html/UG-10_Reference_0100.html"
+     },
+     "calculo_derivado": "ancho = 5328 px x (36.0 mm / 6000 px) = 31.97 mm; alto = 24.0 mm (altura completa, 4000 px)"
+    },
+    {
+     "id": "foto_16_9",
+     "nombre": "Foto 16:9 (L, 20.2 MP)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 20.21,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "6000x3368",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R6 Mark II Product Manual > Specifications: Image sensor 'Screen size Approx. 36.0x24.0 mm', max. approx. 24.2 MP efectivos; cuadro 'Still photo pixel count' (L: 3:2 6000x4000; 1.6x crop 3744x2496; 1:1 4000x4000; 4:3 5328x4000; 16:9 6000x3368)",
+      "url": "https://cam.start.canon/en/C012/manual/html/UG-10_Reference_0100.html"
+     },
+     "calculo_derivado": "ancho = 36.0 mm (ancho completo, 6000 px); alto = 3368 px x (24.0 mm / 4000 px) = 20.21 mm"
+    },
+    {
+     "id": "foto_1_1",
+     "nombre": "Foto 1:1 (L, 16.0 MP)",
+     "ancho_activo_mm": 24.0,
+     "alto_activo_mm": 24.0,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "4000x4000",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R6 Mark II Product Manual > Specifications: Image sensor 'Screen size Approx. 36.0x24.0 mm', max. approx. 24.2 MP efectivos; cuadro 'Still photo pixel count' (L: 3:2 6000x4000; 1.6x crop 3744x2496; 1:1 4000x4000; 4:3 5328x4000; 16:9 6000x3368)",
+      "url": "https://cam.start.canon/en/C012/manual/html/UG-10_Reference_0100.html"
+     },
+     "calculo_derivado": "ancho = 4000 px x (36.0 mm / 6000 px) = 24.00 mm; alto = 24.0 mm (altura completa, 4000 px)"
+    }
+   ]
+  },
+  {
+   "id": "canon_eos_r7",
+   "marca": "Canon",
+   "modelo": "EOS R7",
+   "tipo": "mirrorless APS-C foto/video",
+   "montura": "Canon RF (fuente: manual Canon > Specifications: 'Lens mount: Canon RF mount')",
+   "notas": "Solo modos de foto, revisados el 2026-11-13 contra el manual oficial de Canon (cam.start.canon). Sensor CMOS APS-C 'Approx. 22.3 x 14.8 mm', max. ~32.5 MP efectivos (L 3:2 = 6960x4640, ~32.3 MP). Canon solo publica los mm del sensor completo: 4:3, 16:9 y 1:1 son derivados por pixeles. Canon avisa que en 4:3 (6160x4640) y 16:9 (6960x3904) la relacion de aspecto es ligeramente distinta de la nominal. Canon declara 'approx. 1.6 times' de focal equivalente; por ancho de sensor el factor es 36/22.3 = 1.61. Las dimensiones de sensor son nominales (22.3/6960 = 3.204 um vs 14.8/4640 = 3.190 um), error esperado <=0.1 mm. No se investigaron modos de video.",
+   "modos": [
+    {
+     "id": "foto_3_2",
+     "nombre": "Foto 3:2 APS-C (L, 32.3 MP)",
+     "ancho_activo_mm": 22.3,
+     "alto_activo_mm": 14.8,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.61,
+     "resolucion_px": "6960x4640",
+     "derivado": false,
+     "fuente": {
+      "texto": "Canon EOS R7 Product Manual > Specifications: Image sensor 'Screen size Approx. 22.3 x 14.8 mm', CMOS size APS-C, max. approx. 32.5 MP efectivos; cuadro 'Still photo pixel count' (L: 3:2 6960x4640; 4:3 6160x4640; 16:9 6960x3904; 1:1 4640x4640)",
+      "url": "https://cam.start.canon/en/C005/manual/html/UG-10_Reference_0100.html"
+     }
+    },
+    {
+     "id": "foto_4_3",
+     "nombre": "Foto 4:3 (L, 28.6 MP)",
+     "ancho_activo_mm": 19.74,
+     "alto_activo_mm": 14.8,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.82,
+     "resolucion_px": "6160x4640",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R7 Product Manual > Specifications: Image sensor 'Screen size Approx. 22.3 x 14.8 mm', CMOS size APS-C, max. approx. 32.5 MP efectivos; cuadro 'Still photo pixel count' (L: 3:2 6960x4640; 4:3 6160x4640; 16:9 6960x3904; 1:1 4640x4640)",
+      "url": "https://cam.start.canon/en/C005/manual/html/UG-10_Reference_0100.html"
+     },
+     "calculo_derivado": "ancho = 6160 px x (22.3 mm / 6960 px) = 19.74 mm; alto = 14.8 mm (altura completa, 4640 px)"
+    },
+    {
+     "id": "foto_16_9",
+     "nombre": "Foto 16:9 (L, 27.2 MP)",
+     "ancho_activo_mm": 22.3,
+     "alto_activo_mm": 12.45,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.61,
+     "resolucion_px": "6960x3904",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R7 Product Manual > Specifications: Image sensor 'Screen size Approx. 22.3 x 14.8 mm', CMOS size APS-C, max. approx. 32.5 MP efectivos; cuadro 'Still photo pixel count' (L: 3:2 6960x4640; 4:3 6160x4640; 16:9 6960x3904; 1:1 4640x4640)",
+      "url": "https://cam.start.canon/en/C005/manual/html/UG-10_Reference_0100.html"
+     },
+     "calculo_derivado": "ancho = 22.3 mm (ancho completo, 6960 px); alto = 3904 px x (14.8 mm / 4640 px) = 12.45 mm"
+    },
+    {
+     "id": "foto_1_1",
+     "nombre": "Foto 1:1 (L, 21.5 MP)",
+     "ancho_activo_mm": 14.87,
+     "alto_activo_mm": 14.8,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.42,
+     "resolucion_px": "4640x4640",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R7 Product Manual > Specifications: Image sensor 'Screen size Approx. 22.3 x 14.8 mm', CMOS size APS-C, max. approx. 32.5 MP efectivos; cuadro 'Still photo pixel count' (L: 3:2 6960x4640; 4:3 6160x4640; 16:9 6960x3904; 1:1 4640x4640)",
+      "url": "https://cam.start.canon/en/C005/manual/html/UG-10_Reference_0100.html"
+     },
+     "calculo_derivado": "ancho = 4640 px x (22.3 mm / 6960 px) = 14.87 mm; alto = 14.8 mm (altura completa, 4640 px)"
+    }
+   ]
+  },
+  {
+   "id": "nikon_z8",
+   "marca": "Nikon",
+   "modelo": "Z 8",
+   "tipo": "mirrorless full frame foto/video",
+   "montura": "Nikon Z (fuente: Nikon Z 8 Reference Guide > Specifications, 'Lens mount: Nikon Z mount')",
+   "notas": "Solo modos de foto (video sin investigar). Sensor CMOS FX publicado: 35.9 x 23.9 mm, 45.7 MP efectivos (52.37 MP totales). Nikon publica los pixeles por area de imagen (FX, DX, 1:1, 16:9) y los megapixeles de cada tamano, pero no los mm de cada area: solo el FX usa los mm publicados; DX, 1:1 y 16:9 son derivados por pixeles. Las etiquetas de Nikon '(36 x 24)', '(24 x 16)', '(24 x 24)' y '(36 x 20)' son nominales; el DX derivado por pixeles da 23.45 x 15.60 mm (factor 1.54, no 1.5 exacto). Solo se incluyo el tamano Large.",
+   "modos": [
+    {
+     "id": "foto_fx_3_2_L",
+     "nombre": "Foto FX 3:2 (L, 45.4 MP)",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 23.9,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "8256x5504",
+     "derivado": false,
+     "fuente": {
+      "texto": "Nikon Z 8 Reference Guide (manual en linea) > Technical Notes > Specifications: 'Image sensor: 35.9 x 23.9 mm CMOS sensor (full-frame/FX-format)', 'Effective pixels 45.7 million', 'Lens mount: Nikon Z mount' y cuadro 'Image size (pixels)' por area de imagen (FX, DX, 1:1, 16:9; Large/Medium/Small)",
+      "url": "https://onlinemanual.nikonimglib.com/z8/en/specifications_384.html"
+     }
+    },
+    {
+     "id": "foto_dx_3_2_L",
+     "nombre": "Foto DX 3:2 (L, 19.4 MP)",
+     "ancho_activo_mm": 23.45,
+     "alto_activo_mm": 15.6,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.54,
+     "resolucion_px": "5392x3592",
+     "derivado": true,
+     "fuente": {
+      "texto": "Nikon Z 8 Reference Guide (manual en linea) > Technical Notes > Specifications: 'Image sensor: 35.9 x 23.9 mm CMOS sensor (full-frame/FX-format)', 'Effective pixels 45.7 million', 'Lens mount: Nikon Z mount' y cuadro 'Image size (pixels)' por area de imagen (FX, DX, 1:1, 16:9; Large/Medium/Small)",
+      "url": "https://onlinemanual.nikonimglib.com/z8/en/specifications_384.html"
+     },
+     "calculo_derivado": "ancho = 35.9 mm x 5392/8256 px = 23.45 mm; alto = 23.9 mm x 3592/5504 px = 15.60 mm. Nikon rotula esta area 'DX (24 x 16)' (nominal)"
+    },
+    {
+     "id": "foto_1_1_L",
+     "nombre": "Foto 1:1 (L, 30.3 MP)",
+     "ancho_activo_mm": 23.93,
+     "alto_activo_mm": 23.9,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "5504x5504",
+     "derivado": true,
+     "fuente": {
+      "texto": "Nikon Z 8 Reference Guide (manual en linea) > Technical Notes > Specifications: 'Image sensor: 35.9 x 23.9 mm CMOS sensor (full-frame/FX-format)', 'Effective pixels 45.7 million', 'Lens mount: Nikon Z mount' y cuadro 'Image size (pixels)' por area de imagen (FX, DX, 1:1, 16:9; Large/Medium/Small)",
+      "url": "https://onlinemanual.nikonimglib.com/z8/en/specifications_384.html"
+     },
+     "calculo_derivado": "ancho = 35.9 mm x 5504/8256 px = 23.93 mm; alto = 23.9 mm (alto completo, 5504 px). Nikon rotula esta area '1:1 (24 x 24)' (nominal)"
+    },
+    {
+     "id": "foto_16_9_L",
+     "nombre": "Foto 16:9 (L, 38.3 MP)",
+     "ancho_activo_mm": 35.9,
+     "alto_activo_mm": 20.15,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "8256x4640",
+     "derivado": true,
+     "fuente": {
+      "texto": "Nikon Z 8 Reference Guide (manual en linea) > Technical Notes > Specifications: 'Image sensor: 35.9 x 23.9 mm CMOS sensor (full-frame/FX-format)', 'Effective pixels 45.7 million', 'Lens mount: Nikon Z mount' y cuadro 'Image size (pixels)' por area de imagen (FX, DX, 1:1, 16:9; Large/Medium/Small)",
+      "url": "https://onlinemanual.nikonimglib.com/z8/en/specifications_384.html"
+     },
+     "calculo_derivado": "ancho = 35.9 mm (ancho completo, 8256 px); alto = 23.9 mm x 4640/5504 px = 20.15 mm. Nikon rotula esta area '16:9 (36 x 20)' (nominal)"
+    }
+   ]
+  },
+  {
+   "id": "nikon_z50ii",
+   "marca": "Nikon",
+   "modelo": "Z50II",
+   "tipo": "mirrorless APS-C (DX) foto/video",
+   "montura": "Nikon Z (fuente: Nikon Z50II Reference Guide > Specifications, 'Lens mount: Nikon Z mount')",
+   "notas": "Solo modos de foto (video sin investigar). Sensor CMOS DX publicado: 23.5 x 15.7 mm, 20.9 MP efectivos (21.51 MP totales). Nikon publica los pixeles por area de imagen (DX, 1:1, 16:9) y los megapixeles de cada tamano, pero no los mm de cada area: solo el DX usa los mm publicados; 1:1 y 16:9 son derivados por pixeles. Las etiquetas de Nikon '(24x16)', '(16x16)' y '(24x14)' son nominales. Solo se incluyo el tamano Large.",
+   "modos": [
+    {
+     "id": "foto_dx_3_2_L",
+     "nombre": "Foto DX 3:2 (L, 20.7 MP)",
+     "ancho_activo_mm": 23.5,
+     "alto_activo_mm": 15.7,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.53,
+     "resolucion_px": "5568x3712",
+     "derivado": false,
+     "fuente": {
+      "texto": "Nikon Z50II Reference Guide (manual en linea) > Technical notes > Specifications: 'Image sensor: 23.5 x 15.7 mm CMOS sensor (Nikon DX format)', 'Effective pixels 20.9 million', 'Lens mount: Nikon Z mount' y cuadro 'Image size (pixels)' por area de imagen (DX, 1:1, 16:9; Large/Medium/Small)",
+      "url": "https://onlinemanual.nikonimglib.com/z50II/en/15-08.html"
+     }
+    },
+    {
+     "id": "foto_1_1_L",
+     "nombre": "Foto 1:1 (L, 13.8 MP)",
+     "ancho_activo_mm": 15.67,
+     "alto_activo_mm": 15.7,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.3,
+     "resolucion_px": "3712x3712",
+     "derivado": true,
+     "fuente": {
+      "texto": "Nikon Z50II Reference Guide (manual en linea) > Technical notes > Specifications: 'Image sensor: 23.5 x 15.7 mm CMOS sensor (Nikon DX format)', 'Effective pixels 20.9 million', 'Lens mount: Nikon Z mount' y cuadro 'Image size (pixels)' por area de imagen (DX, 1:1, 16:9; Large/Medium/Small)",
+      "url": "https://onlinemanual.nikonimglib.com/z50II/en/15-08.html"
+     },
+     "calculo_derivado": "ancho = 23.5 mm x 3712/5568 px = 15.67 mm; alto = 15.7 mm (alto completo, 3712 px). Nikon rotula esta area '1:1 (16x16)' (nominal)"
+    },
+    {
+     "id": "foto_16_9_L",
+     "nombre": "Foto 16:9 (L, 17.4 MP)",
+     "ancho_activo_mm": 23.5,
+     "alto_activo_mm": 13.23,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.53,
+     "resolucion_px": "5568x3128",
+     "derivado": true,
+     "fuente": {
+      "texto": "Nikon Z50II Reference Guide (manual en linea) > Technical notes > Specifications: 'Image sensor: 23.5 x 15.7 mm CMOS sensor (Nikon DX format)', 'Effective pixels 20.9 million', 'Lens mount: Nikon Z mount' y cuadro 'Image size (pixels)' por area de imagen (DX, 1:1, 16:9; Large/Medium/Small)",
+      "url": "https://onlinemanual.nikonimglib.com/z50II/en/15-08.html"
+     },
+     "calculo_derivado": "ancho = 23.5 mm (ancho completo, 5568 px); alto = 15.7 mm x 3128/3712 px = 13.23 mm. Nikon rotula esta area '16:9 (24x14)' (nominal)"
+    }
+   ]
+  },
+  {
+   "id": "fujifilm_x_t5",
+   "marca": "Fujifilm",
+   "modelo": "X-T5",
+   "tipo": "mirrorless APS-C foto/video",
+   "montura": "Fujifilm X (fuente: fujifilm-x.com X-T5 Specifications, 'Lens Mount: FUJIFILM X mount')",
+   "notas": "Solo modos de foto (video sin investigar). Sensor X-Trans CMOS 5 HR publicado: 23.5 x 15.7 mm (APS-C), 40.2 MP efectivos. Fujifilm publica los pixeles grabados por relacion de aspecto (4:3, 3:2, 16:9, 1:1, 5:4), no los mm de cada una: el 3:2 nativo (7728x5152) usa los mm publicados y el resto es derivado por pixeles. Los megapixeles de los nombres estan calculados (ancho x alto en px), Fujifilm no los publica por modo. Solo se incluyo el tamano L. No incluidos: panoramica y teleconvertidor digital (1.4x / 2.0x), que la pagina lista sin dimensiones de area.",
+   "modos": [
+    {
+     "id": "foto_3_2_L",
+     "nombre": "Foto 3:2 (L, 39.8 MP)",
+     "ancho_activo_mm": 23.5,
+     "alto_activo_mm": 15.7,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.53,
+     "resolucion_px": "7728x5152",
+     "derivado": false,
+     "fuente": {
+      "texto": "Fujifilm X-T5, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM X mount', 'Image Sensor: 23.5mm x 15.7mm (APS-C) X-Trans CMOS 5 HR', 'Number Of Effective Pixels: 40.2 millions pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 5:4)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/x-t5/specifications/"
+     }
+    },
+    {
+     "id": "foto_4_3_L",
+     "nombre": "Foto 4:3 (L, 35.4 MP)",
+     "ancho_activo_mm": 20.87,
+     "alto_activo_mm": 15.7,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.72,
+     "resolucion_px": "6864x5152",
+     "derivado": true,
+     "fuente": {
+      "texto": "Fujifilm X-T5, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM X mount', 'Image Sensor: 23.5mm x 15.7mm (APS-C) X-Trans CMOS 5 HR', 'Number Of Effective Pixels: 40.2 millions pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 5:4)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/x-t5/specifications/"
+     },
+     "calculo_derivado": "ancho = 23.5 mm x 6864/7728 px = 20.87 mm; alto = 15.7 mm (alto completo, 5152 px)"
+    },
+    {
+     "id": "foto_16_9_L",
+     "nombre": "Foto 16:9 (L, 33.6 MP)",
+     "ancho_activo_mm": 23.5,
+     "alto_activo_mm": 13.24,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.53,
+     "resolucion_px": "7728x4344",
+     "derivado": true,
+     "fuente": {
+      "texto": "Fujifilm X-T5, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM X mount', 'Image Sensor: 23.5mm x 15.7mm (APS-C) X-Trans CMOS 5 HR', 'Number Of Effective Pixels: 40.2 millions pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 5:4)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/x-t5/specifications/"
+     },
+     "calculo_derivado": "ancho = 23.5 mm (ancho completo, 7728 px); alto = 15.7 mm x 4344/5152 px = 13.24 mm"
+    },
+    {
+     "id": "foto_1_1_L",
+     "nombre": "Foto 1:1 (L, 26.5 MP)",
+     "ancho_activo_mm": 15.67,
+     "alto_activo_mm": 15.7,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.3,
+     "resolucion_px": "5152x5152",
+     "derivado": true,
+     "fuente": {
+      "texto": "Fujifilm X-T5, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM X mount', 'Image Sensor: 23.5mm x 15.7mm (APS-C) X-Trans CMOS 5 HR', 'Number Of Effective Pixels: 40.2 millions pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 5:4)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/x-t5/specifications/"
+     },
+     "calculo_derivado": "ancho = 23.5 mm x 5152/7728 px = 15.67 mm; alto = 15.7 mm (alto completo, 5152 px)"
+    },
+    {
+     "id": "foto_5_4_L",
+     "nombre": "Foto 5:4 (L, 33.1 MP)",
+     "ancho_activo_mm": 19.56,
+     "alto_activo_mm": 15.7,
+     "relacion_aspecto": "5:4",
+     "factor_crop_vs_ff": 1.84,
+     "resolucion_px": "6432x5152",
+     "derivado": true,
+     "fuente": {
+      "texto": "Fujifilm X-T5, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM X mount', 'Image Sensor: 23.5mm x 15.7mm (APS-C) X-Trans CMOS 5 HR', 'Number Of Effective Pixels: 40.2 millions pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 5:4)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/x-t5/specifications/"
+     },
+     "calculo_derivado": "ancho = 23.5 mm x 6432/7728 px = 19.56 mm; alto = 15.7 mm (alto completo, 5152 px)"
+    }
+   ]
+  },
+  {
+   "id": "fujifilm_gfx100s_ii",
+   "marca": "Fujifilm",
+   "modelo": "GFX100S II",
+   "tipo": "mirrorless formato medio foto/video",
+   "montura": "Fujifilm G (fuente: fujifilm-x.com GFX100S II Specifications, 'Lens Mount: FUJIFILM G mount')",
+   "notas": "Solo modos de foto (video sin investigar). Sensor GFX 102MP CMOS II publicado: 43.8 x 32.9 mm, 102 MP efectivos. Formato medio: el factor de crop respecto a full frame es menor que 1 (36/43.8 = 0.82). Fujifilm publica los pixeles grabados por relacion de aspecto (4:3, 3:2, 16:9, 1:1, 65:24, 5:4, 7:6), no los mm de cada una: el 4:3 nativo (11648x8736) usa los mm publicados y el resto es derivado por pixeles. Los megapixeles de los nombres estan calculados (ancho x alto en px), Fujifilm no los publica por modo. Solo se incluyo el tamano L.",
+   "modos": [
+    {
+     "id": "foto_4_3_L",
+     "nombre": "Foto 4:3 (L, 101.8 MP)",
+     "ancho_activo_mm": 43.8,
+     "alto_activo_mm": 32.9,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 0.82,
+     "resolucion_px": "11648x8736",
+     "derivado": false,
+     "fuente": {
+      "texto": "Fujifilm GFX100S II, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM G mount', 'Image Sensor: 43.8mm x 32.9mm GFX 102MP CMOS II', 'Number Of Effective Pixels: 102 million pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 65:24, 5:4, 7:6)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/gfx100s-ii/specifications/"
+     }
+    },
+    {
+     "id": "foto_3_2_L",
+     "nombre": "Foto 3:2 (L, 90.5 MP)",
+     "ancho_activo_mm": 43.8,
+     "alto_activo_mm": 29.25,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 0.82,
+     "resolucion_px": "11648x7768",
+     "derivado": true,
+     "fuente": {
+      "texto": "Fujifilm GFX100S II, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM G mount', 'Image Sensor: 43.8mm x 32.9mm GFX 102MP CMOS II', 'Number Of Effective Pixels: 102 million pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 65:24, 5:4, 7:6)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/gfx100s-ii/specifications/"
+     },
+     "calculo_derivado": "ancho = 43.8 mm (ancho completo, 11648 px); alto = 32.9 mm x 7768/8736 px = 29.25 mm"
+    },
+    {
+     "id": "foto_16_9_L",
+     "nombre": "Foto 16:9 (L, 76.3 MP)",
+     "ancho_activo_mm": 43.8,
+     "alto_activo_mm": 24.68,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 0.82,
+     "resolucion_px": "11648x6552",
+     "derivado": true,
+     "fuente": {
+      "texto": "Fujifilm GFX100S II, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM G mount', 'Image Sensor: 43.8mm x 32.9mm GFX 102MP CMOS II', 'Number Of Effective Pixels: 102 million pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 65:24, 5:4, 7:6)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/gfx100s-ii/specifications/"
+     },
+     "calculo_derivado": "ancho = 43.8 mm (ancho completo, 11648 px); alto = 32.9 mm x 6552/8736 px = 24.68 mm"
+    },
+    {
+     "id": "foto_1_1_L",
+     "nombre": "Foto 1:1 (L, 76.3 MP)",
+     "ancho_activo_mm": 32.85,
+     "alto_activo_mm": 32.9,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.1,
+     "resolucion_px": "8736x8736",
+     "derivado": true,
+     "fuente": {
+      "texto": "Fujifilm GFX100S II, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM G mount', 'Image Sensor: 43.8mm x 32.9mm GFX 102MP CMOS II', 'Number Of Effective Pixels: 102 million pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 65:24, 5:4, 7:6)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/gfx100s-ii/specifications/"
+     },
+     "calculo_derivado": "ancho = 43.8 mm x 8736/11648 px = 32.85 mm; alto = 32.9 mm (alto completo, 8736 px)"
+    },
+    {
+     "id": "foto_65_24_L",
+     "nombre": "Foto 65:24 (L, 50.1 MP)",
+     "ancho_activo_mm": 43.8,
+     "alto_activo_mm": 16.21,
+     "relacion_aspecto": "65:24",
+     "factor_crop_vs_ff": 0.82,
+     "resolucion_px": "11648x4304",
+     "derivado": true,
+     "fuente": {
+      "texto": "Fujifilm GFX100S II, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM G mount', 'Image Sensor: 43.8mm x 32.9mm GFX 102MP CMOS II', 'Number Of Effective Pixels: 102 million pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 65:24, 5:4, 7:6)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/gfx100s-ii/specifications/"
+     },
+     "calculo_derivado": "ancho = 43.8 mm (ancho completo, 11648 px); alto = 32.9 mm x 4304/8736 px = 16.21 mm"
+    },
+    {
+     "id": "foto_5_4_L",
+     "nombre": "Foto 5:4 (L, 95.5 MP)",
+     "ancho_activo_mm": 41.09,
+     "alto_activo_mm": 32.9,
+     "relacion_aspecto": "5:4",
+     "factor_crop_vs_ff": 0.88,
+     "resolucion_px": "10928x8736",
+     "derivado": true,
+     "fuente": {
+      "texto": "Fujifilm GFX100S II, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM G mount', 'Image Sensor: 43.8mm x 32.9mm GFX 102MP CMOS II', 'Number Of Effective Pixels: 102 million pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 65:24, 5:4, 7:6)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/gfx100s-ii/specifications/"
+     },
+     "calculo_derivado": "ancho = 43.8 mm x 10928/11648 px = 41.09 mm; alto = 32.9 mm (alto completo, 8736 px)"
+    },
+    {
+     "id": "foto_7_6_L",
+     "nombre": "Foto 7:6 (L, 89.0 MP)",
+     "ancho_activo_mm": 38.33,
+     "alto_activo_mm": 32.9,
+     "relacion_aspecto": "7:6",
+     "factor_crop_vs_ff": 0.94,
+     "resolucion_px": "10192x8736",
+     "derivado": true,
+     "fuente": {
+      "texto": "Fujifilm GFX100S II, pagina oficial de especificaciones: 'Lens Mount: FUJIFILM G mount', 'Image Sensor: 43.8mm x 32.9mm GFX 102MP CMOS II', 'Number Of Effective Pixels: 102 million pixels' y 'Number Of Recorded Pixels' [L] (4:3, 3:2, 16:9, 1:1, 65:24, 5:4, 7:6)",
+      "url": "https://www.fujifilm-x.com/global/products/cameras/gfx100s-ii/specifications/"
+     },
+     "calculo_derivado": "ancho = 43.8 mm x 10192/11648 px = 38.33 mm; alto = 32.9 mm (alto completo, 8736 px)"
+    }
+   ]
+  },
+  {
+   "id": "om_system_om1_ii",
+   "marca": "OM SYSTEM",
+   "modelo": "OM-1 Mark II",
+   "tipo": "mirrorless Micro Cuatro Tercios foto/video",
+   "montura": "Micro Four Thirds (fuente: explore.omsystem.com OM-1 Mark II > Specifications 'Lens mount: Micro Four Thirds'; manual en línea > Specifications 'Micro Four Thirds mount')",
+   "modos": [
+    {
+     "id": "foto_4_3_L",
+     "nombre": "Foto 4:3 (L, 20.4 MP)",
+     "ancho_activo_mm": 17.3,
+     "alto_activo_mm": 13.0,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 2.08,
+     "resolucion_px": "5184x3888",
+     "derivado": false,
+     "fuente": {
+      "texto": "OM SYSTEM, página oficial OM-1 Mark II > Specifications: Image Sensor 'Effective pixels 20.4 Megapixels', 'Aspect ratio & area 4:3 / 17.3 x 13.0mm'; Recording Formats 'Aspect ratio 4:3 / 3:2 / 16:9 / 6:6 / 3:4'; Image Size 'RAW 5184 x 3888', 'JPEG 5184 x 3888 - 1024 x 768'",
+      "url": "https://explore.omsystem.com/ie/en/om-1-mark-ii"
+     }
+    }
+   ],
+   "notas": "Sensor 4/3'' Stacked BSI Live MOS, 'Aspect ratio & area 4:3 / 17.3 x 13.0mm', 20.4 MP efectivos (22.9 MP totales), RAW 5184x3888 (pagina oficial de especificaciones de OM SYSTEM, leida el 2026-11-13). Discrepancia oficial: el manual en linea (Specifications) dice 'Screen size 17.4 mm (H) x 13.0 mm (V)' y 'Approx. 20.37 million pixels' efectivos; se usa 17.3 x 13.0 de la pagina de especificaciones. Solo se incluye el modo 4:3: OM SYSTEM no publica los pixeles de 3:2, 16:9 ni 1:1, asi que esos encuadres no se agregaron (usar el aspecto de entrega sobre el 4:3). No se investigaron video ni alta resolucion."
+  },
+  {
+   "id": "panasonic_lumix_g9_ii",
+   "marca": "Panasonic",
+   "modelo": "LUMIX G9II (DC-G9M2)",
+   "tipo": "mirrorless Micro Cuatro Tercios foto/video",
+   "montura": "Micro Four Thirds (fuente: Panasonic 'Features and Specifications - DC-G9M2' > 'Lens mount: Micro Four Thirds mount')",
+   "modos": [
+    {
+     "id": "foto_4_3_L",
+     "nombre": "Foto 4:3 (L, 25.2 MP)",
+     "ancho_activo_mm": 17.3,
+     "alto_activo_mm": 13.0,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 2.08,
+     "resolucion_px": "5776x4336",
+     "derivado": false,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - LUMIX G-Series - DC-G9M2': Image sensor 'Live MOS sensor (17.3 x 13.0 mm)', 'Camera effective pixels / Total pixels 25.21 megapixels / 26.52 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1'; 'File size (Pixels)' 4:3 5776x4336(L), 3:2 5776x3848(L), 16:9 5776x3248(L), 1:1 4336x4336(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-for-lumix-g-series-dc-g9m2"
+     }
+    },
+    {
+     "id": "foto_3_2_L",
+     "nombre": "Foto 3:2 (L, 22.2 MP)",
+     "ancho_activo_mm": 17.3,
+     "alto_activo_mm": 11.54,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 2.08,
+     "resolucion_px": "5776x3848",
+     "derivado": true,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - LUMIX G-Series - DC-G9M2': Image sensor 'Live MOS sensor (17.3 x 13.0 mm)', 'Camera effective pixels / Total pixels 25.21 megapixels / 26.52 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1'; 'File size (Pixels)' 4:3 5776x4336(L), 3:2 5776x3848(L), 16:9 5776x3248(L), 1:1 4336x4336(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-for-lumix-g-series-dc-g9m2"
+     },
+     "calculo_derivado": "ancho = 17.3 mm (5776 px, ancho completo); alto = 3848 px x (13.0 mm / 4336 px) = 11.54 mm"
+    },
+    {
+     "id": "foto_16_9_L",
+     "nombre": "Foto 16:9 (L, 18.8 MP)",
+     "ancho_activo_mm": 17.3,
+     "alto_activo_mm": 9.74,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 2.08,
+     "resolucion_px": "5776x3248",
+     "derivado": true,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - LUMIX G-Series - DC-G9M2': Image sensor 'Live MOS sensor (17.3 x 13.0 mm)', 'Camera effective pixels / Total pixels 25.21 megapixels / 26.52 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1'; 'File size (Pixels)' 4:3 5776x4336(L), 3:2 5776x3848(L), 16:9 5776x3248(L), 1:1 4336x4336(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-for-lumix-g-series-dc-g9m2"
+     },
+     "calculo_derivado": "ancho = 17.3 mm (5776 px, ancho completo); alto = 3248 px x (13.0 mm / 4336 px) = 9.74 mm"
+    },
+    {
+     "id": "foto_1_1_L",
+     "nombre": "Foto 1:1 (L, 18.8 MP)",
+     "ancho_activo_mm": 12.99,
+     "alto_activo_mm": 13.0,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 2.77,
+     "resolucion_px": "4336x4336",
+     "derivado": true,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - LUMIX G-Series - DC-G9M2': Image sensor 'Live MOS sensor (17.3 x 13.0 mm)', 'Camera effective pixels / Total pixels 25.21 megapixels / 26.52 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1'; 'File size (Pixels)' 4:3 5776x4336(L), 3:2 5776x3848(L), 16:9 5776x3248(L), 1:1 4336x4336(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-for-lumix-g-series-dc-g9m2"
+     },
+     "calculo_derivado": "ancho = 4336 px x (17.3 mm / 5776 px) = 12.99 mm; alto = 13.0 mm (4336 px, alto completo)"
+    }
+   ],
+   "notas": "Sensor 'Live MOS sensor (17.3 x 13.0 mm)', 25.21 MP efectivos (26.52 MP totales), 4:3 L 5776x4336 (hoja oficial de especificaciones de Panasonic Norteamérica, leída el 2026-11-13). Solo el 4:3 usa los mm publicados; 3:2, 16:9 y 1:1 son derivados por píxeles. La hoja no lista 65:24 ni 2:1 para esta cámara. Los mm son nominales (17.3/5776 y 13.0/4336 dan pasos de píxel casi iguales, 2.995 y 2.998 um). Los tamaños XL/LL de alta resolución no se incluyen."
+  },
+  {
+   "id": "panasonic_lumix_s5_ii",
+   "marca": "Panasonic",
+   "modelo": "LUMIX S5II (DC-S5M2)",
+   "tipo": "mirrorless full frame foto/video",
+   "montura": "L-Mount (fuente: Panasonic 'Features and Specifications - DC-S5M2' > 'Lens mount: L-Mount')",
+   "modos": [
+    {
+     "id": "foto_ff_3_2_L",
+     "nombre": "Foto FF 3:2 (L, 24.2 MP)",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 23.8,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "6000x4000",
+     "derivado": false,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - Lumix S Series - DC-S5M2': Image sensor '35mm full-frame (35.6mm x 23.8mm) CMOS sensor', 'Camera effective pixels / Total pixels 24.20 megapixels / 25.28 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1 / 65:24 / 2:1'; 'File size (pixels) when using full-frame lenses' 3:2 6000x4000(L), 4:3 5328x4000(L), 16:9 6000x3368(L), 1:1 4000x4000(L), 65:24 6000x2208(L), 2:1 6000x3000(L); 'File size (pixels) when using APS-C/Super 35mm lenses' 3:2 3984x2656(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-lumix-s-series-dc-s5m2/"
+     }
+    },
+    {
+     "id": "foto_ff_4_3_L",
+     "nombre": "Foto FF 4:3 (L, 21.3 MP)",
+     "ancho_activo_mm": 31.61,
+     "alto_activo_mm": 23.8,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.14,
+     "resolucion_px": "5328x4000",
+     "derivado": true,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - Lumix S Series - DC-S5M2': Image sensor '35mm full-frame (35.6mm x 23.8mm) CMOS sensor', 'Camera effective pixels / Total pixels 24.20 megapixels / 25.28 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1 / 65:24 / 2:1'; 'File size (pixels) when using full-frame lenses' 3:2 6000x4000(L), 4:3 5328x4000(L), 16:9 6000x3368(L), 1:1 4000x4000(L), 65:24 6000x2208(L), 2:1 6000x3000(L); 'File size (pixels) when using APS-C/Super 35mm lenses' 3:2 3984x2656(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-lumix-s-series-dc-s5m2/"
+     },
+     "calculo_derivado": "ancho = 5328 px x (35.6 mm / 6000 px) = 31.61 mm; alto = 23.8 mm (4000 px, alto completo)"
+    },
+    {
+     "id": "foto_ff_16_9_L",
+     "nombre": "Foto FF 16:9 (L, 20.2 MP)",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 20.04,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "6000x3368",
+     "derivado": true,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - Lumix S Series - DC-S5M2': Image sensor '35mm full-frame (35.6mm x 23.8mm) CMOS sensor', 'Camera effective pixels / Total pixels 24.20 megapixels / 25.28 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1 / 65:24 / 2:1'; 'File size (pixels) when using full-frame lenses' 3:2 6000x4000(L), 4:3 5328x4000(L), 16:9 6000x3368(L), 1:1 4000x4000(L), 65:24 6000x2208(L), 2:1 6000x3000(L); 'File size (pixels) when using APS-C/Super 35mm lenses' 3:2 3984x2656(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-lumix-s-series-dc-s5m2/"
+     },
+     "calculo_derivado": "ancho = 35.6 mm (6000 px, ancho completo); alto = 3368 px x (23.8 mm / 4000 px) = 20.04 mm"
+    },
+    {
+     "id": "foto_ff_1_1_L",
+     "nombre": "Foto FF 1:1 (L, 16.0 MP)",
+     "ancho_activo_mm": 23.73,
+     "alto_activo_mm": 23.8,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.52,
+     "resolucion_px": "4000x4000",
+     "derivado": true,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - Lumix S Series - DC-S5M2': Image sensor '35mm full-frame (35.6mm x 23.8mm) CMOS sensor', 'Camera effective pixels / Total pixels 24.20 megapixels / 25.28 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1 / 65:24 / 2:1'; 'File size (pixels) when using full-frame lenses' 3:2 6000x4000(L), 4:3 5328x4000(L), 16:9 6000x3368(L), 1:1 4000x4000(L), 65:24 6000x2208(L), 2:1 6000x3000(L); 'File size (pixels) when using APS-C/Super 35mm lenses' 3:2 3984x2656(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-lumix-s-series-dc-s5m2/"
+     },
+     "calculo_derivado": "ancho = 4000 px x (35.6 mm / 6000 px) = 23.73 mm; alto = 23.8 mm (4000 px, alto completo)"
+    },
+    {
+     "id": "foto_ff_65_24_L",
+     "nombre": "Foto FF 65:24 (L, 13.2 MP)",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 13.14,
+     "relacion_aspecto": "65:24",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "6000x2208",
+     "derivado": true,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - Lumix S Series - DC-S5M2': Image sensor '35mm full-frame (35.6mm x 23.8mm) CMOS sensor', 'Camera effective pixels / Total pixels 24.20 megapixels / 25.28 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1 / 65:24 / 2:1'; 'File size (pixels) when using full-frame lenses' 3:2 6000x4000(L), 4:3 5328x4000(L), 16:9 6000x3368(L), 1:1 4000x4000(L), 65:24 6000x2208(L), 2:1 6000x3000(L); 'File size (pixels) when using APS-C/Super 35mm lenses' 3:2 3984x2656(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-lumix-s-series-dc-s5m2/"
+     },
+     "calculo_derivado": "ancho = 35.6 mm (6000 px, ancho completo); alto = 2208 px x (23.8 mm / 4000 px) = 13.14 mm"
+    },
+    {
+     "id": "foto_ff_2_1_L",
+     "nombre": "Foto FF 2:1 (L, 18.0 MP)",
+     "ancho_activo_mm": 35.6,
+     "alto_activo_mm": 17.85,
+     "relacion_aspecto": "2:1",
+     "factor_crop_vs_ff": 1.01,
+     "resolucion_px": "6000x3000",
+     "derivado": true,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - Lumix S Series - DC-S5M2': Image sensor '35mm full-frame (35.6mm x 23.8mm) CMOS sensor', 'Camera effective pixels / Total pixels 24.20 megapixels / 25.28 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1 / 65:24 / 2:1'; 'File size (pixels) when using full-frame lenses' 3:2 6000x4000(L), 4:3 5328x4000(L), 16:9 6000x3368(L), 1:1 4000x4000(L), 65:24 6000x2208(L), 2:1 6000x3000(L); 'File size (pixels) when using APS-C/Super 35mm lenses' 3:2 3984x2656(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-lumix-s-series-dc-s5m2/"
+     },
+     "calculo_derivado": "ancho = 35.6 mm (6000 px, ancho completo); alto = 3000 px x (23.8 mm / 4000 px) = 17.85 mm"
+    },
+    {
+     "id": "foto_aps_c_3_2_L",
+     "nombre": "Foto APS-C/S35 3:2 (L, 10.6 MP)",
+     "ancho_activo_mm": 23.64,
+     "alto_activo_mm": 15.8,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.52,
+     "resolucion_px": "3984x2656",
+     "derivado": true,
+     "fuente": {
+      "texto": "Panasonic (help.na.panasonic.com), 'Features and Specifications - Lumix S Series - DC-S5M2': Image sensor '35mm full-frame (35.6mm x 23.8mm) CMOS sensor', 'Camera effective pixels / Total pixels 24.20 megapixels / 25.28 megapixels'; Still image 'Aspect ratio 4:3 / 3:2 / 16:9 / 1:1 / 65:24 / 2:1'; 'File size (pixels) when using full-frame lenses' 3:2 6000x4000(L), 4:3 5328x4000(L), 16:9 6000x3368(L), 1:1 4000x4000(L), 65:24 6000x2208(L), 2:1 6000x3000(L); 'File size (pixels) when using APS-C/Super 35mm lenses' 3:2 3984x2656(L)",
+      "url": "https://help.na.panasonic.com/answers/specifications-sheet-lumix-s-series-dc-s5m2/"
+     },
+     "calculo_derivado": "ancho = 3984 px x (35.6 mm / 6000 px) = 23.64 mm; alto = 2656 px x (23.8 mm / 4000 px) = 15.80 mm (supone que 3984x2656 es la lectura APS-C a la misma densidad de píxeles)",
+     "nota": "Factor por píxeles = 6000/3984 = 1.506. Panasonic publica el tamaño en píxeles con lentes APS-C/Super 35mm, no los mm ni el factor."
+    }
+   ],
+   "notas": "Sensor '35mm full-frame (35.6mm x 23.8mm) CMOS sensor', 24.20 MP efectivos (25.28 MP totales), 3:2 L 6000x4000 (hoja oficial de especificaciones de Panasonic Norteamérica, leída el 2026-11-13). Solo el 3:2 full frame usa los mm publicados; 4:3, 16:9, 1:1, 65:24, 2:1 y el recorte APS-C son derivados por píxeles. Con lentes APS-C/Super 35mm Panasonic publica además 4:3 3536x2656, 16:9 3984x2240 y 1:1 2656x2656 (no incluidos; 65:24 y 2:1 no figuran para APS-C). Los mm son nominales (35.6/6000 y 23.8/4000 dan pasos de 5.933 y 5.950 um), error esperado <=0.1 mm. Los tamaños XL/LL de alta resolución no se incluyen."
+  },
+  {
+   "id": "canon_eos_r5_mark_ii",
+   "marca": "Canon",
+   "modelo": "EOS R5 Mark II",
+   "tipo": "mirrorless full frame foto/video 8K",
+   "montura": "Canon RF (fuente: manual Canon > Specifications: 'Lens mount: Canon RF mount')",
+   "modos": [
+    {
+     "id": "foto_3_2",
+     "nombre": "Foto 3:2 full frame (44.8 MP)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 24.0,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "8192x5464",
+     "derivado": false,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Specifications: Image sensor 'Screen size: Approx. 36.0x24.0 mm', 'Max. approx. 45 megapixels'; Still photo recording pixel count L: 3:2 8192x5464, 1.6x (crop) 5088x3392, 1:1 5456x5456, 4:3 7280x5464, 16:9 8192x4608; nota 1: 'Angle of view of approx. 1.6 times the indicated focal length'",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html"
+     }
+    },
+    {
+     "id": "foto_crop_1_6",
+     "nombre": "Foto 1.6x crop (17.3 MP)",
+     "ancho_activo_mm": 22.5,
+     "alto_activo_mm": 15.0,
+     "relacion_aspecto": "3:2",
+     "factor_crop_vs_ff": 1.6,
+     "resolucion_px": "5088x3392",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Specifications: Image sensor 'Screen size: Approx. 36.0x24.0 mm', 'Max. approx. 45 megapixels'; Still photo recording pixel count L: 3:2 8192x5464, 1.6x (crop) 5088x3392, 1:1 5456x5456, 4:3 7280x5464, 16:9 8192x4608; nota 1: 'Angle of view of approx. 1.6 times the indicated focal length'",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html"
+     },
+     "calculo_derivado": "36.0/1.6 = 22.50 mm; 24.0/1.6 = 15.00 mm (Canon: 'approx. 1.6 times'); alternativa por pixeles: 36.0 x 5088/8192 = 22.36 mm"
+    },
+    {
+     "id": "foto_4_3",
+     "nombre": "Foto 4:3 (L, 39.8 MP)",
+     "ancho_activo_mm": 31.99,
+     "alto_activo_mm": 24.0,
+     "relacion_aspecto": "4:3",
+     "factor_crop_vs_ff": 1.13,
+     "resolucion_px": "7280x5464",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Specifications: Image sensor 'Screen size: Approx. 36.0x24.0 mm', 'Max. approx. 45 megapixels'; Still photo recording pixel count L: 3:2 8192x5464, 1.6x (crop) 5088x3392, 1:1 5456x5456, 4:3 7280x5464, 16:9 8192x4608; nota 1: 'Angle of view of approx. 1.6 times the indicated focal length'",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html"
+     },
+     "calculo_derivado": "ancho = 36.0 x 7280/8192 = 31.99 mm; alto = 24.0 mm"
+    },
+    {
+     "id": "foto_16_9",
+     "nombre": "Foto 16:9 (L, 37.7 MP)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 20.24,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "8192x4608",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Specifications: Image sensor 'Screen size: Approx. 36.0x24.0 mm', 'Max. approx. 45 megapixels'; Still photo recording pixel count L: 3:2 8192x5464, 1.6x (crop) 5088x3392, 1:1 5456x5456, 4:3 7280x5464, 16:9 8192x4608; nota 1: 'Angle of view of approx. 1.6 times the indicated focal length'",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html"
+     },
+     "calculo_derivado": "ancho = 36.0 mm; alto = 24.0 x 4608/5464 = 20.24 mm"
+    },
+    {
+     "id": "foto_1_1",
+     "nombre": "Foto 1:1 (L, 29.8 MP)",
+     "ancho_activo_mm": 23.98,
+     "alto_activo_mm": 23.96,
+     "relacion_aspecto": "1:1",
+     "factor_crop_vs_ff": 1.5,
+     "resolucion_px": "5456x5456",
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Specifications: Image sensor 'Screen size: Approx. 36.0x24.0 mm', 'Max. approx. 45 megapixels'; Still photo recording pixel count L: 3:2 8192x5464, 1.6x (crop) 5088x3392, 1:1 5456x5456, 4:3 7280x5464, 16:9 8192x4608; nota 1: 'Angle of view of approx. 1.6 times the indicated focal length'",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html"
+     },
+     "calculo_derivado": "ancho = 36.0 x 5456/8192 = 23.98 mm; alto = 24.0 x 5456/5464 = 23.96 mm"
+    },
+    {
+     "id": "video_8k_dci",
+     "nombre": "Video 8K DCI 17:9 (RAW/XF-HEVC S; sin crop)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "8192x4320",
+     "fps": [
+      "59.94",
+      "50",
+      "29.97",
+      "25",
+      "24",
+      "23.98"
+     ],
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Movie Recording Size: tamanos 8192x4320 y 4096x2160/2048x1080 (aprox. 17:9), 7680x4320, 3840x2160 y 1920x1080 (16:9); 'Image Area': (1) 8192x4320 / 4096x2160 / 2048x1080 y (2) 7680x4320 / 3840x2160 / 1920x1080 con Movie cropping = Disable; (3) 4096x2160 / 2048x1080 y (4) 3840x2160 / 1920x1080 con Movie cropping = Enable o lentes RF-S/EF-S. Cuadros por segundo: tabla 'Movie recording size' de Specifications (https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html)",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "ancho = 36.0 mm (8192 px = ancho de foto full frame; Image Area (1)); alto = 4320 px x (24.0 mm / 5464 px) = 18.98 mm",
+     "nota": "59.94 y 50 fps solo en Light RAW; XF-HEVC S llega a 29.97 fps."
+    },
+    {
+     "id": "video_8k_uhd",
+     "nombre": "Video 8K UHD 16:9 (sin crop)",
+     "ancho_activo_mm": 33.75,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.07,
+     "resolucion_px": "7680x4320",
+     "fps": [
+      "29.97",
+      "25",
+      "23.98"
+     ],
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Movie Recording Size: tamanos 8192x4320 y 4096x2160/2048x1080 (aprox. 17:9), 7680x4320, 3840x2160 y 1920x1080 (16:9); 'Image Area': (1) 8192x4320 / 4096x2160 / 2048x1080 y (2) 7680x4320 / 3840x2160 / 1920x1080 con Movie cropping = Disable; (3) 4096x2160 / 2048x1080 y (4) 3840x2160 / 1920x1080 con Movie cropping = Enable o lentes RF-S/EF-S. Cuadros por segundo: tabla 'Movie recording size' de Specifications (https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html)",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "ancho = 7680 x (36.0/8192) = 33.75 mm; alto = 18.98 mm (Image Area (2))"
+    },
+    {
+     "id": "video_4k_dci",
+     "nombre": "Video 4K DCI 17:9 (sin crop)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "4096x2160",
+     "fps": [
+      "119.88",
+      "100",
+      "59.94",
+      "50",
+      "29.97",
+      "25",
+      "24",
+      "23.98"
+     ],
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Movie Recording Size: tamanos 8192x4320 y 4096x2160/2048x1080 (aprox. 17:9), 7680x4320, 3840x2160 y 1920x1080 (16:9); 'Image Area': (1) 8192x4320 / 4096x2160 / 2048x1080 y (2) 7680x4320 / 3840x2160 / 1920x1080 con Movie cropping = Disable; (3) 4096x2160 / 2048x1080 y (4) 3840x2160 / 1920x1080 con Movie cropping = Enable o lentes RF-S/EF-S. Cuadros por segundo: tabla 'Movie recording size' de Specifications (https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html)",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "Segun 'Image Area', 8K DCI, 4K DCI y 2K DCI comparten el area (1): 36.0 x 18.98 mm",
+     "nota": "119.88 y 100 fps solo en calidad Normal."
+    },
+    {
+     "id": "video_4k_uhd",
+     "nombre": "Video 4K UHD 16:9 (sin crop)",
+     "ancho_activo_mm": 33.75,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.07,
+     "resolucion_px": "3840x2160",
+     "fps": [
+      "119.88",
+      "100",
+      "59.94",
+      "50",
+      "29.97",
+      "25",
+      "23.98"
+     ],
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Movie Recording Size: tamanos 8192x4320 y 4096x2160/2048x1080 (aprox. 17:9), 7680x4320, 3840x2160 y 1920x1080 (16:9); 'Image Area': (1) 8192x4320 / 4096x2160 / 2048x1080 y (2) 7680x4320 / 3840x2160 / 1920x1080 con Movie cropping = Disable; (3) 4096x2160 / 2048x1080 y (4) 3840x2160 / 1920x1080 con Movie cropping = Enable o lentes RF-S/EF-S. Cuadros por segundo: tabla 'Movie recording size' de Specifications (https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html)",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "Area (2) = igual que 8K UHD: 33.75 x 18.98 mm",
+     "nota": "119.88 y 100 fps solo en calidad Normal."
+    },
+    {
+     "id": "video_2k_dci",
+     "nombre": "Video 2K DCI 17:9 (sin crop)",
+     "ancho_activo_mm": 36.0,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.0,
+     "resolucion_px": "2048x1080",
+     "fps": [
+      "239.76",
+      "200",
+      "119.88",
+      "100",
+      "59.94",
+      "50",
+      "29.97",
+      "25",
+      "24",
+      "23.98"
+     ],
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Movie Recording Size: tamanos 8192x4320 y 4096x2160/2048x1080 (aprox. 17:9), 7680x4320, 3840x2160 y 1920x1080 (16:9); 'Image Area': (1) 8192x4320 / 4096x2160 / 2048x1080 y (2) 7680x4320 / 3840x2160 / 1920x1080 con Movie cropping = Disable; (3) 4096x2160 / 2048x1080 y (4) 3840x2160 / 1920x1080 con Movie cropping = Enable o lentes RF-S/EF-S. Cuadros por segundo: tabla 'Movie recording size' de Specifications (https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html)",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "Area (1) = igual que 8K/4K DCI"
+    },
+    {
+     "id": "video_fhd",
+     "nombre": "Video Full HD (sin crop)",
+     "ancho_activo_mm": 33.75,
+     "alto_activo_mm": 18.98,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.07,
+     "resolucion_px": "1920x1080",
+     "fps": [
+      "239.76",
+      "200",
+      "119.88",
+      "100",
+      "59.94",
+      "50",
+      "29.97",
+      "25",
+      "23.98"
+     ],
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Movie Recording Size: tamanos 8192x4320 y 4096x2160/2048x1080 (aprox. 17:9), 7680x4320, 3840x2160 y 1920x1080 (16:9); 'Image Area': (1) 8192x4320 / 4096x2160 / 2048x1080 y (2) 7680x4320 / 3840x2160 / 1920x1080 con Movie cropping = Disable; (3) 4096x2160 / 2048x1080 y (4) 3840x2160 / 1920x1080 con Movie cropping = Enable o lentes RF-S/EF-S. Cuadros por segundo: tabla 'Movie recording size' de Specifications (https://cam.start.canon/en/C017/manual/html/UG-10_Reference_0110.html)",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0040.html"
+     },
+     "calculo_derivado": "Area (2) = igual que 8K/4K UHD"
+    },
+    {
+     "id": "video_4k_dci_crop",
+     "nombre": "Video 4K DCI con Movie cropping = Enable (1.6x)",
+     "ancho_activo_mm": 22.5,
+     "alto_activo_mm": 11.87,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.6,
+     "resolucion_px": "4096x2160",
+     "fps": [
+      "59.94",
+      "50",
+      "29.97",
+      "25",
+      "24",
+      "23.98"
+     ],
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Movie Cropping: 'The recording area available with movie cropping is the same as when recording movies with RF-S / EF-S lenses'; Specifications: 'When using RF-S / EF-S lenses: Approx. 1.6 times the focal length indicated on the lens'; Movie Recording Size: 8K y las opciones Fine no estan disponibles con Movie cropping = Enable",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0070.html"
+     },
+     "calculo_derivado": "ancho = 36.0/1.6 = 22.50 mm (Canon: equivale a RF-S/EF-S, ~1.6x); alto = ancho x 2160/4096 = 11.87 mm (Image Area (3))",
+     "nota": "Con Digital IS = On/Enhanced el recorte aumenta (no cuantificado). Cuadros por segundo altos con recorte: no verificados."
+    },
+    {
+     "id": "video_4k_uhd_crop",
+     "nombre": "Video 4K UHD con Movie cropping = Enable (1.6x)",
+     "ancho_activo_mm": 21.09,
+     "alto_activo_mm": 11.87,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.71,
+     "resolucion_px": "3840x2160",
+     "fps": [
+      "59.94",
+      "50",
+      "29.97",
+      "25",
+      "23.98"
+     ],
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Movie Cropping: 'The recording area available with movie cropping is the same as when recording movies with RF-S / EF-S lenses'; Specifications: 'When using RF-S / EF-S lenses: Approx. 1.6 times the focal length indicated on the lens'; Movie Recording Size: 8K y las opciones Fine no estan disponibles con Movie cropping = Enable",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0070.html"
+     },
+     "calculo_derivado": "ancho = 22.5 x 3840/4096 = 21.09 mm; alto = 11.87 mm (Image Area (4))",
+     "nota": "factor_crop_vs_ff es respecto al ancho 36.0 mm: 36.0/21.09; el factor de recorte de sensor es 1.6."
+    },
+    {
+     "id": "video_2k_dci_crop",
+     "nombre": "Video 2K DCI con Movie cropping = Enable (1.6x)",
+     "ancho_activo_mm": 22.5,
+     "alto_activo_mm": 11.87,
+     "relacion_aspecto": "17:9",
+     "factor_crop_vs_ff": 1.6,
+     "resolucion_px": "2048x1080",
+     "fps": [
+      "59.94",
+      "50",
+      "29.97",
+      "25",
+      "24",
+      "23.98"
+     ],
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Movie Cropping: 'The recording area available with movie cropping is the same as when recording movies with RF-S / EF-S lenses'; Specifications: 'When using RF-S / EF-S lenses: Approx. 1.6 times the focal length indicated on the lens'; Movie Recording Size: 8K y las opciones Fine no estan disponibles con Movie cropping = Enable",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0070.html"
+     },
+     "calculo_derivado": "igual que video_4k_dci_crop (Image Area (3))"
+    },
+    {
+     "id": "video_fhd_crop",
+     "nombre": "Video Full HD con Movie cropping = Enable (1.6x)",
+     "ancho_activo_mm": 21.09,
+     "alto_activo_mm": 11.87,
+     "relacion_aspecto": "16:9",
+     "factor_crop_vs_ff": 1.71,
+     "resolucion_px": "1920x1080",
+     "fps": [
+      "59.94",
+      "50",
+      "29.97",
+      "25",
+      "23.98"
+     ],
+     "derivado": true,
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Movie Cropping: 'The recording area available with movie cropping is the same as when recording movies with RF-S / EF-S lenses'; Specifications: 'When using RF-S / EF-S lenses: Approx. 1.6 times the focal length indicated on the lens'; Movie Recording Size: 8K y las opciones Fine no estan disponibles con Movie cropping = Enable",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0070.html"
+     },
+     "calculo_derivado": "igual que video_4k_uhd_crop (Image Area (4))"
+    }
+   ],
+   "perfiles_color": [
+    {
+     "id": "c_log2",
+     "nombre": "Canon Log 2",
+     "tipo": "log",
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Custom Pictures: archivos predefinidos C1 Canon 709, C2 Canon Log 2 / C.Gamut, C3 Canon Log 3 / C.Gamut, C4 PQ / BT.2020, C5 HLG / BT.2020, C6 BT.709 Standard",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0130.html"
+     }
+    },
+    {
+     "id": "c_log3",
+     "nombre": "Canon Log 3",
+     "tipo": "log",
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Custom Pictures: archivos predefinidos C1 Canon 709, C2 Canon Log 2 / C.Gamut, C3 Canon Log 3 / C.Gamut, C4 PQ / BT.2020, C5 HLG / BT.2020, C6 BT.709 Standard",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0130.html"
+     }
+    },
+    {
+     "id": "hdr_pq",
+     "nombre": "HDR PQ",
+     "tipo": "hdr",
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Custom Pictures: archivos predefinidos C1 Canon 709, C2 Canon Log 2 / C.Gamut, C3 Canon Log 3 / C.Gamut, C4 PQ / BT.2020, C5 HLG / BT.2020, C6 BT.709 Standard",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0130.html"
+     }
+    },
+    {
+     "id": "hlg",
+     "nombre": "HLG",
+     "tipo": "hdr",
+     "fuente": {
+      "texto": "Canon EOS R5 Mark II Product Manual > Custom Pictures: archivos predefinidos C1 Canon 709, C2 Canon Log 2 / C.Gamut, C3 Canon Log 3 / C.Gamut, C4 PQ / BT.2020, C5 HLG / BT.2020, C6 BT.709 Standard",
+      "url": "https://cam.start.canon/en/C017/manual/html/UG-03_Shooting-2_0130.html"
+     }
+    }
+   ],
+   "notas": "Agregada el 2026-11-13 desde el manual en linea de Canon (cam.start.canon, codigo C017). Sensor 'Approx. 36.0x24.0 mm', max. aprox. 45 MP efectivos, 50.3 MP totales. Solo el modo de foto 3:2 usa los mm publicados; los demas modos de foto y todos los de video son derivados: Canon publica los tamanos en pixeles y un diagrama 'Image Area' sin milimetros, y aqui se aplica la misma derivacion que en la EOS R5 (el ancho de 8192 px es todo el ancho del sensor). Cuadros por segundo: union de los formatos de la tabla 'Movie recording size'. No se investigo el historial de firmware ni que version cubre el manual."
   }
  ],
  "juegos_de_lentes": [
@@ -4094,6 +5292,103 @@
    "fuente": {
     "texto": "CineD (NAB 2024): la serie Orion tiene 12 focales (18, 21, 25, 28, 32, 40, 50, 65, 80, 100, 135 y 200 mm), todas con compresion 2x. No se encontro el sitio oficial de Atlas: confirmar el set que llevas.",
     "url": "https://www.cined.com/atlas-orion-18mm-135mm-and-200mm-first-look/"
+   }
+  },
+  {
+   "id": "zoom_24_70_ejemplo",
+   "nombre": "Zoom 24-70 mm (ejemplo editable)",
+   "montura": null,
+   "tipo": "esferico",
+   "squeeze": 1.0,
+   "focales_mm": [
+    24,
+    28,
+    35,
+    50,
+    70
+   ]
+  },
+  {
+   "id": "zoom_70_200_ejemplo",
+   "nombre": "Zoom 70-200 mm (ejemplo editable)",
+   "montura": null,
+   "tipo": "esferico",
+   "squeeze": 1.0,
+   "focales_mm": [
+    70,
+    85,
+    100,
+    135,
+    200
+   ]
+  },
+  {
+   "id": "canon_rf_15_35_f2_8l",
+   "nombre": "Canon RF 15-35mm F2.8 L IS USM",
+   "montura": "Canon RF",
+   "tipo": "esferico",
+   "squeeze": 1.0,
+   "focales_mm": [
+    15,
+    20,
+    24,
+    28,
+    35
+   ],
+   "fuente": {
+    "texto": "Canon (sitio oficial de Asia), especificaciones RF15-35mm f/2.8L IS USM: zoom de 15 a 35 mm, apertura maxima f/2.8, minima f/22, distancia minima de enfoque 0.28 m, angulo horizontal 100°25'-54°00'. Las focales intermedias (20, 24, 28) son solo pasos dentro del rango del zoom.",
+    "url": "https://asia.canon/en/consumer/rf15-35mm-f-2-8l-is-usm/specification?category=photography&subCategory=rf-lenses"
+   }
+  },
+  {
+   "id": "canon_rf_24_105_f4l",
+   "nombre": "Canon RF 24-105mm F4 L IS USM",
+   "montura": "Canon RF",
+   "tipo": "esferico",
+   "squeeze": 1.0,
+   "focales_mm": [
+    24,
+    35,
+    50,
+    70,
+    85,
+    105
+   ],
+   "fuente": {
+    "texto": "Canon (sitio oficial de Asia), especificaciones RF24-105mm f/4L IS USM: zoom de 24 a 105 mm, apertura maxima f/4, minima f/22, distancia minima de enfoque 0.45 m, angulo horizontal 74°00'-19°20'. Las focales intermedias (35, 50, 70, 85) son solo pasos dentro del rango del zoom.",
+    "url": "https://asia.canon/en/consumer/rf24-105mm-f-4l-is-usm/specification?category=photography&subCategory=rf-lenses"
+   }
+  },
+  {
+   "id": "canon_rf_70_200_f2_8l",
+   "nombre": "Canon RF 70-200mm F2.8 L IS USM",
+   "montura": "Canon RF",
+   "tipo": "esferico",
+   "squeeze": 1.0,
+   "focales_mm": [
+    70,
+    85,
+    100,
+    135,
+    200
+   ],
+   "fuente": {
+    "texto": "Canon (sitio oficial de Asia), especificaciones RF70-200mm f/2.8L IS USM: zoom de 70 a 200 mm, apertura maxima f/2.8, minima f/32, distancia minima de enfoque 0.7 m, angulo horizontal 29°00'-10°00'. Las focales intermedias (85, 100, 135) son solo pasos dentro del rango del zoom.",
+    "url": "https://asia.canon/en/consumer/rf70-200mm-f-2-8l-is-usm/specification?category=photography&subCategory=rf-lenses"
+   }
+  },
+  {
+   "id": "canon_rf_50_f1_2l",
+   "nombre": "Canon RF 50mm F1.2 L USM",
+   "montura": "Canon RF",
+   "tipo": "esferico",
+   "squeeze": 1.0,
+   "focales_mm": [
+    50
+   ],
+   "fuente": {
+    "texto": "Canon (sitio oficial de Asia), especificaciones RF50mm f/1.2L USM: focal fija de 50 mm, apertura maxima f/1.2, minima f/16, distancia minima de enfoque 0.40 m, angulo horizontal 40°00'.",
+    "url": "https://asia.canon/en/consumer/rf50mm-f-1-2l-usm/specification?category=photography&subCategory=rf-lenses"
    }
   }
  ],
