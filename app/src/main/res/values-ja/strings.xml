@@ -274,4 +274,5 @@
     <string name="dof_hyperfocal_line">過焦点距離 %1$s：そこにピントを合わせると %2$s から無限遠までシャープ</string>
     <string name="dof_note">概算：許容錯乱円＝センサー対角線÷1500</string>
     <string name="dof_badge">f/%1$s ・ピント %2$s ・シャープ %3$s〜%4$s</string>
+    <string name="frm_focus_mark">写真にピント位置を表示（タップでピントを合わせた場合）</string>
 </resources>

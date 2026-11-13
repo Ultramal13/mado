@@ -274,4 +274,5 @@
     <string name="dof_hyperfocal_line">hyperfocal %1$s: focus there and everything from %2$s to ∞ is sharp</string>
     <string name="dof_note">approximate: circle of confusion = sensor diagonal / 1500</string>
     <string name="dof_badge">f/%1$s · focused at %2$s · sharp %3$s–%4$s</string>
+    <string name="frm_focus_mark">focus point on the photo (if you tapped to focus)</string>
 </resources>

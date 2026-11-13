@@ -594,6 +594,9 @@ internal fun FramingControls(
         Label(stringResource(R.string.frm_show_angles))
         Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (showAngles) 1 else 0) { onShowAngles(it == 1) }
 
+        Label(stringResource(R.string.frm_focus_mark))
+        Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (framing.focusMarkOn) 1 else 0) { framing.focusMarkOn = it == 1 }
+
         Label(stringResource(R.string.frm_fast_capture))
         Seg(listOf(stringResource(R.string.opt_no), stringResource(R.string.opt_yes)), if (fastOn) 1 else 0) { onFast(it == 1) }
 

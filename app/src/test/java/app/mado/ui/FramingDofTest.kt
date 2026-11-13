@@ -53,4 +53,12 @@ class FramingDofTest {
         val c = FramingState(db); c.restore("{\"aperture\":\"x\",\"dofDist\":\"-3\"}")
         assertEquals("5.6", c.aperture); assertEquals("", c.dofDistM)
     }
+
+    @Test fun focusMarkOptionIsRememberedAndOnByDefault() {
+        val a = FramingState(db)
+        assertTrue(a.focusMarkOn)
+        a.focusMarkOn = false
+        val b = FramingState(db); b.restore(a.snapshot())
+        assertTrue(!b.focusMarkOn)
+    }
 }

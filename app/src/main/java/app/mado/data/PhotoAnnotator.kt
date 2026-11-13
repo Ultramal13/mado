@@ -38,6 +38,20 @@ data class SunArc(val color: Int, val points: List<SunPoint?>, val label: String
  */
 data class SunNote(val badge: String, val window: String?, val marker: SunPoint?, val arcs: List<SunArc>, val hourFmt: String = "%dh")
 
+/**
+ * Dónde se enfocó: (x, y) en fracciones de la foto (0..1, de izquierda a derecha y de arriba abajo), [afState] el estado del autofoco de Android
+ * (4 y 2 = enfocado, 5 y 6 = no logró enfocar, 1 y 3 = todavía buscando, 0 = inactivo) y [label] la distancia («0.41 m») si se conoce.
+ */
+data class FocusMark(val x: Float, val y: Float, val afState: Int?, val label: String? = null) {
+    val focused: Boolean get() = afState == 4 || afState == 2
+    val failed: Boolean get() = afState == 5 || afState == 6
+    /** La misma marca en las coordenadas de un recorte centrado de ancho [fw] y alto [fh] (fracciones de la foto); null si cae fuera. */
+    fun inCrop(fw: Float, fh: Float): FocusMark? {
+        val u = (x - 0.5f) / fw + 0.5f; val v = (y - 0.5f) / fh + 0.5f
+        return if (u in 0f..1f && v in 0f..1f) copy(x = u, y = v) else null
+    }
+}
+
 /** Un recuadro por focal del kit; `current` = el que se está usando; `detail` = texto de su etiqueta (la actual lleva la medida). */
 data class AnnotFrame(val label: String, val frame: Framing.Frame, val current: Boolean, val detail: String = label)
 
@@ -57,7 +71,7 @@ object PhotoAnnotator {
     // ---------- Vista general: foto + todos los recuadros ----------
     fun overview(
         jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet(),
-        delivery: Double? = null, deliveryLabel: String = "", sun: SunNote? = null, dofText: String? = null,
+        delivery: Double? = null, deliveryLabel: String = "", sun: SunNote? = null, dofText: String? = null, focus: FocusMark? = null,
     ): ByteArray {
         val photo = decodeRotated(jpeg, rotationDeg, sample = 2)
         val w = photo.width; val h = photo.height
@@ -101,6 +115,7 @@ object PhotoAnnotator {
             drawGuides(c, guides, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, unit / 12f)
             delivery?.let { drawDelivery(c, w / 2f - gw / 2f, h / 2f - gh / 2f, gw, gh, it, deliveryLabel, unit) }
         }
+        focus?.let { drawFocus(c, it, ix + it.x * iw, iy + it.y * ih, minOf(iw, ih), unit) }
         if (sun != null || dofText != null) drawSun(c, sun, listOfNotNull(dofText?.let { it to DOF }), w / 2f, h / 2f, iw / 2f, ih / 2f, w.toFloat(), h.toFloat(), unit, listOfNotNull(info.sceneTag?.let { t -> scenePillRect(t, info.sceneColor != 0, h.toFloat(), unit) }), listOfNotNull(curTag))
         info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, barUnit, info)
@@ -111,9 +126,9 @@ object PhotoAnnotator {
     // ---------- Plano: la foto recortada al encuadre actual ----------
     fun plano(
         jpeg: ByteArray, rotationDeg: Int, frames: List<AnnotFrame>, info: BarInfo, guides: Set<Guide> = emptySet(),
-        delivery: Double? = null, deliveryLabel: String = "", sun: SunNote? = null, dofText: String? = null,
+        delivery: Double? = null, deliveryLabel: String = "", sun: SunNote? = null, dofText: String? = null, focus: FocusMark? = null,
     ): ByteArray {
-        val cur = frames.firstOrNull { it.current }?.frame ?: return overview(jpeg, rotationDeg, frames, info, guides, delivery, deliveryLabel, sun, dofText)
+        val cur = frames.firstOrNull { it.current }?.frame ?: return overview(jpeg, rotationDeg, frames, info, guides, delivery, deliveryLabel, sun, dofText, focus)
         val size = BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { BitmapFactory.decodeByteArray(jpeg, 0, jpeg.size, it) }
         val rotated90 = rotationDeg % 180 != 0
         val W = if (rotated90) size.outHeight else size.outWidth      // medidas de la foto ya girada
@@ -159,6 +174,7 @@ object PhotoAnnotator {
         drawGuides(c, guides, 0f, 0f, w.toFloat(), h.toFloat(), unit / 8f)
         delivery?.let { drawDelivery(c, 0f, 0f, w.toFloat(), h.toFloat(), it, deliveryLabel, unit * 1.1f) }
         // En el recorte el borde de la foto está a ±1/fracción del recuadro: la escala del sol cambia con el encuadre.
+        focus?.inCrop(fwFrac, fhFrac)?.let { drawFocus(c, it, it.x * w, it.y * h, minOf(w, h).toFloat(), unit * 1.1f) }
         if (sun != null || dofText != null) drawSun(c, sun, listOfNotNull(dofText?.let { it to DOF }), w / 2f, h / 2f, w / 2f / fwFrac, h / 2f / fhFrac, w.toFloat(), h.toFloat(), unit * 1.1f, listOfNotNull(info.sceneTag?.let { t -> scenePillRect(t, info.sceneColor != 0, h.toFloat(), unit * 1.1f) }))
         info.sceneTag?.let { drawScenePill(c, it, info.sceneColor, h.toFloat(), unit * 1.1f) }
         drawInfoBar(c, w.toFloat(), h.toFloat(), bar, unit, info)
@@ -223,6 +239,33 @@ object PhotoAnnotator {
         c.drawRoundRect(RectF(m, top, m + tw, top + th), th / 2f, th / 2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = Color.argb(185, 12, 12, 12) })
         if (hasDot) c.drawCircle(m + padX + dot, top + th / 2f, dot, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = color })
         c.drawText(text, m + padX + lead, top + th * 0.68f, p)
+    }
+
+    /**
+     * Marca típica de enfoque de una cámara: un cuadrado de esquinas (corchetes) con un punto al centro. Verde si el autofoco logró enfocar,
+     * rojo si no pudo, amarillo si no está claro; debajo, la distancia. Con borde oscuro para que se vea sobre cualquier fondo.
+     */
+    private fun drawFocus(c: Canvas, f: FocusMark, cx: Float, cy: Float, minSide: Float, unit: Float) {
+        val color = when { f.focused -> 0xFF2EE66B.toInt(); f.failed -> 0xFFFF4D4D.toInt(); else -> 0xFFFFD84D.toInt() }
+        val half = minSide * 0.045f
+        val arm = half * 0.55f
+        val dark = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.SQUARE; strokeWidth = unit * 0.34f; this.color = Color.argb(170, 0, 0, 0) }
+        val line = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.SQUARE; strokeWidth = unit * 0.17f; this.color = color }
+        for (p in listOf(dark, line)) {
+            for (sx in listOf(-1f, 1f)) for (sy in listOf(-1f, 1f)) {
+                val x = cx + sx * half; val y = cy + sy * half
+                c.drawLine(x, y, x - sx * arm, y, p); c.drawLine(x, y, x, y - sy * arm, p)
+            }
+        }
+        c.drawCircle(cx, cy, unit * 0.22f, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = Color.argb(170, 0, 0, 0) })
+        c.drawCircle(cx, cy, unit * 0.14f, Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = color })
+        f.label?.let { t ->
+            val bold = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+            val shadow = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 0.9f; style = Paint.Style.STROKE; strokeWidth = unit * 0.24f; this.color = Color.argb(190, 0, 0, 0) }
+            val text = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = bold; textSize = unit * 0.9f; this.color = color }
+            val tx = cx - text.measureText(t) / 2f; val ty = cy + half + unit * 1.3f
+            c.drawText(t, tx, ty, shadow); c.drawText(t, tx, ty, text)
+        }
     }
 
     private const val SUN = 0xFFFFC83D.toInt()

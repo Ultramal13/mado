@@ -40,6 +40,8 @@ class FramingState(val db: CameraDb) {
     var kit by mutableStateOf(listOf(24.0, 35.0, 50.0, 85.0))
     /** Encuadre vertical (la cámara girada 90°, como se dispara una foto de retrato); false = horizontal. */
     var vertical by mutableStateOf(false)
+    /** Dibuja en las fotos guardadas dónde se enfocó (marca de enfoque), si se tocó la imagen para enfocar. */
+    var focusMarkOn by mutableStateOf(true)
     /** Profundidad de campo e hiperfocal: activada, apertura (f/) y distancia de enfoque escrita a mano en metros (vacío = la que enfoca el teléfono). */
     var dofOn by mutableStateOf(false)
     var aperture by mutableStateOf("5.6")
@@ -101,6 +103,7 @@ class FramingState(val db: CameraDb) {
         put("aspect", fixedAspectIdx)
         put("delivery", deliveryIdx)
         put("vertical", vertical)
+        put("focusMark", focusMarkOn)
         put("dofOn", dofOn); put("aperture", aperture); put("dofDist", dofDistM)
         put("scene", scene); put("shotNo", shotNo)
         put("opFps", opFps); put("opShutter", opShutter ?: org.json.JSONObject.NULL); put("opIso", opIso); put("opWb", opWb); put("opNote", opNote)
@@ -128,6 +131,7 @@ class FramingState(val db: CameraDb) {
             o.optInt("aspect", -1).takeIf { it in fixedAspects.indices }?.let { fixedAspectIdx = it }
             deliveryIdx = o.optInt("delivery", -1).takeIf { it in deliveryAspects.indices } ?: -1
             vertical = o.optBoolean("vertical", false)
+            focusMarkOn = o.optBoolean("focusMark", true)
             dofOn = o.optBoolean("dofOn", false)
             o.optString("aperture").takeIf { (it.toDoubleOrNull() ?: 0.0) > 0 }?.let { aperture = it }
             dofDistM = o.optString("dofDist", "").takeIf { (it.toDoubleOrNull() ?: 0.0) > 0 } ?: ""

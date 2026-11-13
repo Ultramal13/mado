@@ -48,6 +48,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalView
+import app.mado.data.FocusMark
 import app.mado.data.PhotoAnnotator
 import app.mado.data.PhotoSaver
 import kotlinx.coroutines.Dispatchers
@@ -311,6 +312,9 @@ fun FovScreen(
     val sunHalfW = if (landscape) sunHwL else sunHhL
     val sunHalfH = if (landscape) sunHhL else sunHwL
     // Toque en la imagen: enfoca y mide la exposición ahí (fracciones del recuadro del visor → fracciones del flujo).
+    // Último punto donde se tocó para enfocar (fracciones del flujo = de la foto); se borra al apagar la cámara, cambiar de lente o de vista.
+    var focusPoint by remember { mutableStateOf<Pair<Float, Float>?>(null) }
+    LaunchedEffect(running, lens.id, cropOn) { focusPoint = null }
     val onFocus: (Float, Float) -> Unit = { bu, bv ->
         if (sun.calibrating) {
             // Calibrar con el sol real: el toque dice dónde está el sol en la imagen; de ahí salen los ajustes de rumbo y elevación.
@@ -326,7 +330,7 @@ fun FovScreen(
             }
         } else {
         val su = 0.5f + (bu - 0.5f) / surfFracX; val sv = 0.5f + (bv - 0.5f) / surfFracY
-        if (su in 0f..1f && sv in 0f..1f) camera.focusAt(su, sv, displayRotation * 90)
+        if (su in 0f..1f && sv in 0f..1f) { camera.focusAt(su, sv, displayRotation * 90); focusPoint = su to sv }
         }
     }
     val cropDraws = if (cropOn) frameDraws.filter { it.current }.map { it.copy(frame = Framing.Frame(1.0, 1.0)) } else frameDraws
@@ -459,6 +463,7 @@ fun FovScreen(
                 .put("padding", frame?.padding))
             pose?.let { put("orientation", JSONObject().put("heading_deg_magnetic", it.headingDeg).put("elevation_deg", it.elevationDeg).put("level_deg", it.levelDeg)) }
         }
+        val focusPointNow = focusPoint.takeIf { framing.focusMarkOn }
         // Profundidad de campo de lo que se simula, a la distancia que enfocaba el teléfono (o la escrita a mano).
         val focusAtShot = camera.focusDiopters?.let { d -> if (d > 0.05f) (1f / d).toDouble() else null }
         val dofDistNow = framing.dofDistance(focusAtShot)
@@ -534,6 +539,10 @@ fun FovScreen(
                         sunShot?.let { meta.put("sun", it.meta) }
                         val loc = try { locJob?.await() } catch (e: Exception) { null }
                         meta.put("still", JSONObject().put("width", result.width).put("height", result.height).put("rotation_deg", result.rotationDeg).put("capture_ms", result.ms).put("delay_to_exposure_ms", result.exposedMs).put("moved_deg", movedDeg).put("focus", camera.lastStillFocus))
+                        // Marca de enfoque: dónde se tocó, con el estado del autofoco al disparar y la distancia.
+                        val afState = Regex("af_state=(\\d+)").find(camera.lastStillFocus.orEmpty())?.groupValues?.get(1)?.toIntOrNull()
+                        val focusMark = focusPointNow?.let { (fx, fy) -> FocusMark(fx, fy, afState, focusAtShot?.let { m -> app.mado.optics.Dof.format(m) }) }
+                        focusPointNow?.let { (fx, fy) -> meta.put("focus_point", JSONObject().put("x", fx.toDouble()).put("y", fy.toDouble()).put("af_state", afState)) }
                         loc?.let { meta.put("location", JSONObject().put("lat", it.latitude).put("lon", it.longitude).put("accuracy_m", it.accuracy.toDouble())) }
                         val info = BarInfo(camText, modeText, phoneLine, stamp, headText, attText, positionText ?: loc?.let { LocationHelper.format(it) }, barLine1, barLine2, bigText, sceneTagText, if (sceneDot) app.mado.optics.sceneColorArgb(sceneNow) else 0)
                         shot = try {
@@ -541,9 +550,9 @@ fun FovScreen(
                             val saved = withContext(Dispatchers.IO) {
                                 // Dos archivos con la barra de datos: la foto con los recuadros del kit y el plano recortado al encuadre.
                                 // (No se guarda la foto sin gráficos: es la misma imagen que la primera.)
-                                val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel, sunShot?.note, dofBadge)
+                                val overview = PhotoAnnotator.overview(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel, sunShot?.note, dofBadge, focusMark)
                                 val marco = PhotoSaver.save(ctx, overview, 0, meta, now, suffix = "_marco", location = loc, headingDeg = posePhoto?.headingDeg)
-                                val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel, sunShot?.note, dofBadge)
+                                val plano = PhotoAnnotator.plano(result.jpeg, result.rotationDeg, annotFrames, info, guidesNow, deliveryNow, deliveryLabel, sunShot?.note, dofBadge, focusMark)
                                 PhotoSaver.save(ctx, plano, 0, meta, now, suffix = "_plano", location = loc, headingDeg = posePhoto?.headingDeg)
                                 marco
                             }
