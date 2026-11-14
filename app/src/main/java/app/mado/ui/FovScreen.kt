@@ -888,7 +888,7 @@ private fun ViewerLayout(
                 ViewerBar(framing, running, working, onToggle, onShot, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
             }
         }
-        calOverlay?.invoke()
+        if (calActive) calOverlay?.invoke()
     }
 }
 

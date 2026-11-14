@@ -103,17 +103,40 @@ class OrientationTracker(context: Context) : SensorEventListener {
         return doubleArrayOf(x, y, z)
     }
 
-    fun start() {
+    // Los sensores se escuchan mientras el visor corre y, además, mientras dura una calibración propia: esa se puede hacer con la cámara apagada
+    // (si no, sin eventos el porcentaje se queda en 0 %).
+    private var listening = false
+    private var viewerOn = false
+
+    private fun resetReadings() {
         jump.reset(); haveB = false; haveA = false; haveR = false; haveBw = false; gameHeading = null; fieldBad = false; fieldMeh = false
         disturbedNow = false; disturbed = false; impreciseNow = false; imprecise = false
-        if (calState == MagCalState.COLLECTING) { est = null; calState = MagCalState.IDLE }
+    }
+
+    private fun register() {
+        if (listening) return
+        listening = true
+        resetReadings()
         sensor?.let { sm.registerListener(this, it, SensorManager.SENSOR_DELAY_UI) }
         gameSensor?.let { sm.registerListener(this, it, SensorManager.SENSOR_DELAY_UI) }
         magSensor?.let { sm.registerListener(this, it, SensorManager.SENSOR_DELAY_UI) }
         rawMagSensor?.let { sm.registerListener(this, it, SensorManager.SENSOR_DELAY_UI) }
         accSensor?.let { sm.registerListener(this, it, SensorManager.SENSOR_DELAY_UI) }
     }
-    fun stop() { sm.unregisterListener(this) }
+
+    private fun unregister() {
+        if (!listening) return
+        sm.unregisterListener(this); listening = false
+    }
+
+    /** Deja de escuchar si ya no hace falta: ni el visor corre ni hay una calibración en curso. */
+    private fun releaseIfIdle() { if (!viewerOn && calState != MagCalState.COLLECTING) unregister() }
+
+    fun start() {
+        viewerOn = true
+        if (!listening) register() else resetReadings()
+    }
+    fun stop() { viewerOn = false; releaseIfIdle() }
 
     /** Empieza a juntar muestras: el usuario gira el teléfono en todas direcciones (plano, de pie, de lado, boca abajo). */
     fun startMagCal() {
@@ -124,16 +147,18 @@ class OrientationTracker(context: Context) : SensorEventListener {
             else -> {
                 est = MagBiasEstimator(MagCalibration.expectedVerticalUt(exp.first, exp.second))
                 calStartMs = android.os.SystemClock.elapsedRealtime(); calProgress = 0f; calBiasUt = null; calState = MagCalState.COLLECTING
+                register()
             }
         }
     }
 
-    fun cancelMagCal() { est = null; calState = MagCalState.IDLE }
+    fun cancelMagCal() { est = null; calState = MagCalState.IDLE; releaseIfIdle() }
 
     /** Vuelve a usar el campo calibrado por Android, sin sesgo propio. */
     fun clearMagBias() {
         bias = null; hasBias = false; haveB = false; haveBw = false; est = null; calState = MagCalState.IDLE
         prefs.edit().remove("mag_bias_at").remove("mag_bias_x").remove("mag_bias_y").remove("mag_bias_z").apply()
+        releaseIfIdle()
     }
 
     private fun finishCal(e: MagBiasEstimator) {
@@ -145,6 +170,7 @@ class OrientationTracker(context: Context) : SensorEventListener {
             prefs.edit().putLong("mag_bias_at", System.currentTimeMillis()).putString("mag_bias_x", b[0].toString())
                 .putString("mag_bias_y", b[1].toString()).putString("mag_bias_z", b[2].toString()).apply()
         } else calState = MagCalState.FAILED
+        releaseIfIdle()
     }
 
     private fun smooth(avg: DoubleArray, v: DoubleArray, first: Boolean) {
@@ -214,7 +240,7 @@ class OrientationTracker(context: Context) : SensorEventListener {
             if (haveA) est.add(raw, aLast)
             calProgress = est.coverage().toFloat()
             if (est.ready) finishCal(est)
-            else if (android.os.SystemClock.elapsedRealtime() - calStartMs > 45_000) { this.est = null; calState = MagCalState.FAILED }
+            else if (android.os.SystemClock.elapsedRealtime() - calStartMs > 45_000) { this.est = null; calState = MagCalState.FAILED; releaseIfIdle() }
         }
         val b = bias ?: return
         val eff = doubleArrayOf(raw[0] - b[0], raw[1] - b[1], raw[2] - b[2])
