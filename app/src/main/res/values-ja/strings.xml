@@ -50,11 +50,11 @@
     <string name="fov_save">保存</string>
     <string name="fov_saved">保存済み · %1$d</string>
     <string name="fov_ruler_caption">端から端: %1$s cm（距離 %2$s cm）</string>
-    <string name="mode_framing">枠</string>
+    <string name="mode_framing">画角</string>
     <string name="frm_target_caption">対象カメラの水平画角</string>
     <string name="frm_aspect_v">アスペクト %1$s:1 · 垂直画角 %2$s°</string>
-    <string name="frm_frame">枠: ビューファインダーの %1$s %% × %2$s %%</string>
-    <string name="frm_padding">スマホの画角より広い: 枠がビューファインダー全体になり、スマホの映像は縮小されます</string>
+    <string name="frm_frame">画角: ビューファインダーの %1$s %% × %2$s %%</string>
+    <string name="frm_padding">スマホの画角より広い: このカメラの画角がビューファインダー全体になり、スマホの映像は縮小されます</string>
     <string name="frm_no_target">有効な焦点距離とセンサーサイズを入力してください</string>
     <string name="frm_verified">精度: このレンズは校正済み</string>
     <string name="frm_unverified">このレンズの精度は未検証</string>
@@ -80,7 +80,7 @@
     <string name="frm_scene_label">シーン</string>
     <string name="frm_scene_hint">例：暖炉</string>
     <string name="frm_shot_no">ショット番号</string>
-    <string name="frm_delivery">納品アスペクト（枠内のライン）</string>
+    <string name="frm_delivery">納品アスペクト（画角内のライン）</string>
     <string name="frm_delivery_same">センサーと同じ</string>
     <string name="frm_shot_word">ショット</string>
     <string name="frm_phone_lens">スマホのレンズ（固定・一度に1つ）</string>
@@ -136,7 +136,7 @@
     <string name="menu_calibration">レンズ校正（画角の測定）</string>
     <string name="menu_diagnostics">カメラ診断</string>
     <string name="menu_theme">テーマ</string>
-    <string name="cal_intro">このレンズの実際の画角を測り、ファインダーの枠を正確にします</string>
+    <string name="cal_intro">このレンズの実際の画角を測り、ファインダーの画角表示を正確にします</string>
     <string name="screen_projects">プロジェクト</string>
     <string name="menu_projects">プロジェクトとロケ地</string>
     <string name="proj_projects">プロジェクト</string>
@@ -176,9 +176,9 @@
     <string name="frm_pp">ピクチャープロファイル (PP)</string>
     <string name="frm_op_external">外部収録 (HDMI)</string>
     <string name="frm_op_external_hint">例：Ninja · ProRes RAW</string>
-    <string name="calnotice_short">枠の精度は未検証・タップ</string>
+    <string name="calnotice_short">画角の精度は未検証・タップ</string>
     <string name="calnotice_title">このレンズは未校正です</string>
-    <string name="calnotice_body">枠は端末が報告するレンズ情報に基づくため、数度ずれることがあります（広角レンズほど大きくなります）。メジャーで測定する（1本あたり約10分）か、診断ファイルを共有してこの機種を追加してください。</string>
+    <string name="calnotice_body">画角は端末が報告するレンズ情報に基づくため、数度ずれることがあります（広角レンズほど大きくなります）。メジャーで測定する（1本あたり約10分）か、診断ファイルを共有してこの機種を追加してください。</string>
     <string name="calnotice_share">診断を共有</string>
     <string name="calnotice_calibrate">レンズ校正</string>
     <string name="proj_export">ロケ地シート</string>
@@ -248,8 +248,8 @@
     <string name="sun_behind">後方</string>
     <string name="sun_below">地平線の下</string>
     <string name="sun_accuracy">端末のコンパスは金属や磁石の近くで数度ずれることがあります（精度は未検証）。磁気偏角は補正済みです。8の字に動かしてコンパスを校正してください</string>
-    <string name="sun_in_frame">この枠に太陽が入る時間：%1$s〜%2$s</string>
-    <string name="sun_not_in_frame">この日は太陽がこの枠を通りません</string>
+    <string name="sun_in_frame">太陽の画角入り時間：%1$s〜%2$s</string>
+    <string name="sun_not_in_frame">この日は太陽がこの画角を通りません</string>
     <string name="sun_calibrate_title">実際の太陽でコンパスを校正</string>
     <string name="sun_calibrate_help">円が実際の太陽に重ならないときは、ビューアの ◎ をタップし、画面の実際の太陽をタップしてください（太陽を直接見ないでください）</string>
     <string name="sun_calibrate_need">◎ は太陽が地平線から十分高く、時刻が「今」のときに使えます</string>
@@ -261,8 +261,8 @@
     <string name="sun_compass_disturbed">コンパスが乱れています：ケーブル、磁石、金属から離れてください</string>
     <string name="sun_compass_disturbed_short">コンパス乱れ（ケーブル・磁石）</string>
     <string name="sun_seasons">夏至・冬至・春分の軌跡も描く</string>
-    <string name="sun_in_frame_short">この枠に太陽が入る時間：%1$s〜%2$s</string>
-    <string name="frm_orientation">枠の向き</string>
+    <string name="sun_in_frame_short">太陽の画角入り時間：%1$s〜%2$s</string>
+    <string name="frm_orientation">画角の向き</string>
     <string name="frm_horizontal">横</string>
     <string name="frm_vertical">縦</string>
     <string name="dof_label">被写界深度と過焦点距離</string>
