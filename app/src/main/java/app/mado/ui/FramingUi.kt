@@ -47,6 +47,9 @@ import app.mado.camera.ThermalGuard
 import app.mado.data.loc
 import app.mado.diagnostics.CameraInfo
 import app.mado.optics.Fov
+import app.mado.optics.PhoneLensKind
+import app.mado.optics.phoneLensDisplayOrder
+import app.mado.optics.phoneLensKind
 import app.mado.optics.Guide
 import app.mado.optics.Framing
 import java.util.Locale
@@ -613,7 +616,7 @@ internal fun FramingControls(
         if (gpsDenied) Text(stringResource(R.string.gps_denied), style = mono(10, p.accent))
 
         Label(stringResource(R.string.frm_phone_lens))
-        Seg(lenses.map { "${it.id} · ${fmt(it.equiv35Mm.first(), 0)}mm" }, lensIdx, onLens)
+        PhoneLensChips(lenses, lensIdx, onLens)
 
 
         BlackScreen {
@@ -732,3 +735,24 @@ internal fun PickerDialog(title: String, items: List<String>, selected: Int, onP
 }
 
 private fun Modifier.androidx_vscroll(): Modifier = composed { this.verticalScroll(androidx.compose.foundation.rememberScrollState()) }
+
+
+/**
+ * Selector del lente del teléfono: de más ancho a más largo y con nombre («ultra 12mm · principal 24mm · tele 105mm»), no por el id de Camera2,
+ * que no le dice nada a quien lo usa. El id sigue a la vista en la pantalla negra de abajo. Un lente sin equivalente conocido muestra solo su id.
+ */
+@Composable
+internal fun PhoneLensChips(lenses: List<CameraInfo>, lensIdx: Int, onLens: (Int) -> Unit) {
+    val eq = lenses.map { it.equiv35Mm.firstOrNull() ?: 0.0 }
+    val order = phoneLensDisplayOrder(eq)
+    val ultra = stringResource(R.string.lens_kind_ultrawide)
+    val main = stringResource(R.string.lens_kind_main)
+    val tele = stringResource(R.string.lens_kind_tele)
+    val labels = order.map { i ->
+        if (eq[i] <= 0.0) "id ${lenses[i].id}" else {
+            val name = when (phoneLensKind(eq[i])) { PhoneLensKind.ULTRA_WIDE -> ultra; PhoneLensKind.MAIN -> main; PhoneLensKind.TELE -> tele }
+            "$name ${fmt(eq[i], 0)}mm"
+        }
+    }
+    Seg(labels, order.indexOf(lensIdx)) { onLens(order[it]) }
+}

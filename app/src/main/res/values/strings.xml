@@ -9,7 +9,7 @@
     <string name="diag_physical_of">physical of %1$s</string>
     <string name="diag_hfov_caption">horizontal fov, first focal length</string>
     <string name="diag_focal_label">focal length</string>
-    <string name="diag_equiv_label">35mm equiv.</string>
+    <string name="diag_equiv_label">35mm equiv. (diagonal)</string>
     <string name="diag_vfov_label">vertical fov</string>
     <string name="diag_active_label">active sensor</string>
     <string name="diag_full_label">full sensor</string>
@@ -292,4 +292,7 @@
     <string name="sun_compass_imprecise_short">compass ±15° (steel nearby)</string>
     <string name="sun_magcal_overlay_help">turn the phone slowly in every direction: flat, upright, on its side, upside down</string>
     <string name="sun_magcal_tap_cancel">tap to cancel</string>
+    <string name="lens_kind_ultrawide">ultra</string>
+    <string name="lens_kind_main">main</string>
+    <string name="lens_kind_tele">tele</string>
 </resources>

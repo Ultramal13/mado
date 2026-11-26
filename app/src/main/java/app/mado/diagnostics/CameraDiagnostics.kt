@@ -157,7 +157,8 @@ object CameraDiagnostics {
             activeSizeMm = activeMm,
             hFovDeg = activeMm?.let { m -> focals.map { Fov.fovDeg(m.first, it.toDouble()) } }.orEmpty(),
             vFovDeg = activeMm?.let { m -> focals.map { Fov.fovDeg(m.second, it.toDouble()) } }.orEmpty(),
-            equiv35Mm = activeMm?.let { m -> focals.map { Fov.equivalentFocal35(m.first, it.toDouble()) } }.orEmpty(),
+            // Por diagonal (la convención de los fabricantes): un sensor 4:3 con 71.6° horizontales da 24 mm, no 25.
+            equiv35Mm = activeMm?.let { m -> focals.map { Fov.equivalentFocal35Diagonal(m.first, m.second, it.toDouble()) } }.orEmpty(),
             minFocusDiopters = c.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE),
             zoomRatioRange = zoom,
             maxDigitalZoom = c.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM),

@@ -79,9 +79,9 @@ La última versión de prueba está en **[Releases](https://github.com/Ultramal1
 
 El idioma de la app se elige desde el menú **☰** → idioma: automático, español, inglés o japonés.
 
-### ¿Tienes un Xperia 1 III? Calibra tu teléfono
+### ¿Tienes un Xperia 1 III o un Pixel 11 Pro? Calibra tu teléfono
 
-Hay una **[guía paso a paso para calibrar el Xperia 1 III](docs/calibracion-xperia.md)** (español, inglés y japonés): qué necesitas, cómo medir cada lente con una cinta métrica, **qué datos anotar** y cómo enviarlos.
+Hay una **[guía paso a paso para calibrar el Xperia 1 III](docs/calibracion-xperia.md)** y otra para el **[Pixel 11 Pro](docs/calibracion-pixel.md)** (español, inglés y japonés): qué necesitas, cómo medir cada lente con una cinta métrica, **qué datos anotar** y cómo enviarlos.
 
 ## Compilar
 

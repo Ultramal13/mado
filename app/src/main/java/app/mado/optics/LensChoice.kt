@@ -15,3 +15,16 @@ fun defaultLensIndex(equivMm: List<Double>, calibrated: List<Boolean>): Int {
     if (cal >= 0) return cal
     return equivMm.indices.minByOrNull { abs(equivMm[it] - MAIN_LENS_EQUIV_MM) } ?: 0
 }
+
+/** Tipo de lente de un teléfono según su equivalente en 35 mm (por diagonal): ultra gran angular, principal («1x») o tele. */
+enum class PhoneLensKind { ULTRA_WIDE, MAIN, TELE }
+
+fun phoneLensKind(equivMm: Double): PhoneLensKind = when {
+    equivMm < 18.0 -> PhoneLensKind.ULTRA_WIDE
+    equivMm < 35.0 -> PhoneLensKind.MAIN
+    else -> PhoneLensKind.TELE
+}
+
+/** Orden en que se muestran los lentes: de más ancho a más largo (el orden de los ids de Camera2 no dice nada al usuario). Los que no traen equivalente van al final. */
+fun phoneLensDisplayOrder(equivMm: List<Double>): List<Int> =
+    equivMm.indices.sortedWith(compareBy({ equivMm[it] <= 0.0 }, { equivMm[it] }, { it }))

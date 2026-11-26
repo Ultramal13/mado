@@ -24,6 +24,14 @@ object Fov {
         focalMm * FULL_FRAME_WIDTH_MM / activeMm
 
     /**
+     * Focal equivalente full frame **por diagonal**, que es la convención de los fabricantes y de las apps de cámara («12, 24 y 105 mm»):
+     * el mismo ángulo de visión de la diagonal del sensor que el de la diagonal de un cuadro de 36×24 mm. Con un sensor 4:3 sale ~4 %
+     * menos que [equivalentFocal35], que compara el ancho con el ancho de un cuadro 3:2.
+     */
+    fun equivalentFocal35Diagonal(activeWidthMm: Double, activeHeightMm: Double, focalMm: Double): Double =
+        focalMm * FULL_FRAME_DIAGONAL_MM / kotlin.math.hypot(activeWidthMm, activeHeightMm)
+
+    /**
      * Ancho activo que realmente ve un stream de relación `streamAspect` (ancho/alto): si el sensor es más
      * ancho que el stream se recorta a los lados; si es más angosto, el ancho se conserva.
      */
@@ -45,4 +53,6 @@ object Fov {
         Math.toDegrees(2.0 * atan(visibleWidth / (2.0 * distance)))
 
     const val FULL_FRAME_WIDTH_MM = 36.0
+    /** Diagonal de un cuadro de 36×24 mm. */
+    val FULL_FRAME_DIAGONAL_MM = kotlin.math.hypot(36.0, 24.0)
 }

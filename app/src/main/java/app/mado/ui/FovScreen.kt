@@ -1090,9 +1090,7 @@ private fun Controls(
         )
 
         Label(stringResource(R.string.fov_lens_label))
-        Seg(
-            lenses.map { "${it.id} · ${fmt(it.equiv35Mm.first(), 0)}mm" }, lensIdx, onLens,
-        )
+        PhoneLensChips(lenses, lensIdx, onLens)
         Label(stringResource(R.string.fov_distortion_label))
         Seg(listOf(stringResource(R.string.fov_dist_auto), stringResource(R.string.fov_dist_off)), if (distortionOff) 1 else 0) {
             onDistortion(it == 1)

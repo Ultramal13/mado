@@ -9,7 +9,7 @@
     <string name="diag_physical_of">%1$s の物理カメラ</string>
     <string name="diag_hfov_caption">水平画角（最初の焦点距離）</string>
     <string name="diag_focal_label">焦点距離</string>
-    <string name="diag_equiv_label">35mm換算</string>
+    <string name="diag_equiv_label">35mm換算（対角）</string>
     <string name="diag_vfov_label">垂直画角</string>
     <string name="diag_active_label">有効センサー</string>
     <string name="diag_full_label">センサー全体</string>
@@ -292,4 +292,7 @@
     <string name="sun_compass_imprecise_short">コンパス±15°（近くに鉄）</string>
     <string name="sun_magcal_overlay_help">スマホをゆっくりあらゆる向きに回してください：水平、立てる、横、裏返し</string>
     <string name="sun_magcal_tap_cancel">タップでキャンセル</string>
+    <string name="lens_kind_ultrawide">超広角</string>
+    <string name="lens_kind_main">メイン</string>
+    <string name="lens_kind_tele">望遠</string>
 </resources>
